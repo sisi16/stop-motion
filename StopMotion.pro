@@ -29,3 +29,5 @@ HEADERS  += mainwindow.h \
             myslider.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += myres.qrc
