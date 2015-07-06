@@ -21,7 +21,7 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="13" column="1" colspan="14">
+    <item row="12" column="1" colspan="13">
      <layout class="QHBoxLayout" name="horizontalLayout_5">
       <item>
        <widget class="QLabel" name="bgLabel_3">
@@ -35,56 +35,7 @@
       </item>
      </layout>
     </item>
-    <item row="11" column="2">
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
-      <item>
-       <widget class="QPushButton" name="confirmButton">
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>Confirm</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="deleteButton">
-        <property name="text">
-         <string>Delete</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="resumeButton">
-        <property name="text">
-         <string>Resume</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="reverseButton">
-        <property name="text">
-         <string>Reverse</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="groupButton">
-        <property name="text">
-         <string>Group</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="ungroupButton">
-        <property name="text">
-         <string>Un-group</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="14" column="1" colspan="14">
+    <item row="13" column="1" colspan="13">
      <layout class="QHBoxLayout" name="horizontalLayout_6">
       <item>
        <widget class="QLabel" name="bgLabel_4">
@@ -98,35 +49,21 @@
       </item>
      </layout>
     </item>
-    <item row="12" column="1" colspan="14">
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QSlider" name="timeLineSlider">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="9" column="1" colspan="14">
+    <item row="8" column="1" colspan="13">
      <widget class="Line" name="line">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
      </widget>
     </item>
-    <item row="11" column="1">
-     <widget class="QCheckBox" name="editCheckBox">
-      <property name="styleSheet">
-       <string notr="true">font: 75 12pt &quot;Times New Roman&quot;;</string>
-      </property>
-      <property name="text">
-       <string>Edit Mode</string>
+    <item row="0" column="7" rowspan="2">
+     <widget class="Line" name="line_2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
       </property>
      </widget>
     </item>
-    <item row="6" column="3">
+    <item row="5" column="8">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="QPushButton" name="okButton">
@@ -135,6 +72,9 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
         </property>
         <property name="text">
          <string>OK</string>
@@ -156,7 +96,7 @@
       </item>
      </layout>
     </item>
-    <item row="6" column="1">
+    <item row="5" column="1">
      <layout class="QHBoxLayout" name="horizontalLayout_1">
       <item>
        <widget class="QPushButton" name="playButton1">
@@ -199,21 +139,119 @@
       </item>
      </layout>
     </item>
-    <item row="0" column="3" rowspan="3" colspan="12">
-     <layout class="QVBoxLayout" name="vLayout_2">
-      <item>
-       <widget class="QLabel" name="bgLabel_2">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(159, 159, 159);</string>
-        </property>
-        <property name="text">
-         <string/>
+    <item row="11" column="1" colspan="13">
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="1" column="0">
+       <widget class="QSlider" name="timeLineSlider">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
+      <item row="0" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QCheckBox" name="editCheckBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 75 12pt &quot;Times New Roman&quot;;</string>
+          </property>
+          <property name="text">
+           <string>Edit Mode</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="confirmButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
+          <property name="text">
+           <string>Confirm</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="deleteButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Delete</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="resumeButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Resume</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="reverseButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Reverse</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="groupButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Group</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="ungroupButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Un-group</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
      </layout>
     </item>
-    <item row="0" column="1" rowspan="3" colspan="2">
+    <item row="0" column="1" rowspan="2" colspan="6">
      <layout class="QVBoxLayout" name="vLayout_1">
       <property name="spacing">
        <number>0</number>
@@ -236,7 +274,21 @@
       </item>
      </layout>
     </item>
-    <item row="6" column="2">
+    <item row="0" column="8" rowspan="2" colspan="6">
+     <layout class="QVBoxLayout" name="vLayout_2">
+      <item>
+       <widget class="QLabel" name="bgLabel_2">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(159, 159, 159);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="5" column="2">
      <widget class="QPushButton" name="cutButton">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -290,6 +342,7 @@
    <attribute name="toolBarBreak">
     <bool>true</bool>
    </attribute>
+   <addaction name="actionSet"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionLoad">
@@ -309,7 +362,7 @@
   </action>
   <action name="actionOpen">
    <property name="icon">
-    <iconset resource="myres.qrc">
+    <iconset>
      <normaloff>:/Images/load.png</normaloff>:/Images/load.png</iconset>
    </property>
    <property name="text">
@@ -337,6 +390,18 @@
   <action name="actionSave">
    <property name="text">
     <string>save</string>
+   </property>
+  </action>
+  <action name="actionConfirm">
+   <property name="icon">
+    <iconset resource="myres.qrc">
+     <normaloff>:/Images/icons/tick.ico</normaloff>:/Images/icons/tick.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Confirm</string>
+   </property>
+   <property name="toolTip">
+    <string>Confirm</string>
    </property>
   </action>
  </widget>

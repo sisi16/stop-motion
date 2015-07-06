@@ -6,5 +6,9 @@
         <file>icons/load_24.png</file>        
         <file>icons/load_512.png</file>
         <file>icons/confirm.png</file>
+        <file>icons/tick.png</file>
+        <file>icons/tick_16.png</file>
+        <file>icons/tick_32.png</file>
+        <file>icons/tick.ico</file>
     </qresource>
 </RCC>
