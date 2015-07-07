@@ -1,14 +1,20 @@
 <RCC>
-    <qresource prefix="/Images">
-        <file>icons/save.png</file>
-        <file>icons/settings.png</file>
-        <file>icons/load_16.png</file>
-        <file>icons/load_24.png</file>        
-        <file>icons/load_512.png</file>
-        <file>icons/confirm.png</file>
-        <file>icons/tick.png</file>
-        <file>icons/tick_16.png</file>
-        <file>icons/tick_32.png</file>
-        <file>icons/tick.ico</file>
-    </qresource>
+  <qresource prefix="/Images">
+    <file>icons/load.png</file>
+    <file>icons/save.png</file>
+    <file>icons/settings.png</file>
+    <file>icons/pause_24.png</file>
+    <file>icons/play_24.png</file>
+    <file>icons/stop_24.png</file>
+    <file>icons/interpolation_48.png</file>
+    <file>icons/reverse_32.png</file>
+    <file>icons/group_48.png</file>
+    <file>icons/cut_32.png</file>
+    <file>icons/resume_32.png</file>
+    <file>icons/tick_32.png</file>
+    <file>icons/delete_32.png</file>
+    <file>icons/cancel.png</file>
+    <file>icons/ungroup_48.png</file>
+    <file>icons/tick.png</file>
+  </qresource>
 </RCC>

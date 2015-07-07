@@ -37,46 +37,44 @@ public:
     QAction *actionLoad;
     QAction *actionCandidates;
     QAction *actionTest;
-    QAction *actionOpen;
     QAction *actionSet;
     QAction *actionSave;
     QAction *actionConfirm;
+    QAction *actionDelete;
+    QAction *actionResume;
+    QAction *actionReverse;
+    QAction *actionGroup;
+    QAction *actionUngroup;
+    QAction *actionItpl;
     QWidget *centralWidget;
     QGridLayout *gridLayout_2;
-    QHBoxLayout *horizontalLayout_5;
-    QLabel *bgLabel_3;
-    QHBoxLayout *horizontalLayout_6;
-    QLabel *bgLabel_4;
-    QFrame *line;
-    QFrame *line_2;
     QHBoxLayout *horizontalLayout_2;
-    QPushButton *okButton;
-    QPushButton *cancelButton;
+    QLabel *bgLabel_3;
+    QHBoxLayout *horizontalLayout_3;
+    QLabel *bgLabel_4;
+    QFrame *line_1;
+    QVBoxLayout *vLayout_2;
+    QLabel *bgLabel_2;
     QHBoxLayout *horizontalLayout_1;
+    QPushButton *cutButton;
     QPushButton *playButton1;
     QPushButton *pauseButton1;
     QPushButton *stopButton1;
     QGridLayout *gridLayout;
     QSlider *timeLineSlider;
-    QHBoxLayout *horizontalLayout_3;
     QCheckBox *editCheckBox;
-    QPushButton *confirmButton;
-    QPushButton *deleteButton;
-    QPushButton *resumeButton;
-    QPushButton *reverseButton;
-    QPushButton *groupButton;
-    QPushButton *ungroupButton;
+    QPushButton *okButton;
+    QPushButton *cancelButton;
+    QFrame *line_2;
     QVBoxLayout *vLayout_1;
     QLabel *bgLabel_1;
-    QVBoxLayout *vLayout_2;
-    QLabel *bgLabel_2;
-    QPushButton *cutButton;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuEdit;
     QMenu *menuSettings;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
+    QToolBar *toolBar;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -90,15 +88,13 @@ public:
         MainWindow->setSizePolicy(sizePolicy);
         actionLoad = new QAction(MainWindow);
         actionLoad->setObjectName(QStringLiteral("actionLoad"));
+        QIcon icon;
+        icon.addFile(QStringLiteral(":/Images/icons/load.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionLoad->setIcon(icon);
         actionCandidates = new QAction(MainWindow);
         actionCandidates->setObjectName(QStringLiteral("actionCandidates"));
         actionTest = new QAction(MainWindow);
         actionTest->setObjectName(QStringLiteral("actionTest"));
-        actionOpen = new QAction(MainWindow);
-        actionOpen->setObjectName(QStringLiteral("actionOpen"));
-        QIcon icon;
-        icon.addFile(QStringLiteral(":/Images/load.png"), QSize(), QIcon::Normal, QIcon::Off);
-        actionOpen->setIcon(icon);
         actionSet = new QAction(MainWindow);
         actionSet->setObjectName(QStringLiteral("actionSet"));
         QIcon icon1;
@@ -106,86 +102,118 @@ public:
         actionSet->setIcon(icon1);
         actionSave = new QAction(MainWindow);
         actionSave->setObjectName(QStringLiteral("actionSave"));
+        QIcon icon2;
+        icon2.addFile(QStringLiteral(":/Images/icons/save.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionSave->setIcon(icon2);
         actionConfirm = new QAction(MainWindow);
         actionConfirm->setObjectName(QStringLiteral("actionConfirm"));
-        QIcon icon2;
-        icon2.addFile(QStringLiteral(":/Images/icons/tick.ico"), QSize(), QIcon::Normal, QIcon::Off);
-        actionConfirm->setIcon(icon2);
+        QIcon icon3;
+        icon3.addFile(QStringLiteral(":/Images/icons/tick_32.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionConfirm->setIcon(icon3);
+        actionDelete = new QAction(MainWindow);
+        actionDelete->setObjectName(QStringLiteral("actionDelete"));
+        QIcon icon4;
+        icon4.addFile(QStringLiteral(":/Images/icons/delete_32.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionDelete->setIcon(icon4);
+        actionResume = new QAction(MainWindow);
+        actionResume->setObjectName(QStringLiteral("actionResume"));
+        QIcon icon5;
+        icon5.addFile(QStringLiteral(":/Images/icons/resume_32.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionResume->setIcon(icon5);
+        actionReverse = new QAction(MainWindow);
+        actionReverse->setObjectName(QStringLiteral("actionReverse"));
+        QIcon icon6;
+        icon6.addFile(QStringLiteral(":/Images/icons/reverse_32.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionReverse->setIcon(icon6);
+        actionGroup = new QAction(MainWindow);
+        actionGroup->setObjectName(QStringLiteral("actionGroup"));
+        QIcon icon7;
+        icon7.addFile(QStringLiteral(":/Images/icons/group_48.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionGroup->setIcon(icon7);
+        actionUngroup = new QAction(MainWindow);
+        actionUngroup->setObjectName(QStringLiteral("actionUngroup"));
+        QIcon icon8;
+        icon8.addFile(QStringLiteral(":/Images/icons/ungroup_48.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionUngroup->setIcon(icon8);
+        actionItpl = new QAction(MainWindow);
+        actionItpl->setObjectName(QStringLiteral("actionItpl"));
+        QIcon icon9;
+        icon9.addFile(QStringLiteral(":/Images/icons/interpolation_48.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionItpl->setIcon(icon9);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout_2 = new QGridLayout(centralWidget);
         gridLayout_2->setSpacing(6);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);
         gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
-        horizontalLayout_5 = new QHBoxLayout();
-        horizontalLayout_5->setSpacing(6);
-        horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
         bgLabel_3 = new QLabel(centralWidget);
         bgLabel_3->setObjectName(QStringLiteral("bgLabel_3"));
         bgLabel_3->setStyleSheet(QStringLiteral("background-color: rgb(229, 229, 229);"));
 
-        horizontalLayout_5->addWidget(bgLabel_3);
+        horizontalLayout_2->addWidget(bgLabel_3);
 
 
-        gridLayout_2->addLayout(horizontalLayout_5, 12, 1, 1, 13);
+        gridLayout_2->addLayout(horizontalLayout_2, 12, 1, 1, 13);
 
-        horizontalLayout_6 = new QHBoxLayout();
-        horizontalLayout_6->setSpacing(6);
-        horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setSpacing(6);
+        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
         bgLabel_4 = new QLabel(centralWidget);
         bgLabel_4->setObjectName(QStringLiteral("bgLabel_4"));
         bgLabel_4->setStyleSheet(QStringLiteral("background-color: rgb(210, 210, 210);"));
 
-        horizontalLayout_6->addWidget(bgLabel_4);
+        horizontalLayout_3->addWidget(bgLabel_4);
 
 
-        gridLayout_2->addLayout(horizontalLayout_6, 13, 1, 1, 13);
+        gridLayout_2->addLayout(horizontalLayout_3, 13, 1, 1, 13);
 
-        line = new QFrame(centralWidget);
-        line->setObjectName(QStringLiteral("line"));
-        line->setFrameShape(QFrame::HLine);
-        line->setFrameShadow(QFrame::Sunken);
+        line_1 = new QFrame(centralWidget);
+        line_1->setObjectName(QStringLiteral("line_1"));
+        line_1->setFrameShape(QFrame::HLine);
+        line_1->setFrameShadow(QFrame::Sunken);
 
-        gridLayout_2->addWidget(line, 8, 1, 1, 13);
+        gridLayout_2->addWidget(line_1, 8, 1, 1, 13);
 
-        line_2 = new QFrame(centralWidget);
-        line_2->setObjectName(QStringLiteral("line_2"));
-        line_2->setFrameShape(QFrame::VLine);
-        line_2->setFrameShadow(QFrame::Sunken);
+        vLayout_2 = new QVBoxLayout();
+        vLayout_2->setSpacing(6);
+        vLayout_2->setObjectName(QStringLiteral("vLayout_2"));
+        bgLabel_2 = new QLabel(centralWidget);
+        bgLabel_2->setObjectName(QStringLiteral("bgLabel_2"));
+        bgLabel_2->setStyleSheet(QStringLiteral("background-color: rgb(159, 159, 159);"));
 
-        gridLayout_2->addWidget(line_2, 0, 7, 2, 1);
-
-        horizontalLayout_2 = new QHBoxLayout();
-        horizontalLayout_2->setSpacing(6);
-        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
-        okButton = new QPushButton(centralWidget);
-        okButton->setObjectName(QStringLiteral("okButton"));
-        QSizePolicy sizePolicy1(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(okButton->sizePolicy().hasHeightForWidth());
-        okButton->setSizePolicy(sizePolicy1);
-        okButton->setStyleSheet(QStringLiteral(""));
-
-        horizontalLayout_2->addWidget(okButton);
-
-        cancelButton = new QPushButton(centralWidget);
-        cancelButton->setObjectName(QStringLiteral("cancelButton"));
-        sizePolicy1.setHeightForWidth(cancelButton->sizePolicy().hasHeightForWidth());
-        cancelButton->setSizePolicy(sizePolicy1);
-
-        horizontalLayout_2->addWidget(cancelButton);
+        vLayout_2->addWidget(bgLabel_2);
 
 
-        gridLayout_2->addLayout(horizontalLayout_2, 5, 8, 1, 1);
+        gridLayout_2->addLayout(vLayout_2, 0, 8, 2, 6);
 
         horizontalLayout_1 = new QHBoxLayout();
         horizontalLayout_1->setSpacing(6);
         horizontalLayout_1->setObjectName(QStringLiteral("horizontalLayout_1"));
+        cutButton = new QPushButton(centralWidget);
+        cutButton->setObjectName(QStringLiteral("cutButton"));
+        QSizePolicy sizePolicy1(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(cutButton->sizePolicy().hasHeightForWidth());
+        cutButton->setSizePolicy(sizePolicy1);
+        QIcon icon10;
+        icon10.addFile(QStringLiteral(":/Images/icons/cut_32.png"), QSize(), QIcon::Normal, QIcon::Off);
+        cutButton->setIcon(icon10);
+        cutButton->setIconSize(QSize(20, 20));
+
+        horizontalLayout_1->addWidget(cutButton);
+
         playButton1 = new QPushButton(centralWidget);
         playButton1->setObjectName(QStringLiteral("playButton1"));
         sizePolicy1.setHeightForWidth(playButton1->sizePolicy().hasHeightForWidth());
         playButton1->setSizePolicy(sizePolicy1);
+        QIcon icon11;
+        icon11.addFile(QStringLiteral(":/Images/icons/play_24.png"), QSize(), QIcon::Normal, QIcon::Off);
+        playButton1->setIcon(icon11);
+        playButton1->setIconSize(QSize(20, 20));
 
         horizontalLayout_1->addWidget(playButton1);
 
@@ -193,6 +221,10 @@ public:
         pauseButton1->setObjectName(QStringLiteral("pauseButton1"));
         sizePolicy1.setHeightForWidth(pauseButton1->sizePolicy().hasHeightForWidth());
         pauseButton1->setSizePolicy(sizePolicy1);
+        QIcon icon12;
+        icon12.addFile(QStringLiteral(":/Images/icons/pause_24.png"), QSize(), QIcon::Normal, QIcon::Off);
+        pauseButton1->setIcon(icon12);
+        pauseButton1->setIconSize(QSize(20, 20));
 
         horizontalLayout_1->addWidget(pauseButton1);
 
@@ -200,6 +232,10 @@ public:
         stopButton1->setObjectName(QStringLiteral("stopButton1"));
         sizePolicy1.setHeightForWidth(stopButton1->sizePolicy().hasHeightForWidth());
         stopButton1->setSizePolicy(sizePolicy1);
+        QIcon icon13;
+        icon13.addFile(QStringLiteral(":/Images/icons/stop_24.png"), QSize(), QIcon::Normal, QIcon::Off);
+        stopButton1->setIcon(icon13);
+        stopButton1->setIconSize(QSize(20, 20));
 
         horizontalLayout_1->addWidget(stopButton1);
 
@@ -215,65 +251,46 @@ public:
 
         gridLayout->addWidget(timeLineSlider, 1, 0, 1, 1);
 
-        horizontalLayout_3 = new QHBoxLayout();
-        horizontalLayout_3->setSpacing(6);
-        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
+
+        gridLayout_2->addLayout(gridLayout, 11, 1, 1, 13);
+
         editCheckBox = new QCheckBox(centralWidget);
         editCheckBox->setObjectName(QStringLiteral("editCheckBox"));
         sizePolicy1.setHeightForWidth(editCheckBox->sizePolicy().hasHeightForWidth());
         editCheckBox->setSizePolicy(sizePolicy1);
         editCheckBox->setStyleSheet(QStringLiteral("font: 75 12pt \"Times New Roman\";"));
 
-        horizontalLayout_3->addWidget(editCheckBox);
+        gridLayout_2->addWidget(editCheckBox, 10, 1, 1, 1);
 
-        confirmButton = new QPushButton(centralWidget);
-        confirmButton->setObjectName(QStringLiteral("confirmButton"));
-        sizePolicy1.setHeightForWidth(confirmButton->sizePolicy().hasHeightForWidth());
-        confirmButton->setSizePolicy(sizePolicy1);
-        confirmButton->setStyleSheet(QStringLiteral(""));
+        okButton = new QPushButton(centralWidget);
+        okButton->setObjectName(QStringLiteral("okButton"));
+        sizePolicy1.setHeightForWidth(okButton->sizePolicy().hasHeightForWidth());
+        okButton->setSizePolicy(sizePolicy1);
+        okButton->setStyleSheet(QStringLiteral(""));
+        QIcon icon14;
+        icon14.addFile(QStringLiteral(":/Images/icons/tick.png"), QSize(), QIcon::Normal, QIcon::Off);
+        okButton->setIcon(icon14);
+        okButton->setIconSize(QSize(20, 20));
 
-        horizontalLayout_3->addWidget(confirmButton);
+        gridLayout_2->addWidget(okButton, 5, 8, 1, 1);
 
-        deleteButton = new QPushButton(centralWidget);
-        deleteButton->setObjectName(QStringLiteral("deleteButton"));
-        sizePolicy1.setHeightForWidth(deleteButton->sizePolicy().hasHeightForWidth());
-        deleteButton->setSizePolicy(sizePolicy1);
+        cancelButton = new QPushButton(centralWidget);
+        cancelButton->setObjectName(QStringLiteral("cancelButton"));
+        sizePolicy1.setHeightForWidth(cancelButton->sizePolicy().hasHeightForWidth());
+        cancelButton->setSizePolicy(sizePolicy1);
+        QIcon icon15;
+        icon15.addFile(QStringLiteral(":/Images/icons/cancel.png"), QSize(), QIcon::Normal, QIcon::Off);
+        cancelButton->setIcon(icon15);
+        cancelButton->setIconSize(QSize(20, 20));
 
-        horizontalLayout_3->addWidget(deleteButton);
+        gridLayout_2->addWidget(cancelButton, 5, 9, 1, 1);
 
-        resumeButton = new QPushButton(centralWidget);
-        resumeButton->setObjectName(QStringLiteral("resumeButton"));
-        sizePolicy1.setHeightForWidth(resumeButton->sizePolicy().hasHeightForWidth());
-        resumeButton->setSizePolicy(sizePolicy1);
+        line_2 = new QFrame(centralWidget);
+        line_2->setObjectName(QStringLiteral("line_2"));
+        line_2->setFrameShape(QFrame::VLine);
+        line_2->setFrameShadow(QFrame::Sunken);
 
-        horizontalLayout_3->addWidget(resumeButton);
-
-        reverseButton = new QPushButton(centralWidget);
-        reverseButton->setObjectName(QStringLiteral("reverseButton"));
-        sizePolicy1.setHeightForWidth(reverseButton->sizePolicy().hasHeightForWidth());
-        reverseButton->setSizePolicy(sizePolicy1);
-
-        horizontalLayout_3->addWidget(reverseButton);
-
-        groupButton = new QPushButton(centralWidget);
-        groupButton->setObjectName(QStringLiteral("groupButton"));
-        sizePolicy1.setHeightForWidth(groupButton->sizePolicy().hasHeightForWidth());
-        groupButton->setSizePolicy(sizePolicy1);
-
-        horizontalLayout_3->addWidget(groupButton);
-
-        ungroupButton = new QPushButton(centralWidget);
-        ungroupButton->setObjectName(QStringLiteral("ungroupButton"));
-        sizePolicy1.setHeightForWidth(ungroupButton->sizePolicy().hasHeightForWidth());
-        ungroupButton->setSizePolicy(sizePolicy1);
-
-        horizontalLayout_3->addWidget(ungroupButton);
-
-
-        gridLayout->addLayout(horizontalLayout_3, 0, 0, 1, 1);
-
-
-        gridLayout_2->addLayout(gridLayout, 11, 1, 1, 13);
+        gridLayout_2->addWidget(line_2, 0, 7, 2, 1);
 
         vLayout_1 = new QVBoxLayout();
         vLayout_1->setSpacing(0);
@@ -289,25 +306,6 @@ public:
 
         gridLayout_2->addLayout(vLayout_1, 0, 1, 2, 6);
 
-        vLayout_2 = new QVBoxLayout();
-        vLayout_2->setSpacing(6);
-        vLayout_2->setObjectName(QStringLiteral("vLayout_2"));
-        bgLabel_2 = new QLabel(centralWidget);
-        bgLabel_2->setObjectName(QStringLiteral("bgLabel_2"));
-        bgLabel_2->setStyleSheet(QStringLiteral("background-color: rgb(159, 159, 159);"));
-
-        vLayout_2->addWidget(bgLabel_2);
-
-
-        gridLayout_2->addLayout(vLayout_2, 0, 8, 2, 6);
-
-        cutButton = new QPushButton(centralWidget);
-        cutButton->setObjectName(QStringLiteral("cutButton"));
-        sizePolicy1.setHeightForWidth(cutButton->sizePolicy().hasHeightForWidth());
-        cutButton->setSizePolicy(sizePolicy1);
-
-        gridLayout_2->addWidget(cutButton, 5, 2, 1, 1);
-
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -321,11 +319,19 @@ public:
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
-        MainWindow->addToolBar(Qt::TopToolBarArea, mainToolBar);
+        mainToolBar->setMovable(false);
+        mainToolBar->setIconSize(QSize(32, 32));
+        MainWindow->addToolBar(Qt::BottomToolBarArea, mainToolBar);
         MainWindow->insertToolBarBreak(mainToolBar);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         MainWindow->setStatusBar(statusBar);
+        toolBar = new QToolBar(MainWindow);
+        toolBar->setObjectName(QStringLiteral("toolBar"));
+        toolBar->setMovable(false);
+        toolBar->setIconSize(QSize(32, 32));
+        MainWindow->addToolBar(Qt::RightToolBarArea, toolBar);
+        MainWindow->insertToolBarBreak(toolBar);
 
         menuBar->addAction(menuFile->menuAction());
         menuBar->addAction(menuEdit->menuAction());
@@ -334,7 +340,24 @@ public:
         menuFile->addAction(actionSave);
         menuEdit->addAction(actionCandidates);
         menuEdit->addAction(actionTest);
-        mainToolBar->addAction(actionSet);
+        mainToolBar->addAction(actionConfirm);
+        mainToolBar->addSeparator();
+        mainToolBar->addAction(actionDelete);
+        mainToolBar->addSeparator();
+        mainToolBar->addAction(actionResume);
+        mainToolBar->addSeparator();
+        mainToolBar->addAction(actionReverse);
+        mainToolBar->addSeparator();
+        mainToolBar->addAction(actionGroup);
+        mainToolBar->addSeparator();
+        mainToolBar->addAction(actionUngroup);
+        mainToolBar->addSeparator();
+        mainToolBar->addAction(actionItpl);
+        toolBar->addAction(actionLoad);
+        toolBar->addSeparator();
+        toolBar->addAction(actionSave);
+        toolBar->addSeparator();
+        toolBar->addAction(actionSet);
 
         retranslateUi(MainWindow);
 
@@ -347,40 +370,57 @@ public:
         actionLoad->setText(QApplication::translate("MainWindow", "Load", 0));
         actionCandidates->setText(QApplication::translate("MainWindow", "Get Candidates", 0));
         actionTest->setText(QApplication::translate("MainWindow", "Test", 0));
-        actionOpen->setText(QApplication::translate("MainWindow", "Open", 0));
-#ifndef QT_NO_TOOLTIP
-        actionOpen->setToolTip(QApplication::translate("MainWindow", "Open File", 0));
-#endif // QT_NO_TOOLTIP
-        actionOpen->setShortcut(QApplication::translate("MainWindow", "Ctrl+O", 0));
         actionSet->setText(QApplication::translate("MainWindow", "Set", 0));
 #ifndef QT_NO_TOOLTIP
         actionSet->setToolTip(QApplication::translate("MainWindow", "Settings", 0));
 #endif // QT_NO_TOOLTIP
-        actionSave->setText(QApplication::translate("MainWindow", "save", 0));
+        actionSave->setText(QApplication::translate("MainWindow", "Save", 0));
+#ifndef QT_NO_TOOLTIP
+        actionSave->setToolTip(QApplication::translate("MainWindow", "Save", 0));
+#endif // QT_NO_TOOLTIP
         actionConfirm->setText(QApplication::translate("MainWindow", "Confirm", 0));
 #ifndef QT_NO_TOOLTIP
         actionConfirm->setToolTip(QApplication::translate("MainWindow", "Confirm", 0));
 #endif // QT_NO_TOOLTIP
+        actionDelete->setText(QApplication::translate("MainWindow", "Delete", 0));
+#ifndef QT_NO_TOOLTIP
+        actionDelete->setToolTip(QApplication::translate("MainWindow", "Delete", 0));
+#endif // QT_NO_TOOLTIP
+        actionResume->setText(QApplication::translate("MainWindow", "Resume", 0));
+#ifndef QT_NO_TOOLTIP
+        actionResume->setToolTip(QApplication::translate("MainWindow", "Resume", 0));
+#endif // QT_NO_TOOLTIP
+        actionReverse->setText(QApplication::translate("MainWindow", "Reverse", 0));
+#ifndef QT_NO_TOOLTIP
+        actionReverse->setToolTip(QApplication::translate("MainWindow", "Reverse", 0));
+#endif // QT_NO_TOOLTIP
+        actionGroup->setText(QApplication::translate("MainWindow", "Group", 0));
+#ifndef QT_NO_TOOLTIP
+        actionGroup->setToolTip(QApplication::translate("MainWindow", "Group", 0));
+#endif // QT_NO_TOOLTIP
+        actionUngroup->setText(QApplication::translate("MainWindow", "Ungroup", 0));
+#ifndef QT_NO_TOOLTIP
+        actionUngroup->setToolTip(QApplication::translate("MainWindow", "Un-group", 0));
+#endif // QT_NO_TOOLTIP
+        actionItpl->setText(QApplication::translate("MainWindow", "Itpl", 0));
+#ifndef QT_NO_TOOLTIP
+        actionItpl->setToolTip(QApplication::translate("MainWindow", "Interpolate", 0));
+#endif // QT_NO_TOOLTIP
         bgLabel_3->setText(QString());
         bgLabel_4->setText(QString());
-        okButton->setText(QApplication::translate("MainWindow", "OK", 0));
-        cancelButton->setText(QApplication::translate("MainWindow", "Cancel", 0));
-        playButton1->setText(QApplication::translate("MainWindow", "Play", 0));
-        pauseButton1->setText(QApplication::translate("MainWindow", "Pause", 0));
-        stopButton1->setText(QApplication::translate("MainWindow", "Stop", 0));
-        editCheckBox->setText(QApplication::translate("MainWindow", "Edit Mode", 0));
-        confirmButton->setText(QApplication::translate("MainWindow", "Confirm", 0));
-        deleteButton->setText(QApplication::translate("MainWindow", "Delete", 0));
-        resumeButton->setText(QApplication::translate("MainWindow", "Resume", 0));
-        reverseButton->setText(QApplication::translate("MainWindow", "Reverse", 0));
-        groupButton->setText(QApplication::translate("MainWindow", "Group", 0));
-        ungroupButton->setText(QApplication::translate("MainWindow", "Un-group", 0));
-        bgLabel_1->setText(QString());
         bgLabel_2->setText(QString());
-        cutButton->setText(QApplication::translate("MainWindow", "Cut", 0));
+        cutButton->setText(QString());
+        playButton1->setText(QString());
+        pauseButton1->setText(QString());
+        stopButton1->setText(QString());
+        editCheckBox->setText(QApplication::translate("MainWindow", "Edit Mode", 0));
+        okButton->setText(QString());
+        cancelButton->setText(QString());
+        bgLabel_1->setText(QString());
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
         menuEdit->setTitle(QApplication::translate("MainWindow", "Edit", 0));
         menuSettings->setTitle(QApplication::translate("MainWindow", "Settings", 0));
+        toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", 0));
     } // retranslateUi
 
 };
