@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="/Images">
+    <file>icons/zoom-in.png</file>
+    <file>icons/zoom-out.png</file>
     <file>icons/load.png</file>
     <file>icons/save.png</file>
     <file>icons/settings.png</file>

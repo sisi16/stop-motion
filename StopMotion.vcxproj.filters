@@ -47,6 +47,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cliplabel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="handdetection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -67,6 +70,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <CustomBuild Include="cliplabel.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
     <ClInclude Include="handdetection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -84,6 +90,12 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="debug\moc_cliplabel.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="release\moc_cliplabel.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
     <ClCompile Include="debug\moc_mainwindow.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
@@ -106,37 +118,61 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <None Include="icons\confirm.png">
+    <None Include="icons\cancel.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="icons\load_16.png">
+    <None Include="icons\cut_32.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="icons\load_24.png">
+    <None Include="icons\delete_32.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="icons\load_512.png">
+    <None Include="icons\group_48.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\interpolation_48.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\load.png">
       <Filter>Resource Files</Filter>
     </None>
     <CustomBuild Include="myres.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
+    <None Include="icons\pause_24.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\play_24.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\resume_32.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\reverse_32.png">
+      <Filter>Resource Files</Filter>
+    </None>
     <None Include="icons\save.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="icons\settings.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="icons\tick.ico">
+    <None Include="icons\stop_24.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="icons\tick.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="icons\tick_16.png">
+    <None Include="icons\tick_32.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="icons\tick_32.png">
+    <None Include="icons\ungroup_48.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\zoom-in.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\zoom-out.png">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

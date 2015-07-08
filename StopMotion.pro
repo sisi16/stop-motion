@@ -20,13 +20,15 @@ SOURCES += main.cpp\
            videoprocessor.cpp \
            opflow.cpp \
            handdetection.cpp \
-           myslider.cpp
+           myslider.cpp \
+           cliplabel.cpp
 
 HEADERS  += mainwindow.h \
             videoprocessor.h \
             opflow.h \
             handdetection.h \
-            myslider.h
+            myslider.h \
+            cliplabel.h
 
 FORMS    += mainwindow.ui
 

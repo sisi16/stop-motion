@@ -12,11 +12,35 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     isCut = false;
+    resize_count = -1;
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::resizeEvent(QResizeEvent* ev)
+{
+	QMainWindow::resizeEvent(ev);
+    resize_count++;
+    //cv::Mat temp;
+    //cv::cvtColor(vproc.getFrames().at(0), temp, CV_BGR2RGB);
+    //QImage image((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+    //image.bits();
+
+    if (resize_count > 0)
+    {
+        cout << preview_1->width() << " " << preview_1->height() << endl;
+        //int height = preview_1->height();
+        //int width = floor(height * 640 / 480.0);
+        //preview_1->setFixedSize(width, height);
+    }
+    //int height = preview_1->height();
+    //int width = floor(height * image.width() / double(image.height()));
+    //preview_1->setPixmap(QPixmap::fromImage(image));
+    //preview_1->pixmap()->size().scale(size(), Qt::IgnoreAspectRatio);
+    //preview_1->setFixedSize(width, height);*/
 }
 
 void MainWindow::on_playButton1_clicked()
@@ -131,9 +155,14 @@ void MainWindow::on_actionLoad_triggered()
     QImage image((const uchar *) temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
     image.bits();
 
-    preview_1->setPixmap(QPixmap::fromImage(image));
-    preview_1->pixmap()->size().scale(size(), Qt::IgnoreAspectRatio);
-    preview_1->setFixedSize(460, 345);
+	int height = ui->bgLabel_1->height();
+    int width = height * image.width() / double(image.height());
+
+    QPixmap pm = QPixmap::fromImage(image);
+    //preview_1->setPixmap(pm.scaled(width, height, Qt::KeepAspectRatio));
+    //preview_1->setPixmap(QPixmap::fromImage(image));
+    //preview_1->pixmap()->size().scale(size(), Qt::IgnoreAspectRatio);
+    //preview_1->setFixedSize(width, height);
 
     QLayoutItem *child;
     if ((child = ui->vLayout_1->takeAt(0)) != 0)  {
@@ -142,7 +171,8 @@ void MainWindow::on_actionLoad_triggered()
         delete child;
     }
 
-    ui->vLayout_1->addWidget(preview_1);
+    ui->vLayout_1->addWidget(preview_1, Qt::AlignCenter);
+    preview_1->setPixmap(pm.scaled(width, height, Qt::IgnoreAspectRatio));
 }
 
 void MainWindow::on_actionCandidates_triggered()
@@ -190,9 +220,26 @@ void MainWindow::on_actionCandidates_triggered()
 
 void MainWindow::on_actionTest_triggered()
 {
-    frame_slider->setMouseTracking(true);
-    frame_slider->setCursor(Qt::PointingHandCursor);
-    frame_slider->installEventFilter(this);
+    cliplabel *clip_0 = new cliplabel();
+    clip_0->setScaledContents(true);
+    //preview_1->setFixedSize(0, 0);
+
+    cv::Mat temp;
+    cv::cvtColor(vproc.getFrames().at(0), temp, CV_BGR2RGB);
+    QImage image((const uchar *) temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+    image.bits();
+
+    clip_0->setPixmap(QPixmap::fromImage(image));
+    clip_0->pixmap()->size().scale(size(), Qt::IgnoreAspectRatio);
+
+    int length = ui->bgLabel_3->height();
+    clip_0->setFixedSize(length, length);
+
+    ui->horizontalLayout_2->addWidget(clip_0);
+    this->setAcceptDrops(true);
+    clip_0->setMouseTracking(true);
+    clip_0->getMovingParent(this);
+    clip_0->getMovingPixmap(QPixmap::fromImage(image));
 }
 
 bool MainWindow::eventFilter(QObject *widget, QEvent *event)

@@ -21,7 +21,7 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="12" column="1" colspan="13">
+    <item row="12" column="1" colspan="14">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="QLabel" name="bgLabel_3">
@@ -35,7 +35,7 @@
       </item>
      </layout>
     </item>
-    <item row="13" column="1" colspan="13">
+    <item row="13" column="1" colspan="14">
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
        <widget class="QLabel" name="bgLabel_4">
@@ -49,26 +49,12 @@
       </item>
      </layout>
     </item>
-    <item row="8" column="1" colspan="13">
+    <item row="8" column="1" colspan="14">
      <widget class="Line" name="line_1">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
      </widget>
-    </item>
-    <item row="0" column="8" rowspan="2" colspan="6">
-     <layout class="QVBoxLayout" name="vLayout_2">
-      <item>
-       <widget class="QLabel" name="bgLabel_2">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(159, 159, 159);</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </item>
     <item row="5" column="1">
      <layout class="QHBoxLayout" name="horizontalLayout_1">
@@ -166,7 +152,7 @@
       </item>
      </layout>
     </item>
-    <item row="11" column="1" colspan="13">
+    <item row="11" column="1" colspan="14">
      <layout class="QGridLayout" name="gridLayout">
       <item row="1" column="0">
        <widget class="QSlider" name="timeLineSlider">
@@ -190,6 +176,27 @@
       </property>
       <property name="text">
        <string>Edit Mode</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="8" rowspan="2" colspan="7">
+     <layout class="QVBoxLayout" name="vLayout_2">
+      <item>
+       <widget class="QLabel" name="bgLabel_2">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(159, 159, 159);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="0" column="7" rowspan="2">
+     <widget class="Line" name="line_2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
       </property>
      </widget>
     </item>
@@ -219,36 +226,6 @@
       </property>
      </widget>
     </item>
-    <item row="5" column="9">
-     <widget class="QPushButton" name="cancelButton">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="icon">
-       <iconset resource="myres.qrc">
-        <normaloff>:/Images/icons/cancel.png</normaloff>:/Images/icons/cancel.png</iconset>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>20</width>
-        <height>20</height>
-       </size>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="7" rowspan="2">
-     <widget class="Line" name="line_2">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="1" rowspan="2" colspan="6">
      <layout class="QVBoxLayout" name="vLayout_1">
       <property name="spacing">
@@ -271,6 +248,29 @@
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="5" column="9">
+     <widget class="QPushButton" name="cancelButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="myres.qrc">
+        <normaloff>:/Images/icons/cancel.png</normaloff>:/Images/icons/cancel.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>20</width>
+        <height>20</height>
+       </size>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -320,7 +320,7 @@
     <enum>BottomToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
    <addaction name="actionConfirm"/>
    <addaction name="separator"/>
@@ -335,6 +335,10 @@
    <addaction name="actionUngroup"/>
    <addaction name="separator"/>
    <addaction name="actionItpl"/>
+   <addaction name="separator"/>
+   <addaction name="actionZoomIn"/>
+   <addaction name="separator"/>
+   <addaction name="actionZoomOut"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="toolBar">
@@ -354,7 +358,7 @@
     <enum>RightToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
    <addaction name="actionLoad"/>
    <addaction name="separator"/>
@@ -487,6 +491,30 @@
    </property>
    <property name="toolTip">
     <string>Interpolate</string>
+   </property>
+  </action>
+  <action name="actionZoomIn">
+   <property name="icon">
+    <iconset resource="myres.qrc">
+     <normaloff>:/Images/icons/zoom-in.png</normaloff>:/Images/icons/zoom-in.png</iconset>
+   </property>
+   <property name="text">
+    <string>ZoomIn</string>
+   </property>
+   <property name="toolTip">
+    <string>Zoom in</string>
+   </property>
+  </action>
+  <action name="actionZoomOut">
+   <property name="icon">
+    <iconset resource="myres.qrc">
+     <normaloff>:/Images/icons/zoom-out.png</normaloff>:/Images/icons/zoom-out.png</iconset>
+   </property>
+   <property name="text">
+    <string>ZoomOut</string>
+   </property>
+   <property name="toolTip">
+    <string>Zoom out</string>
    </property>
   </action>
  </widget>

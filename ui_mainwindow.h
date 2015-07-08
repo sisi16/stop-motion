@@ -46,6 +46,8 @@ public:
     QAction *actionGroup;
     QAction *actionUngroup;
     QAction *actionItpl;
+    QAction *actionZoomIn;
+    QAction *actionZoomOut;
     QWidget *centralWidget;
     QGridLayout *gridLayout_2;
     QHBoxLayout *horizontalLayout_2;
@@ -53,8 +55,6 @@ public:
     QHBoxLayout *horizontalLayout_3;
     QLabel *bgLabel_4;
     QFrame *line_1;
-    QVBoxLayout *vLayout_2;
-    QLabel *bgLabel_2;
     QHBoxLayout *horizontalLayout_1;
     QPushButton *cutButton;
     QPushButton *playButton1;
@@ -63,11 +63,13 @@ public:
     QGridLayout *gridLayout;
     QSlider *timeLineSlider;
     QCheckBox *editCheckBox;
-    QPushButton *okButton;
-    QPushButton *cancelButton;
+    QVBoxLayout *vLayout_2;
+    QLabel *bgLabel_2;
     QFrame *line_2;
+    QPushButton *okButton;
     QVBoxLayout *vLayout_1;
     QLabel *bgLabel_1;
+    QPushButton *cancelButton;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuEdit;
@@ -140,6 +142,16 @@ public:
         QIcon icon9;
         icon9.addFile(QStringLiteral(":/Images/icons/interpolation_48.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionItpl->setIcon(icon9);
+        actionZoomIn = new QAction(MainWindow);
+        actionZoomIn->setObjectName(QStringLiteral("actionZoomIn"));
+        QIcon icon10;
+        icon10.addFile(QStringLiteral(":/Images/icons/zoom-in.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionZoomIn->setIcon(icon10);
+        actionZoomOut = new QAction(MainWindow);
+        actionZoomOut->setObjectName(QStringLiteral("actionZoomOut"));
+        QIcon icon11;
+        icon11.addFile(QStringLiteral(":/Images/icons/zoom-out.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionZoomOut->setIcon(icon11);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout_2 = new QGridLayout(centralWidget);
@@ -156,7 +168,7 @@ public:
         horizontalLayout_2->addWidget(bgLabel_3);
 
 
-        gridLayout_2->addLayout(horizontalLayout_2, 12, 1, 1, 13);
+        gridLayout_2->addLayout(horizontalLayout_2, 12, 1, 1, 14);
 
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setSpacing(6);
@@ -168,26 +180,14 @@ public:
         horizontalLayout_3->addWidget(bgLabel_4);
 
 
-        gridLayout_2->addLayout(horizontalLayout_3, 13, 1, 1, 13);
+        gridLayout_2->addLayout(horizontalLayout_3, 13, 1, 1, 14);
 
         line_1 = new QFrame(centralWidget);
         line_1->setObjectName(QStringLiteral("line_1"));
         line_1->setFrameShape(QFrame::HLine);
         line_1->setFrameShadow(QFrame::Sunken);
 
-        gridLayout_2->addWidget(line_1, 8, 1, 1, 13);
-
-        vLayout_2 = new QVBoxLayout();
-        vLayout_2->setSpacing(6);
-        vLayout_2->setObjectName(QStringLiteral("vLayout_2"));
-        bgLabel_2 = new QLabel(centralWidget);
-        bgLabel_2->setObjectName(QStringLiteral("bgLabel_2"));
-        bgLabel_2->setStyleSheet(QStringLiteral("background-color: rgb(159, 159, 159);"));
-
-        vLayout_2->addWidget(bgLabel_2);
-
-
-        gridLayout_2->addLayout(vLayout_2, 0, 8, 2, 6);
+        gridLayout_2->addWidget(line_1, 8, 1, 1, 14);
 
         horizontalLayout_1 = new QHBoxLayout();
         horizontalLayout_1->setSpacing(6);
@@ -199,9 +199,9 @@ public:
         sizePolicy1.setVerticalStretch(0);
         sizePolicy1.setHeightForWidth(cutButton->sizePolicy().hasHeightForWidth());
         cutButton->setSizePolicy(sizePolicy1);
-        QIcon icon10;
-        icon10.addFile(QStringLiteral(":/Images/icons/cut_32.png"), QSize(), QIcon::Normal, QIcon::Off);
-        cutButton->setIcon(icon10);
+        QIcon icon12;
+        icon12.addFile(QStringLiteral(":/Images/icons/cut_32.png"), QSize(), QIcon::Normal, QIcon::Off);
+        cutButton->setIcon(icon12);
         cutButton->setIconSize(QSize(20, 20));
 
         horizontalLayout_1->addWidget(cutButton);
@@ -210,9 +210,9 @@ public:
         playButton1->setObjectName(QStringLiteral("playButton1"));
         sizePolicy1.setHeightForWidth(playButton1->sizePolicy().hasHeightForWidth());
         playButton1->setSizePolicy(sizePolicy1);
-        QIcon icon11;
-        icon11.addFile(QStringLiteral(":/Images/icons/play_24.png"), QSize(), QIcon::Normal, QIcon::Off);
-        playButton1->setIcon(icon11);
+        QIcon icon13;
+        icon13.addFile(QStringLiteral(":/Images/icons/play_24.png"), QSize(), QIcon::Normal, QIcon::Off);
+        playButton1->setIcon(icon13);
         playButton1->setIconSize(QSize(20, 20));
 
         horizontalLayout_1->addWidget(playButton1);
@@ -221,9 +221,9 @@ public:
         pauseButton1->setObjectName(QStringLiteral("pauseButton1"));
         sizePolicy1.setHeightForWidth(pauseButton1->sizePolicy().hasHeightForWidth());
         pauseButton1->setSizePolicy(sizePolicy1);
-        QIcon icon12;
-        icon12.addFile(QStringLiteral(":/Images/icons/pause_24.png"), QSize(), QIcon::Normal, QIcon::Off);
-        pauseButton1->setIcon(icon12);
+        QIcon icon14;
+        icon14.addFile(QStringLiteral(":/Images/icons/pause_24.png"), QSize(), QIcon::Normal, QIcon::Off);
+        pauseButton1->setIcon(icon14);
         pauseButton1->setIconSize(QSize(20, 20));
 
         horizontalLayout_1->addWidget(pauseButton1);
@@ -232,9 +232,9 @@ public:
         stopButton1->setObjectName(QStringLiteral("stopButton1"));
         sizePolicy1.setHeightForWidth(stopButton1->sizePolicy().hasHeightForWidth());
         stopButton1->setSizePolicy(sizePolicy1);
-        QIcon icon13;
-        icon13.addFile(QStringLiteral(":/Images/icons/stop_24.png"), QSize(), QIcon::Normal, QIcon::Off);
-        stopButton1->setIcon(icon13);
+        QIcon icon15;
+        icon15.addFile(QStringLiteral(":/Images/icons/stop_24.png"), QSize(), QIcon::Normal, QIcon::Off);
+        stopButton1->setIcon(icon15);
         stopButton1->setIconSize(QSize(20, 20));
 
         horizontalLayout_1->addWidget(stopButton1);
@@ -252,7 +252,7 @@ public:
         gridLayout->addWidget(timeLineSlider, 1, 0, 1, 1);
 
 
-        gridLayout_2->addLayout(gridLayout, 11, 1, 1, 13);
+        gridLayout_2->addLayout(gridLayout, 11, 1, 1, 14);
 
         editCheckBox = new QCheckBox(centralWidget);
         editCheckBox->setObjectName(QStringLiteral("editCheckBox"));
@@ -262,28 +262,17 @@ public:
 
         gridLayout_2->addWidget(editCheckBox, 10, 1, 1, 1);
 
-        okButton = new QPushButton(centralWidget);
-        okButton->setObjectName(QStringLiteral("okButton"));
-        sizePolicy1.setHeightForWidth(okButton->sizePolicy().hasHeightForWidth());
-        okButton->setSizePolicy(sizePolicy1);
-        okButton->setStyleSheet(QStringLiteral(""));
-        QIcon icon14;
-        icon14.addFile(QStringLiteral(":/Images/icons/tick.png"), QSize(), QIcon::Normal, QIcon::Off);
-        okButton->setIcon(icon14);
-        okButton->setIconSize(QSize(20, 20));
+        vLayout_2 = new QVBoxLayout();
+        vLayout_2->setSpacing(6);
+        vLayout_2->setObjectName(QStringLiteral("vLayout_2"));
+        bgLabel_2 = new QLabel(centralWidget);
+        bgLabel_2->setObjectName(QStringLiteral("bgLabel_2"));
+        bgLabel_2->setStyleSheet(QStringLiteral("background-color: rgb(159, 159, 159);"));
 
-        gridLayout_2->addWidget(okButton, 5, 8, 1, 1);
+        vLayout_2->addWidget(bgLabel_2);
 
-        cancelButton = new QPushButton(centralWidget);
-        cancelButton->setObjectName(QStringLiteral("cancelButton"));
-        sizePolicy1.setHeightForWidth(cancelButton->sizePolicy().hasHeightForWidth());
-        cancelButton->setSizePolicy(sizePolicy1);
-        QIcon icon15;
-        icon15.addFile(QStringLiteral(":/Images/icons/cancel.png"), QSize(), QIcon::Normal, QIcon::Off);
-        cancelButton->setIcon(icon15);
-        cancelButton->setIconSize(QSize(20, 20));
 
-        gridLayout_2->addWidget(cancelButton, 5, 9, 1, 1);
+        gridLayout_2->addLayout(vLayout_2, 0, 8, 2, 7);
 
         line_2 = new QFrame(centralWidget);
         line_2->setObjectName(QStringLiteral("line_2"));
@@ -291,6 +280,18 @@ public:
         line_2->setFrameShadow(QFrame::Sunken);
 
         gridLayout_2->addWidget(line_2, 0, 7, 2, 1);
+
+        okButton = new QPushButton(centralWidget);
+        okButton->setObjectName(QStringLiteral("okButton"));
+        sizePolicy1.setHeightForWidth(okButton->sizePolicy().hasHeightForWidth());
+        okButton->setSizePolicy(sizePolicy1);
+        okButton->setStyleSheet(QStringLiteral(""));
+        QIcon icon16;
+        icon16.addFile(QStringLiteral(":/Images/icons/tick.png"), QSize(), QIcon::Normal, QIcon::Off);
+        okButton->setIcon(icon16);
+        okButton->setIconSize(QSize(20, 20));
+
+        gridLayout_2->addWidget(okButton, 5, 8, 1, 1);
 
         vLayout_1 = new QVBoxLayout();
         vLayout_1->setSpacing(0);
@@ -305,6 +306,17 @@ public:
 
 
         gridLayout_2->addLayout(vLayout_1, 0, 1, 2, 6);
+
+        cancelButton = new QPushButton(centralWidget);
+        cancelButton->setObjectName(QStringLiteral("cancelButton"));
+        sizePolicy1.setHeightForWidth(cancelButton->sizePolicy().hasHeightForWidth());
+        cancelButton->setSizePolicy(sizePolicy1);
+        QIcon icon17;
+        icon17.addFile(QStringLiteral(":/Images/icons/cancel.png"), QSize(), QIcon::Normal, QIcon::Off);
+        cancelButton->setIcon(icon17);
+        cancelButton->setIconSize(QSize(20, 20));
+
+        gridLayout_2->addWidget(cancelButton, 5, 9, 1, 1);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
@@ -322,7 +334,6 @@ public:
         mainToolBar->setMovable(false);
         mainToolBar->setIconSize(QSize(32, 32));
         MainWindow->addToolBar(Qt::BottomToolBarArea, mainToolBar);
-        MainWindow->insertToolBarBreak(mainToolBar);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         MainWindow->setStatusBar(statusBar);
@@ -331,7 +342,6 @@ public:
         toolBar->setMovable(false);
         toolBar->setIconSize(QSize(32, 32));
         MainWindow->addToolBar(Qt::RightToolBarArea, toolBar);
-        MainWindow->insertToolBarBreak(toolBar);
 
         menuBar->addAction(menuFile->menuAction());
         menuBar->addAction(menuEdit->menuAction());
@@ -353,6 +363,10 @@ public:
         mainToolBar->addAction(actionUngroup);
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionItpl);
+        mainToolBar->addSeparator();
+        mainToolBar->addAction(actionZoomIn);
+        mainToolBar->addSeparator();
+        mainToolBar->addAction(actionZoomOut);
         toolBar->addAction(actionLoad);
         toolBar->addSeparator();
         toolBar->addAction(actionSave);
@@ -406,17 +420,25 @@ public:
 #ifndef QT_NO_TOOLTIP
         actionItpl->setToolTip(QApplication::translate("MainWindow", "Interpolate", 0));
 #endif // QT_NO_TOOLTIP
+        actionZoomIn->setText(QApplication::translate("MainWindow", "ZoomIn", 0));
+#ifndef QT_NO_TOOLTIP
+        actionZoomIn->setToolTip(QApplication::translate("MainWindow", "Zoom in", 0));
+#endif // QT_NO_TOOLTIP
+        actionZoomOut->setText(QApplication::translate("MainWindow", "ZoomOut", 0));
+#ifndef QT_NO_TOOLTIP
+        actionZoomOut->setToolTip(QApplication::translate("MainWindow", "Zoom out", 0));
+#endif // QT_NO_TOOLTIP
         bgLabel_3->setText(QString());
         bgLabel_4->setText(QString());
-        bgLabel_2->setText(QString());
         cutButton->setText(QString());
         playButton1->setText(QString());
         pauseButton1->setText(QString());
         stopButton1->setText(QString());
         editCheckBox->setText(QApplication::translate("MainWindow", "Edit Mode", 0));
+        bgLabel_2->setText(QString());
         okButton->setText(QString());
-        cancelButton->setText(QString());
         bgLabel_1->setText(QString());
+        cancelButton->setText(QString());
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
         menuEdit->setTitle(QApplication::translate("MainWindow", "Edit", 0));
         menuSettings->setTitle(QApplication::translate("MainWindow", "Settings", 0));

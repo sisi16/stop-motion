@@ -135,6 +135,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cliplabel.cpp" />
     <ClCompile Include="handdetection.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow.cpp" />
@@ -143,6 +144,16 @@
     <ClCompile Include="videoprocessor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <CustomBuild Include="cliplabel.h">
+      <AdditionalInputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">cliplabel.h;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">setlocal&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;D:\Software\OtProject\5.4\msvc2013_64\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DQT_MULTIMEDIAWIDGETS_LIB -DQT_WIDGETS_LIB -DQT_MULTIMEDIA_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -ID:/Software/OtProject/5.4/msvc2013_64/mkspecs/win32-msvc2013 -I&quot;D:/CCCC/Stop Motion/StopMotion&quot; -ID:/Software/OtProject/5.4/msvc2013_64/include -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimediaWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimedia -ID:/Software/OtProject/5.4/msvc2013_64/include/QtGui -ID:/Software/OtProject/5.4/msvc2013_64/include/QtANGLE -ID:/Software/OtProject/5.4/msvc2013_64/include/QtNetwork -ID:/Software/OtProject/5.4/msvc2013_64/include/QtCore cliplabel.h -o release\moc_cliplabel.cpp&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;endlocal</Command>
+      <Message Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">MOC cliplabel.h</Message>
+      <Outputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">release\moc_cliplabel.cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">cliplabel.h;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">setlocal&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;D:\Software\OtProject\5.4\msvc2013_64\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_MULTIMEDIAWIDGETS_LIB -DQT_WIDGETS_LIB -DQT_MULTIMEDIA_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -ID:/Software/OtProject/5.4/msvc2013_64/mkspecs/win32-msvc2013 -I&quot;D:/CCCC/Stop Motion/StopMotion&quot; -ID:/Software/OtProject/5.4/msvc2013_64/include -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimediaWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimedia -ID:/Software/OtProject/5.4/msvc2013_64/include/QtGui -ID:/Software/OtProject/5.4/msvc2013_64/include/QtANGLE -ID:/Software/OtProject/5.4/msvc2013_64/include/QtNetwork -ID:/Software/OtProject/5.4/msvc2013_64/include/QtCore cliplabel.h -o debug\moc_cliplabel.cpp&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;endlocal</Command>
+      <Message Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">MOC cliplabel.h</Message>
+      <Outputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">debug\moc_cliplabel.cpp;%(Outputs)</Outputs>
+    </CustomBuild>
     <ClInclude Include="handdetection.h" />
     <CustomBuild Include="mainwindow.h">
       <AdditionalInputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">mainwindow.h;%(AdditionalInputs)</AdditionalInputs>
@@ -159,6 +170,12 @@
     <ClInclude Include="videoprocessor.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="debug\moc_cliplabel.cpp">
+      <ExcludedFromBuild Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="release\moc_cliplabel.cpp">
+      <ExcludedFromBuild Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="debug\moc_mainwindow.cpp">
       <ExcludedFromBuild Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">true</ExcludedFromBuild>
     </ClCompile>
@@ -187,27 +204,35 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <None Include="icons\confirm.png" />
-    <None Include="icons\load_16.png" />
-    <None Include="icons\load_24.png" />
-    <None Include="icons\load_512.png" />
+    <None Include="icons\cancel.png" />
+    <None Include="icons\cut_32.png" />
+    <None Include="icons\delete_32.png" />
+    <None Include="icons\group_48.png" />
+    <None Include="icons\interpolation_48.png" />
+    <None Include="icons\load.png" />
     <CustomBuild Include="myres.qrc">
       <FileType>Document</FileType>
-      <AdditionalInputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">myres.qrc;icons\save.png;icons\load_16.png;icons\tick.png;icons\load_24.png;icons\tick_16.png;icons\tick_32.png;icons\load_512.png;icons\confirm.png;icons\tick.ico;icons\settings.png;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">myres.qrc;icons\delete_32.png;icons\reverse_32.png;icons\play_24.png;icons\resume_32.png;icons\zoom-out.png;icons\tick_32.png;icons\interpolation_48.png;icons\tick.png;icons\cut_32.png;icons\load.png;icons\settings.png;icons\group_48.png;icons\pause_24.png;icons\save.png;icons\cancel.png;icons\zoom-in.png;icons\stop_24.png;icons\ungroup_48.png;%(AdditionalInputs)</AdditionalInputs>
       <Command Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">setlocal&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;D:\Software\OtProject\5.4\msvc2013_64\bin\rcc.exe -name myres myres.qrc -o release\qrc_myres.cpp&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;endlocal</Command>
       <Message Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">RCC myres.qrc</Message>
       <Outputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">release\qrc_myres.cpp;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">myres.qrc;icons\save.png;icons\load_16.png;icons\tick.png;icons\load_24.png;icons\tick_16.png;icons\tick_32.png;icons\load_512.png;icons\confirm.png;icons\tick.ico;icons\settings.png;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">myres.qrc;icons\delete_32.png;icons\reverse_32.png;icons\play_24.png;icons\resume_32.png;icons\zoom-out.png;icons\tick_32.png;icons\interpolation_48.png;icons\tick.png;icons\cut_32.png;icons\load.png;icons\settings.png;icons\group_48.png;icons\pause_24.png;icons\save.png;icons\cancel.png;icons\zoom-in.png;icons\stop_24.png;icons\ungroup_48.png;%(AdditionalInputs)</AdditionalInputs>
       <Command Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">setlocal&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;D:\Software\OtProject\5.4\msvc2013_64\bin\rcc.exe -name myres myres.qrc -o debug\qrc_myres.cpp&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;endlocal</Command>
       <Message Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">RCC myres.qrc</Message>
       <Outputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">debug\qrc_myres.cpp;%(Outputs)</Outputs>
     </CustomBuild>
+    <None Include="icons\pause_24.png" />
+    <None Include="icons\play_24.png" />
+    <None Include="icons\resume_32.png" />
+    <None Include="icons\reverse_32.png" />
     <None Include="icons\save.png" />
     <None Include="icons\settings.png" />
-    <None Include="icons\tick.ico" />
+    <None Include="icons\stop_24.png" />
     <None Include="icons\tick.png" />
-    <None Include="icons\tick_16.png" />
     <None Include="icons\tick_32.png" />
+    <None Include="icons\ungroup_48.png" />
+    <None Include="icons\zoom-in.png" />
+    <None Include="icons\zoom-out.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

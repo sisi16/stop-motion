@@ -10,6 +10,7 @@
 #include <QMenu>
 #include "videoprocessor.h"
 #include "myslider.h"
+#include "cliplabel.h"
 
 namespace Ui {
 class MainWindow;
@@ -22,6 +23,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+protected:
+	void resizeEvent(QResizeEvent* ev);
 
 private slots:
 
@@ -58,6 +62,7 @@ private slots:
     void show_context_menu();
 
 private:
+    int resize_count;
     Ui::MainWindow *ui;
     videoprocessor vproc;
     QMediaPlayer *mediaplayer_1;
