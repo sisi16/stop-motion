@@ -13,6 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     isCut = false;
     resize_count = -1;
+	ui->scrollArea_1->setBackgroundRole(QPalette::Midlight);
+	ui->scrollArea_2->setBackgroundRole(QPalette::Mid);
 }
 
 MainWindow::~MainWindow()
@@ -46,14 +48,14 @@ void MainWindow::resizeEvent(QResizeEvent* ev)
 void MainWindow::on_playButton1_clicked()
 {
     QLayoutItem *child;
-    if ((child = ui->vLayout_1->takeAt(0)) != 0 && child->widget()->findChild<QWidget*>("preview_1"))
+	if ((child = ui->horizontalLayout_1->takeAt(0)) != 0 && child->widget()->findChild<QWidget*>("preview_1"))//if ((child = ui->vLayout_1->takeAt(0)) != 0 && child->widget()->findChild<QWidget*>("preview_1"))
     {
         child->widget()->setVisible(0);
-        ui->vLayout_1->removeWidget(child->widget());
+		ui->horizontalLayout_1->removeWidget(child->widget());//ui->vLayout_1->removeWidget(child->widget());
         delete child;
     }
 
-    ui->vLayout_1->addWidget(videoWidget_1);
+	ui->horizontalLayout_1->addWidget(videoWidget_1); //ui->vLayout_1->addWidget(videoWidget_1);
 
     if ((child = ui->gridLayout_1->takeAt(0)) == 0)
     {
@@ -160,19 +162,19 @@ void MainWindow::on_actionLoad_triggered()
 
     QPixmap pm = QPixmap::fromImage(image);
     //preview_1->setPixmap(pm.scaled(width, height, Qt::KeepAspectRatio));
-    //preview_1->setPixmap(QPixmap::fromImage(image));
-    //preview_1->pixmap()->size().scale(size(), Qt::IgnoreAspectRatio);
-    //preview_1->setFixedSize(width, height);
+    preview_1->setPixmap(QPixmap::fromImage(image));
+    preview_1->pixmap()->size().scale(size(), Qt::IgnoreAspectRatio);
+    preview_1->setFixedSize(width, height);
 
     QLayoutItem *child;
-    if ((child = ui->vLayout_1->takeAt(0)) != 0)  {
+	if ((child = ui->horizontalLayout_1->takeAt(0)) != 0)  {//if ((child = ui->vLayout_1->takeAt(0)) != 0)  {
         child->widget()->setVisible(0);
-        ui->vLayout_1->removeWidget(child->widget());
+		ui->horizontalLayout_1->removeWidget(child->widget()); //ui->vLayout_1->removeWidget(child->widget());
         delete child;
     }
 
-    ui->vLayout_1->addWidget(preview_1, Qt::AlignCenter);
-    preview_1->setPixmap(pm.scaled(width, height, Qt::IgnoreAspectRatio));
+	ui->horizontalLayout_1->addWidget(preview_1, Qt::AlignCenter);//ui->vLayout_1->addWidget(preview_1, Qt::AlignCenter);
+    //preview_1->setPixmap(pm.scaled(width, height, Qt::KeepAspectRatio));
 }
 
 void MainWindow::on_actionCandidates_triggered()
@@ -236,7 +238,7 @@ void MainWindow::on_actionTest_triggered()
     clip_0->setFixedSize(length, length);
     //ui->gridLayout_4->addWidget(clip_0, 0, 1);
 	//ui->scrollArea_1->setWidget(clip_0);
-	ui->scrollArea_1->setBackgroundRole(QPalette::Dark);
+	//ui->scrollArea_1->setBackgroundRole(QPalette::Dark);
 	ui->gridLayout->addWidget(clip_0, 0, 1);
 	//ui->scrollArea_1->layout()->addWidget(clip_0);
     this->setAcceptDrops(true);
@@ -290,10 +292,10 @@ void MainWindow::playRange()
 		mediaplayer_2->setMedia(QMediaContent());
 
 		QLayoutItem *child;
-		if ((child = ui->vLayout_2->takeAt(0)) != 0)
+		if ((child = ui->horizontalLayout_2->takeAt(0)) != 0)//if ((child = ui->vLayout_2->takeAt(0)) != 0)
 		{
 			child->widget()->setVisible(0);
-			ui->vLayout_2->removeWidget(child->widget());
+			ui->horizontalLayout_2->removeWidget(child->widget());//ui->vLayout_2->removeWidget(child->widget());
 			delete child;
 		}
 		delete mediaplayer_2;
@@ -308,15 +310,15 @@ void MainWindow::playRange()
     videoWidget_2->setFixedSize(460, 345);
 
     QLayoutItem *child;
-    if ((child = ui->vLayout_2->takeAt(0)) != 0)
+	if ((child = ui->horizontalLayout_2->takeAt(0)) != 0)//if ((child = ui->vLayout_2->takeAt(0)) != 0)
     {
         child->widget()->setVisible(0);
-        ui->vLayout_2->removeWidget(child->widget());
+		ui->horizontalLayout_2->removeWidget(child->widget());//ui->vLayout_2->removeWidget(child->widget());
         delete child;
     }
 
     mediaplayer_2->setMedia(QUrl::fromLocalFile("D:/CCCC/Stop Motion/2015_05/range.avi"));
-    ui->vLayout_2->addWidget(videoWidget_2);
+	ui->horizontalLayout_2->addWidget(videoWidget_2);//ui->vLayout_2->addWidget(videoWidget_2);
     mediaplayer_2->play();
 }
 
