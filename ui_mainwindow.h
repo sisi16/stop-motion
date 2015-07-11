@@ -315,7 +315,8 @@ public:
         horizontalLayout_1->setObjectName(QStringLiteral("horizontalLayout_1"));
         bgLabel_1 = new QLabel(centralWidget);
         bgLabel_1->setObjectName(QStringLiteral("bgLabel_1"));
-        bgLabel_1->setStyleSheet(QStringLiteral("background-color: rgb(130, 130, 130);"));
+        bgLabel_1->setStyleSheet(QLatin1String("background-color: rgb(130, 130, 130);\n"
+""));
 
         horizontalLayout_1->addWidget(bgLabel_1);
 

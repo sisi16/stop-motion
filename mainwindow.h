@@ -8,6 +8,7 @@
 #include <QMouseEvent>
 #include <QTimer>
 #include <QMenu>
+#include <QPalette>
 #include "videoprocessor.h"
 #include "myslider.h"
 #include "cliplabel.h"

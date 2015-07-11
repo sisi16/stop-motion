@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Release|x64">
@@ -16,7 +16,7 @@
     <Keyword>Qt4VSv1.0</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <PlatformToolSet>v120</PlatformToolSet>
     <OutputDirectory>release\</OutputDirectory>
     <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
@@ -25,7 +25,7 @@
     <IntermediateDirectory>release\</IntermediateDirectory>
     <PrimaryOutput>StopMotion</PrimaryOutput>
   </PropertyGroup>
-  <PropertyGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <PlatformToolSet>v120</PlatformToolSet>
     <OutputDirectory>debug\</OutputDirectory>
     <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
@@ -36,27 +36,27 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
-  <ImportGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists(&apos;$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props&apos;)" />
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
-  <ImportGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists(&apos;$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props&apos;)" />
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <OutDir Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">release\</OutDir>
-    <IntDir Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">release\</IntDir>
-    <TargetName Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">StopMotion</TargetName>
-    <IgnoreImportLibrary Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">true</IgnoreImportLibrary>
-    <LinkIncremental Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">false</LinkIncremental>
-    <OutDir Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">debug\</OutDir>
-    <IntDir Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">debug\</IntDir>
-    <TargetName Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">StopMotion</TargetName>
-    <IgnoreImportLibrary Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">true</IgnoreImportLibrary>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">StopMotion</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">StopMotion</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IgnoreImportLibrary>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>&quot;.&quot;;&quot;..\..\..\Software\OtProject\5.4\msvc2013_64\include&quot;;&quot;..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtMultimediaWidgets&quot;;&quot;..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtWidgets&quot;;&quot;..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtMultimedia&quot;;&quot;..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtGui&quot;;&quot;..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtANGLE&quot;;&quot;..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtNetwork&quot;;&quot;..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtCore&quot;;&quot;release&quot;;&quot;.&quot;;&quot;..\..\..\Software\OtProject\5.4\msvc2013_64\mkspecs\win32-msvc2013&quot;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>".";"..\..\..\Software\OtProject\5.4\msvc2013_64\include";"..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtMultimediaWidgets";"..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtWidgets";"..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtMultimedia";"..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtGui";"..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtANGLE";"..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtNetwork";"..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtCore";"release";".";"..\..\..\Software\OtProject\5.4\msvc2013_64\mkspecs\win32-msvc2013";%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zm200 -Zc:strictStrings -w34100 -w34189 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>release\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -66,7 +66,8 @@
       <Optimization>MaxSpeed</Optimization>
       <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;WIN64;QT_NO_DEBUG;QT_MULTIMEDIAWIDGETS_LIB;QT_WIDGETS_LIB;QT_MULTIMEDIA_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
-      <ProgramDataBaseFileName></ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>
+      </ProgramDataBaseFileName>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -74,16 +75,16 @@
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>D:\Software\OtProject\5.4\msvc2013_64\lib\qtmain.lib;shell32.lib;&quot;D:/CCCC/Stop Motion/StopMotion\lib\*.lib&quot;;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5MultimediaWidgets.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Widgets.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Multimedia.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Gui.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Network.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Core.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>D:\Software\OtProject\5.4\msvc2013_64\lib\qtmain.lib;shell32.lib;"D:/CCCC/Stop Motion/StopMotion\lib\*.lib";D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5MultimediaWidgets.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Widgets.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Multimedia.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Gui.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Network.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Core.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>D:\Software\OtProject\5.4\msvc2013_64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalOptions>&quot;/MANIFESTDEPENDENCY:type=&apos;win32&apos; name=&apos;Microsoft.Windows.Common-Controls&apos; version=&apos;6.0.0.0&apos; publicKeyToken=&apos;6595b64144ccf1df&apos; language=&apos;*&apos; processorArchitecture=&apos;*&apos;&quot; %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreImportLibrary>true</IgnoreImportLibrary>
       <LinkIncremental>false</LinkIncremental>
       <OutputFile>$(OutDir)\StopMotion.exe</OutputFile>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Link>
     <Midl>
@@ -95,9 +96,9 @@
       <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;WIN64;QT_NO_DEBUG;QT_MULTIMEDIAWIDGETS_LIB;QT_WIDGETS_LIB;QT_MULTIMEDIA_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>&quot;.&quot;;&quot;..\..\..\Software\OtProject\5.4\msvc2013_64\include&quot;;&quot;..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtMultimediaWidgets&quot;;&quot;..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtWidgets&quot;;&quot;..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtMultimedia&quot;;&quot;..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtGui&quot;;&quot;..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtANGLE&quot;;&quot;..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtNetwork&quot;;&quot;..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtCore&quot;;&quot;debug&quot;;&quot;.&quot;;&quot;..\..\..\Software\OtProject\5.4\msvc2013_64\mkspecs\win32-msvc2013&quot;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>".";"..\..\..\Software\OtProject\5.4\msvc2013_64\include";"..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtMultimediaWidgets";"..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtWidgets";"..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtMultimedia";"..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtGui";"..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtANGLE";"..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtNetwork";"..\..\..\Software\OtProject\5.4\msvc2013_64\include\QtCore";"debug";".";"..\..\..\Software\OtProject\5.4\msvc2013_64\mkspecs\win32-msvc2013";%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zm200 -w34100 -w34189 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>debug\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -114,9 +115,9 @@
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>D:\Software\OtProject\5.4\msvc2013_64\lib\qtmaind.lib;shell32.lib;&quot;D:/CCCC/Stop Motion/StopMotion\lib\*.lib&quot;;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5MultimediaWidgetsd.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Widgetsd.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Multimediad.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Guid.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Networkd.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Cored.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>D:\Software\OtProject\5.4\msvc2013_64\lib\qtmaind.lib;shell32.lib;"D:/CCCC/Stop Motion/StopMotion\lib\*.lib";D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5MultimediaWidgetsd.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Widgetsd.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Multimediad.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Guid.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Networkd.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Cored.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>D:\Software\OtProject\5.4\msvc2013_64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalOptions>&quot;/MANIFESTDEPENDENCY:type=&apos;win32&apos; name=&apos;Microsoft.Windows.Common-Controls&apos; version=&apos;6.0.0.0&apos; publicKeyToken=&apos;6595b64144ccf1df&apos; language=&apos;*&apos; processorArchitecture=&apos;*&apos;&quot; %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreImportLibrary>true</IgnoreImportLibrary>
@@ -145,25 +146,41 @@
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="cliplabel.h">
-      <AdditionalInputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">cliplabel.h;%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">setlocal&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;D:\Software\OtProject\5.4\msvc2013_64\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DQT_MULTIMEDIAWIDGETS_LIB -DQT_WIDGETS_LIB -DQT_MULTIMEDIA_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -ID:/Software/OtProject/5.4/msvc2013_64/mkspecs/win32-msvc2013 -I&quot;D:/CCCC/Stop Motion/StopMotion&quot; -ID:/Software/OtProject/5.4/msvc2013_64/include -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimediaWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimedia -ID:/Software/OtProject/5.4/msvc2013_64/include/QtGui -ID:/Software/OtProject/5.4/msvc2013_64/include/QtANGLE -ID:/Software/OtProject/5.4/msvc2013_64/include/QtNetwork -ID:/Software/OtProject/5.4/msvc2013_64/include/QtCore cliplabel.h -o release\moc_cliplabel.cpp&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;endlocal</Command>
-      <Message Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">MOC cliplabel.h</Message>
-      <Outputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">release\moc_cliplabel.cpp;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">cliplabel.h;%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">setlocal&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;D:\Software\OtProject\5.4\msvc2013_64\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_MULTIMEDIAWIDGETS_LIB -DQT_WIDGETS_LIB -DQT_MULTIMEDIA_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -ID:/Software/OtProject/5.4/msvc2013_64/mkspecs/win32-msvc2013 -I&quot;D:/CCCC/Stop Motion/StopMotion&quot; -ID:/Software/OtProject/5.4/msvc2013_64/include -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimediaWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimedia -ID:/Software/OtProject/5.4/msvc2013_64/include/QtGui -ID:/Software/OtProject/5.4/msvc2013_64/include/QtANGLE -ID:/Software/OtProject/5.4/msvc2013_64/include/QtNetwork -ID:/Software/OtProject/5.4/msvc2013_64/include/QtCore cliplabel.h -o debug\moc_cliplabel.cpp&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;endlocal</Command>
-      <Message Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">MOC cliplabel.h</Message>
-      <Outputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">debug\moc_cliplabel.cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cliplabel.h;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+if errorlevel 1 goto VCEnd
+D:\Software\OtProject\5.4\msvc2013_64\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DQT_MULTIMEDIAWIDGETS_LIB -DQT_WIDGETS_LIB -DQT_MULTIMEDIA_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -ID:/Software/OtProject/5.4/msvc2013_64/mkspecs/win32-msvc2013 -I"D:/CCCC/Stop Motion/StopMotion" -ID:/Software/OtProject/5.4/msvc2013_64/include -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimediaWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimedia -ID:/Software/OtProject/5.4/msvc2013_64/include/QtGui -ID:/Software/OtProject/5.4/msvc2013_64/include/QtANGLE -ID:/Software/OtProject/5.4/msvc2013_64/include/QtNetwork -ID:/Software/OtProject/5.4/msvc2013_64/include/QtCore cliplabel.h -o release\moc_cliplabel.cpp
+if errorlevel 1 goto VCEnd
+endlocal</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MOC cliplabel.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\moc_cliplabel.cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">cliplabel.h;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+if errorlevel 1 goto VCEnd
+D:\Software\OtProject\5.4\msvc2013_64\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_MULTIMEDIAWIDGETS_LIB -DQT_WIDGETS_LIB -DQT_MULTIMEDIA_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -ID:/Software/OtProject/5.4/msvc2013_64/mkspecs/win32-msvc2013 -I"D:/CCCC/Stop Motion/StopMotion" -ID:/Software/OtProject/5.4/msvc2013_64/include -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimediaWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimedia -ID:/Software/OtProject/5.4/msvc2013_64/include/QtGui -ID:/Software/OtProject/5.4/msvc2013_64/include/QtANGLE -ID:/Software/OtProject/5.4/msvc2013_64/include/QtNetwork -ID:/Software/OtProject/5.4/msvc2013_64/include/QtCore cliplabel.h -o debug\moc_cliplabel.cpp
+if errorlevel 1 goto VCEnd
+endlocal</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC cliplabel.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debug\moc_cliplabel.cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <ClInclude Include="handdetection.h" />
     <CustomBuild Include="mainwindow.h">
-      <AdditionalInputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">mainwindow.h;%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">setlocal&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;D:\Software\OtProject\5.4\msvc2013_64\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DQT_MULTIMEDIAWIDGETS_LIB -DQT_WIDGETS_LIB -DQT_MULTIMEDIA_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -ID:/Software/OtProject/5.4/msvc2013_64/mkspecs/win32-msvc2013 -I&quot;D:/CCCC/Stop Motion/StopMotion&quot; -ID:/Software/OtProject/5.4/msvc2013_64/include -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimediaWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimedia -ID:/Software/OtProject/5.4/msvc2013_64/include/QtGui -ID:/Software/OtProject/5.4/msvc2013_64/include/QtANGLE -ID:/Software/OtProject/5.4/msvc2013_64/include/QtNetwork -ID:/Software/OtProject/5.4/msvc2013_64/include/QtCore mainwindow.h -o release\moc_mainwindow.cpp&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;endlocal</Command>
-      <Message Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">MOC mainwindow.h</Message>
-      <Outputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">release\moc_mainwindow.cpp;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">mainwindow.h;%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">setlocal&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;D:\Software\OtProject\5.4\msvc2013_64\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_MULTIMEDIAWIDGETS_LIB -DQT_WIDGETS_LIB -DQT_MULTIMEDIA_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -ID:/Software/OtProject/5.4/msvc2013_64/mkspecs/win32-msvc2013 -I&quot;D:/CCCC/Stop Motion/StopMotion&quot; -ID:/Software/OtProject/5.4/msvc2013_64/include -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimediaWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimedia -ID:/Software/OtProject/5.4/msvc2013_64/include/QtGui -ID:/Software/OtProject/5.4/msvc2013_64/include/QtANGLE -ID:/Software/OtProject/5.4/msvc2013_64/include/QtNetwork -ID:/Software/OtProject/5.4/msvc2013_64/include/QtCore mainwindow.h -o debug\moc_mainwindow.cpp&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;endlocal</Command>
-      <Message Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">MOC mainwindow.h</Message>
-      <Outputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">debug\moc_mainwindow.cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">mainwindow.h;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+if errorlevel 1 goto VCEnd
+D:\Software\OtProject\5.4\msvc2013_64\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DQT_MULTIMEDIAWIDGETS_LIB -DQT_WIDGETS_LIB -DQT_MULTIMEDIA_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -ID:/Software/OtProject/5.4/msvc2013_64/mkspecs/win32-msvc2013 -I"D:/CCCC/Stop Motion/StopMotion" -ID:/Software/OtProject/5.4/msvc2013_64/include -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimediaWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimedia -ID:/Software/OtProject/5.4/msvc2013_64/include/QtGui -ID:/Software/OtProject/5.4/msvc2013_64/include/QtANGLE -ID:/Software/OtProject/5.4/msvc2013_64/include/QtNetwork -ID:/Software/OtProject/5.4/msvc2013_64/include/QtCore mainwindow.h -o release\moc_mainwindow.cpp
+if errorlevel 1 goto VCEnd
+endlocal</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MOC mainwindow.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\moc_mainwindow.cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">mainwindow.h;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+if errorlevel 1 goto VCEnd
+D:\Software\OtProject\5.4\msvc2013_64\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_MULTIMEDIAWIDGETS_LIB -DQT_WIDGETS_LIB -DQT_MULTIMEDIA_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -ID:/Software/OtProject/5.4/msvc2013_64/mkspecs/win32-msvc2013 -I"D:/CCCC/Stop Motion/StopMotion" -ID:/Software/OtProject/5.4/msvc2013_64/include -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimediaWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimedia -ID:/Software/OtProject/5.4/msvc2013_64/include/QtGui -ID:/Software/OtProject/5.4/msvc2013_64/include/QtANGLE -ID:/Software/OtProject/5.4/msvc2013_64/include/QtNetwork -ID:/Software/OtProject/5.4/msvc2013_64/include/QtCore mainwindow.h -o debug\moc_mainwindow.cpp
+if errorlevel 1 goto VCEnd
+endlocal</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC mainwindow.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debug\moc_mainwindow.cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <ClInclude Include="myslider.h" />
     <ClInclude Include="opflow.h" />
@@ -171,36 +188,44 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug\moc_cliplabel.cpp">
-      <ExcludedFromBuild Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="release\moc_cliplabel.cpp">
-      <ExcludedFromBuild Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="debug\moc_mainwindow.cpp">
-      <ExcludedFromBuild Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="release\moc_mainwindow.cpp">
-      <ExcludedFromBuild Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="debug\qrc_myres.cpp">
-      <ExcludedFromBuild Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="release\qrc_myres.cpp">
-      <ExcludedFromBuild Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClInclude Include="ui_mainwindow.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="mainwindow.ui">
       <FileType>Document</FileType>
-      <AdditionalInputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">mainwindow.ui;%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">setlocal&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;D:\Software\OtProject\5.4\msvc2013_64\bin\uic.exe mainwindow.ui -o ui_mainwindow.h&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;endlocal</Command>
-      <Message Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">UIC mainwindow.ui</Message>
-      <Outputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">ui_mainwindow.h;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">mainwindow.ui;%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">setlocal&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;D:\Software\OtProject\5.4\msvc2013_64\bin\uic.exe mainwindow.ui -o ui_mainwindow.h&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;endlocal</Command>
-      <Message Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">UIC mainwindow.ui</Message>
-      <Outputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">ui_mainwindow.h;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">mainwindow.ui;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+if errorlevel 1 goto VCEnd
+D:\Software\OtProject\5.4\msvc2013_64\bin\uic.exe mainwindow.ui -o ui_mainwindow.h
+if errorlevel 1 goto VCEnd
+endlocal</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UIC mainwindow.ui</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ui_mainwindow.h;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">mainwindow.ui;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+if errorlevel 1 goto VCEnd
+D:\Software\OtProject\5.4\msvc2013_64\bin\uic.exe mainwindow.ui -o ui_mainwindow.h
+if errorlevel 1 goto VCEnd
+endlocal</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UIC mainwindow.ui</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ui_mainwindow.h;%(Outputs)</Outputs>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -212,14 +237,22 @@
     <None Include="icons\load.png" />
     <CustomBuild Include="myres.qrc">
       <FileType>Document</FileType>
-      <AdditionalInputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">myres.qrc;icons\delete_32.png;icons\reverse_32.png;icons\play_24.png;icons\resume_32.png;icons\zoom-out.png;icons\tick_32.png;icons\interpolation_48.png;icons\tick.png;icons\cut_32.png;icons\load.png;icons\settings.png;icons\group_48.png;icons\pause_24.png;icons\save.png;icons\cancel.png;icons\zoom-in.png;icons\stop_24.png;icons\ungroup_48.png;%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">setlocal&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;D:\Software\OtProject\5.4\msvc2013_64\bin\rcc.exe -name myres myres.qrc -o release\qrc_myres.cpp&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;endlocal</Command>
-      <Message Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">RCC myres.qrc</Message>
-      <Outputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">release\qrc_myres.cpp;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">myres.qrc;icons\delete_32.png;icons\reverse_32.png;icons\play_24.png;icons\resume_32.png;icons\zoom-out.png;icons\tick_32.png;icons\interpolation_48.png;icons\tick.png;icons\cut_32.png;icons\load.png;icons\settings.png;icons\group_48.png;icons\pause_24.png;icons\save.png;icons\cancel.png;icons\zoom-in.png;icons\stop_24.png;icons\ungroup_48.png;%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">setlocal&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;D:\Software\OtProject\5.4\msvc2013_64\bin\rcc.exe -name myres myres.qrc -o debug\qrc_myres.cpp&#x000D;&#x000A;if errorlevel 1 goto VCEnd&#x000D;&#x000A;endlocal</Command>
-      <Message Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">RCC myres.qrc</Message>
-      <Outputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Debug|x64&apos;">debug\qrc_myres.cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">myres.qrc;icons\delete_32.png;icons\reverse_32.png;icons\play_24.png;icons\resume_32.png;icons\zoom-out.png;icons\tick_32.png;icons\interpolation_48.png;icons\tick.png;icons\cut_32.png;icons\load.png;icons\settings.png;icons\group_48.png;icons\pause_24.png;icons\save.png;icons\cancel.png;icons\zoom-in.png;icons\stop_24.png;icons\ungroup_48.png;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+if errorlevel 1 goto VCEnd
+D:\Software\OtProject\5.4\msvc2013_64\bin\rcc.exe -name myres myres.qrc -o release\qrc_myres.cpp
+if errorlevel 1 goto VCEnd
+endlocal</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">RCC myres.qrc</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\qrc_myres.cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">myres.qrc;icons\delete_32.png;icons\reverse_32.png;icons\play_24.png;icons\resume_32.png;icons\zoom-out.png;icons\tick_32.png;icons\interpolation_48.png;icons\tick.png;icons\cut_32.png;icons\load.png;icons\settings.png;icons\group_48.png;icons\pause_24.png;icons\save.png;icons\cancel.png;icons\zoom-in.png;icons\stop_24.png;icons\ungroup_48.png;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+if errorlevel 1 goto VCEnd
+D:\Software\OtProject\5.4\msvc2013_64\bin\rcc.exe -name myres myres.qrc -o debug\qrc_myres.cpp
+if errorlevel 1 goto VCEnd
+endlocal</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">RCC myres.qrc</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debug\qrc_myres.cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <None Include="icons\pause_24.png" />
     <None Include="icons\play_24.png" />

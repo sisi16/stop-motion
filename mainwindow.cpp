@@ -26,23 +26,6 @@ void MainWindow::resizeEvent(QResizeEvent* ev)
 {
 	QMainWindow::resizeEvent(ev);
     resize_count++;
-    //cv::Mat temp;
-    //cv::cvtColor(vproc.getFrames().at(0), temp, CV_BGR2RGB);
-    //QImage image((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
-    //image.bits();
-
-    if (resize_count > 0)
-    {
-        cout << preview_1->width() << " " << preview_1->height() << endl;
-        //int height = preview_1->height();
-        //int width = floor(height * 640 / 480.0);
-        //preview_1->setFixedSize(width, height);
-    }
-    //int height = preview_1->height();
-    //int width = floor(height * image.width() / double(image.height()));
-    //preview_1->setPixmap(QPixmap::fromImage(image));
-    //preview_1->pixmap()->size().scale(size(), Qt::IgnoreAspectRatio);
-    //preview_1->setFixedSize(width, height);*/
 }
 
 void MainWindow::on_playButton1_clicked()
@@ -51,11 +34,11 @@ void MainWindow::on_playButton1_clicked()
 	if ((child = ui->horizontalLayout_1->takeAt(0)) != 0 && child->widget()->findChild<QWidget*>("preview_1"))//if ((child = ui->vLayout_1->takeAt(0)) != 0 && child->widget()->findChild<QWidget*>("preview_1"))
     {
         child->widget()->setVisible(0);
-		ui->horizontalLayout_1->removeWidget(child->widget());//ui->vLayout_1->removeWidget(child->widget());
+		ui->horizontalLayout_1->removeWidget(child->widget());
         delete child;
     }
 
-	ui->horizontalLayout_1->addWidget(videoWidget_1); //ui->vLayout_1->addWidget(videoWidget_1);
+	ui->horizontalLayout_1->addWidget(videoWidget_1); 
 
     if ((child = ui->gridLayout_1->takeAt(0)) == 0)
     {
@@ -147,33 +130,31 @@ void MainWindow::on_actionLoad_triggered()
         return;*/
     vproc.readVideo(fileName.toStdString());
     mediaplayer_1->setMedia(QUrl::fromLocalFile(fileName));
-
-    preview_1 = new QLabel;
+	ui->bgLabel_1->setStyleSheet("background-color: rgb(130, 130, 130); image: url(D:/CCCC/Stop Motion/2015_05/preview.png);");
+    /*preview_1 = new QLabel;
     preview_1->setScaledContents(true);
-    //preview_1->setFixedSize(0, 0);
 
-    cv::Mat temp;
+	cv::Mat temp;
     cv::cvtColor(vproc.getFrames().at(0), temp, CV_BGR2RGB);
-    QImage image((const uchar *) temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
-    image.bits();
+	cv::imwrite("D:/CCCC/Stop Motion/2015_05/preview.png", temp);
+	QImage image((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+	image.bits();
 
 	int height = ui->bgLabel_1->height();
-    int width = height * image.width() / double(image.height());
+	int width = floor(height * image.width() / double(image.height()));
 
-    QPixmap pm = QPixmap::fromImage(image);
-    //preview_1->setPixmap(pm.scaled(width, height, Qt::KeepAspectRatio));
     preview_1->setPixmap(QPixmap::fromImage(image));
-    preview_1->pixmap()->size().scale(size(), Qt::IgnoreAspectRatio);
+    preview_1->pixmap()->size().scale(image.size(), Qt::KeepAspectRatio);
     preview_1->setFixedSize(width, height);
 
     QLayoutItem *child;
-	if ((child = ui->horizontalLayout_1->takeAt(0)) != 0)  {//if ((child = ui->vLayout_1->takeAt(0)) != 0)  {
+	if ((child = ui->horizontalLayout_1->takeAt(0)) != 0)  {
         child->widget()->setVisible(0);
-		ui->horizontalLayout_1->removeWidget(child->widget()); //ui->vLayout_1->removeWidget(child->widget());
+		ui->horizontalLayout_1->removeWidget(child->widget());
         delete child;
     }
 
-	ui->horizontalLayout_1->addWidget(preview_1, Qt::AlignCenter);//ui->vLayout_1->addWidget(preview_1, Qt::AlignCenter);
+	ui->horizontalLayout_1->addWidget(preview_1, Qt::AlignCenter);*/
     //preview_1->setPixmap(pm.scaled(width, height, Qt::KeepAspectRatio));
 }
 
@@ -224,7 +205,6 @@ void MainWindow::on_actionTest_triggered()
 {
     cliplabel *clip_0 = new cliplabel();
     clip_0->setScaledContents(true);
-    //preview_1->setFixedSize(0, 0);
 
     cv::Mat temp;
     cv::cvtColor(vproc.getFrames().at(0), temp, CV_BGR2RGB);
@@ -292,10 +272,10 @@ void MainWindow::playRange()
 		mediaplayer_2->setMedia(QMediaContent());
 
 		QLayoutItem *child;
-		if ((child = ui->horizontalLayout_2->takeAt(0)) != 0)//if ((child = ui->vLayout_2->takeAt(0)) != 0)
+		if ((child = ui->horizontalLayout_2->takeAt(0)) != 0)
 		{
 			child->widget()->setVisible(0);
-			ui->horizontalLayout_2->removeWidget(child->widget());//ui->vLayout_2->removeWidget(child->widget());
+			ui->horizontalLayout_2->removeWidget(child->widget());
 			delete child;
 		}
 		delete mediaplayer_2;
@@ -310,15 +290,15 @@ void MainWindow::playRange()
     videoWidget_2->setFixedSize(460, 345);
 
     QLayoutItem *child;
-	if ((child = ui->horizontalLayout_2->takeAt(0)) != 0)//if ((child = ui->vLayout_2->takeAt(0)) != 0)
+	if ((child = ui->horizontalLayout_2->takeAt(0)) != 0)
     {
         child->widget()->setVisible(0);
-		ui->horizontalLayout_2->removeWidget(child->widget());//ui->vLayout_2->removeWidget(child->widget());
+		ui->horizontalLayout_2->removeWidget(child->widget());
         delete child;
     }
 
     mediaplayer_2->setMedia(QUrl::fromLocalFile("D:/CCCC/Stop Motion/2015_05/range.avi"));
-	ui->horizontalLayout_2->addWidget(videoWidget_2);//ui->vLayout_2->addWidget(videoWidget_2);
+	ui->horizontalLayout_2->addWidget(videoWidget_2);
     mediaplayer_2->play();
 }
 
