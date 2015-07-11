@@ -55,7 +55,7 @@ void MainWindow::on_playButton1_clicked()
 
     ui->vLayout_1->addWidget(videoWidget_1);
 
-    if ((child = ui->gridLayout->takeAt(0)) == 0)
+    if ((child = ui->gridLayout_1->takeAt(0)) == 0)
     {
         vector<int> sc = vproc.getSceneCuts();
         vector<int> ft = vproc.getFrameTypes();
@@ -65,7 +65,7 @@ void MainWindow::on_playButton1_clicked()
         frame_slider->setTickPosition(QSlider::TicksAbove);
         frame_slider->setTickInterval(5);
         connect(frame_slider, SIGNAL(sliderMoved(int)), this, SLOT(seek(int)));
-        ui->gridLayout->addWidget(frame_slider);
+        ui->gridLayout_1->addWidget(frame_slider);
     }
 
     mediaplayer_1->play();
@@ -84,7 +84,7 @@ void MainWindow::on_pauseButton1_clicked()
 void MainWindow::on_cutButton_clicked()
 {
     progressBar = vproc.getProgressBar();
-    ui->gridLayout->addWidget(progressBar);
+    ui->gridLayout_1->addWidget(progressBar);
     progressBar->show();
 
     vproc.cut2Scenes();
@@ -93,7 +93,7 @@ void MainWindow::on_cutButton_clicked()
     statusBar()->clearMessage();
 
     progressBar->hide();
-    ui->gridLayout->removeWidget(progressBar);
+    ui->gridLayout_1->removeWidget(progressBar);
     delete progressBar;
 }
 
@@ -118,13 +118,13 @@ void MainWindow::refresh(int value)
     current_frame->setFixedSize(640, 480);
 
     QLayoutItem *child;
-    if ((child = ui->gridLayout->takeAt(1)) != 0)
+    if ((child = ui->gridLayout_1->takeAt(1)) != 0)
     {
         child->widget()->setVisible(0);
-        ui->gridLayout->removeWidget(child->widget());
+        ui->gridLayout_1->removeWidget(child->widget());
         delete child;
     }
-    ui->gridLayout->addWidget(current_frame);
+    ui->gridLayout_1->addWidget(current_frame);
 }
 
 void MainWindow::seek(int seconds)
@@ -184,9 +184,9 @@ void MainWindow::on_actionCandidates_triggered()
     if (!vproc.getStableFrames().empty())
     {
         QLayoutItem *child;
-        while ((child = ui->gridLayout->takeAt(0)) != 0)  {
+        while ((child = ui->gridLayout_1->takeAt(0)) != 0)  {
             child->widget()->setVisible(0);
-            ui->gridLayout->removeWidget(child->widget());
+            ui->gridLayout_1->removeWidget(child->widget());
             delete child;
         }
 
@@ -213,7 +213,7 @@ void MainWindow::on_actionCandidates_triggered()
             label->setPixmap(QPixmap::fromImage(image));
             label->pixmap()->size().scale(size(), Qt::IgnoreAspectRatio);
             label->setFixedSize(170, label_height);
-            ui->gridLayout->addWidget(label, i/10, i%10, 0);
+            ui->gridLayout_1->addWidget(label, i/10, i%10, 0);
         }
     }
 }
@@ -232,10 +232,13 @@ void MainWindow::on_actionTest_triggered()
     clip_0->setPixmap(QPixmap::fromImage(image));
     clip_0->pixmap()->size().scale(size(), Qt::IgnoreAspectRatio);
 
-    int length = ui->bgLabel_3->height();
+	int length = ui->scrollArea_1->height();
     clip_0->setFixedSize(length, length);
-
-    ui->horizontalLayout_2->addWidget(clip_0);
+    //ui->gridLayout_4->addWidget(clip_0, 0, 1);
+	//ui->scrollArea_1->setWidget(clip_0);
+	ui->scrollArea_1->setBackgroundRole(QPalette::Dark);
+	ui->gridLayout->addWidget(clip_0, 0, 1);
+	//ui->scrollArea_1->layout()->addWidget(clip_0);
     this->setAcceptDrops(true);
     clip_0->setMouseTracking(true);
     clip_0->getMovingParent(this);

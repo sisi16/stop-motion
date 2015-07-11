@@ -21,38 +21,84 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="12" column="1" colspan="14">
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QLabel" name="bgLabel_3">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(229, 229, 229);</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-     </layout>
+    <item row="0" column="3" rowspan="2">
+     <widget class="Line" name="line_2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
     </item>
-    <item row="13" column="1" colspan="14">
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
-      <item>
-       <widget class="QLabel" name="bgLabel_4">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(210, 210, 210);</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="8" column="1" colspan="14">
+    <item row="8" column="1" colspan="6">
      <widget class="Line" name="line_1">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="4" rowspan="2" colspan="3">
+     <layout class="QVBoxLayout" name="vLayout_2">
+      <item>
+       <widget class="QLabel" name="bgLabel_2">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(159, 159, 159);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="11" column="1" colspan="6">
+     <layout class="QGridLayout" name="gridLayout_1">
+      <item row="1" column="0">
+       <widget class="QSlider" name="timeLineSlider">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="5" column="4">
+     <widget class="QPushButton" name="okButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="myres.qrc">
+        <normaloff>:/Images/icons/tick.png</normaloff>:/Images/icons/tick.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>20</width>
+        <height>20</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="1">
+     <widget class="QCheckBox" name="editCheckBox">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 75 12pt &quot;Times New Roman&quot;;</string>
+      </property>
+      <property name="text">
+       <string>Edit Mode</string>
       </property>
      </widget>
     </item>
@@ -152,71 +198,20 @@
       </item>
      </layout>
     </item>
-    <item row="11" column="1" colspan="14">
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="1" column="0">
-       <widget class="QSlider" name="timeLineSlider">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="10" column="1">
-     <widget class="QCheckBox" name="editCheckBox">
+    <item row="5" column="5">
+     <widget class="QPushButton" name="cancelButton">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">font: 75 12pt &quot;Times New Roman&quot;;</string>
-      </property>
-      <property name="text">
-       <string>Edit Mode</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="8" rowspan="2" colspan="7">
-     <layout class="QVBoxLayout" name="vLayout_2">
-      <item>
-       <widget class="QLabel" name="bgLabel_2">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(159, 159, 159);</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="0" column="7" rowspan="2">
-     <widget class="Line" name="line_2">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="8">
-     <widget class="QPushButton" name="okButton">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
       </property>
       <property name="text">
        <string/>
       </property>
       <property name="icon">
        <iconset resource="myres.qrc">
-        <normaloff>:/Images/icons/tick.png</normaloff>:/Images/icons/tick.png</iconset>
+        <normaloff>:/Images/icons/cancel.png</normaloff>:/Images/icons/cancel.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -226,7 +221,7 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="1" rowspan="2" colspan="6">
+    <item row="0" column="1" rowspan="2" colspan="2">
      <layout class="QVBoxLayout" name="vLayout_1">
       <property name="spacing">
        <number>0</number>
@@ -249,27 +244,74 @@
       </item>
      </layout>
     </item>
-    <item row="5" column="9">
-     <widget class="QPushButton" name="cancelButton">
+    <item row="12" column="1" colspan="6">
+     <widget class="QScrollArea" name="scrollArea_1">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="text">
-       <string/>
+      <property name="widgetResizable">
+       <bool>true</bool>
       </property>
-      <property name="icon">
-       <iconset resource="myres.qrc">
-        <normaloff>:/Images/icons/cancel.png</normaloff>:/Images/icons/cancel.png</iconset>
+      <widget class="QWidget" name="scrollAreaWidgetContents_1">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>1260</width>
+         <height>102</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="bgLabel_3">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(229, 229, 229);</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item row="13" column="1" colspan="6">
+     <widget class="QScrollArea" name="scrollArea_2">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-      <property name="iconSize">
-       <size>
-        <width>20</width>
-        <height>20</height>
-       </size>
+      <property name="widgetResizable">
+       <bool>true</bool>
       </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents_2">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>1260</width>
+         <height>101</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
+         <widget class="QLabel" name="bgLabel_4">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(203, 203, 203);</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -341,31 +383,6 @@
    <addaction name="actionZoomOut"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QToolBar" name="toolBar">
-   <property name="windowTitle">
-    <string>toolBar</string>
-   </property>
-   <property name="movable">
-    <bool>false</bool>
-   </property>
-   <property name="iconSize">
-    <size>
-     <width>32</width>
-     <height>32</height>
-    </size>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>RightToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-   <addaction name="actionLoad"/>
-   <addaction name="separator"/>
-   <addaction name="actionSave"/>
-   <addaction name="separator"/>
-   <addaction name="actionSet"/>
-  </widget>
   <action name="actionLoad">
    <property name="icon">
     <iconset resource="myres.qrc">
