@@ -32,6 +32,7 @@ public:
     QProgressBar *getProgressBar();
     cv::Point3i getRange(int current, int width);
     int getNumOfFrames();
+	int getFrameRate();
     void writeVideo(cv::Point3i range, clipOperation operation);
     void test();
 
@@ -40,6 +41,7 @@ private:
     int num_of_frames;
     int frame_width;
     int frame_height;
+	int frame_rate;
     std::vector<cv::Mat> frames;
     std::vector<int> stable_frames;
     std::vector<float> avg_flows;

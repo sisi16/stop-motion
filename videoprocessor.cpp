@@ -33,6 +33,7 @@ void videoprocessor::readVideo(const string& file)
 	cout << num_of_frames << endl;
     frame_width = capture.get(CV_CAP_PROP_FRAME_WIDTH);
     frame_height = capture.get(CV_CAP_PROP_FRAME_HEIGHT);
+	frame_rate = capture.get(CV_CAP_PROP_FPS);
 
     progressBar = new QProgressBar;
     progressBar->setRange(0, frames.size()-1);
@@ -148,6 +149,11 @@ Point3i videoprocessor::getRange(int current, int width)
 int videoprocessor::getNumOfFrames()
 {
     return num_of_frames;
+}
+
+int videoprocessor::getFrameRate()
+{
+	return frame_rate;
 }
 
 void videoprocessor::writeVideo(Point3i range, clipOperation operation)

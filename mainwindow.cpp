@@ -13,6 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     isCut = false;
     resize_count = -1;
+    window_current_width = this->width();
+    window_current_height = this->height() - ui->menuBar->height() - ui->mainToolBar->height();
 	ui->scrollArea_1->setBackgroundRole(QPalette::Midlight);
 	ui->scrollArea_2->setBackgroundRole(QPalette::Mid);
 }
@@ -24,36 +26,58 @@ MainWindow::~MainWindow()
 
 void MainWindow::resizeEvent(QResizeEvent* ev)
 {
-	QMainWindow::resizeEvent(ev);
     resize_count++;
+    int video_current_width, video_current_height;
+    if (resize_count > 0 && videoWidget_1->parent() != 0)
+    {
+        video_current_width = videoWidget_1->width();
+        video_current_height = videoWidget_1->height();
+    }
+
+	QMainWindow::resizeEvent(ev);
+
+    if (resize_count > 0 && videoWidget_1->parent() != 0)
+    {
+        int video_width = floor(this->width()*video_current_width/double(window_current_width));
+        int video_height = floor(this->height()*video_current_height/double(window_current_height));
+        videoWidget_1->setFixedSize(video_width, video_height);
+    }
+
+    window_current_width = this->width();
+    window_current_height = this->height() - ui->menuBar->height() - ui->mainToolBar->height();
 }
 
 void MainWindow::on_playButton1_clicked()
 {
     QLayoutItem *child;
-	if ((child = ui->horizontalLayout_1->takeAt(0)) != 0 && child->widget()->findChild<QWidget*>("preview_1"))//if ((child = ui->vLayout_1->takeAt(0)) != 0 && child->widget()->findChild<QWidget*>("preview_1"))
+
+	if (videoWidget_1->parent() == 0)
     {
+		child = ui->horizontalLayout_1->takeAt(0);
         child->widget()->setVisible(0);
 		ui->horizontalLayout_1->removeWidget(child->widget());
         delete child;
+
+        videoWidget_1->setFixedSize(ui->bgLabel_1->width(), ui->bgLabel_1->height());//videoWidget_1->setFixedSize(460, 345);
+		ui->horizontalLayout_1->addWidget(videoWidget_1);
     }
 
-	ui->horizontalLayout_1->addWidget(videoWidget_1); 
-
-    if ((child = ui->gridLayout_1->takeAt(0)) == 0)
+	if (frame_slider->parent() == 0)
     {
-        vector<int> sc = vproc.getSceneCuts();
-        vector<int> ft = vproc.getFrameTypes();
-        frame_slider = new myslider(Qt::Horizontal, sc, ft);
-        frame_slider->setRange(0, mediaplayer_1->duration()/1000);
-        frame_slider->setValue(0);
-        frame_slider->setTickPosition(QSlider::TicksAbove);
-        frame_slider->setTickInterval(5);
-        connect(frame_slider, SIGNAL(sliderMoved(int)), this, SLOT(seek(int)));
-        ui->gridLayout_1->addWidget(frame_slider);
+		child = ui->gridLayout_1->takeAt(0);
+		child->widget()->setVisible(0);
+		ui->gridLayout_1->removeWidget(child->widget());
+		delete child;
+
+		frame_slider->setRange(0, mediaplayer_1->duration() / 1000);
+		frame_slider->setValue(0);
+		frame_slider->setTickPosition(QSlider::TicksAbove);
+		frame_slider->setTickInterval(5);
+		connect(frame_slider, SIGNAL(sliderMoved(int)), this, SLOT(seek(int)));
+		ui->gridLayout_1->addWidget(frame_slider);
     }
 
-    mediaplayer_1->play();
+	mediaplayer_1->play();
 }
 
 void MainWindow::on_stopButton1_clicked()
@@ -123,14 +147,16 @@ void MainWindow::on_actionLoad_triggered()
     mediaplayer_2 = new QMediaPlayer;
     videoWidget_1 = new QVideoWidget;
     mediaplayer_1->setVideoOutput(videoWidget_1);
-    videoWidget_1->setFixedSize(460, 345);
+    //videoWidget_1->setFixedSize(ui->bgLabel_1->width(), ui->bgLabel_1->height());//videoWidget_1->setFixedSize(460, 345);
 
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), ".", tr("Video Files(*.mp4 *.avi *.mov);;All files (*.*)" ));
-    /*if (fileName.isEmpty())
-        return;*/
+    if (fileName.isEmpty())
+        return;
+
     vproc.readVideo(fileName.toStdString());
     mediaplayer_1->setMedia(QUrl::fromLocalFile(fileName));
-	ui->bgLabel_1->setStyleSheet("background-color: rgb(130, 130, 130); image: url(D:/CCCC/Stop Motion/2015_05/preview.png);");
+	ui->bgLabel_1->setStyleSheet("background-color: rgb(0, 0, 0); image: url(D:/CCCC/Stop Motion/2015_05/preview.png);");
+	initFrameSlider();
     /*preview_1 = new QLabel;
     preview_1->setScaledContents(true);
 
@@ -365,4 +391,11 @@ void MainWindow::show_context_menu()
     connect(reverseAction, SIGNAL(triggered(bool)), this, SLOT(reverse_action()));
 
     sliderMenu->exec(QCursor::pos());
+}
+
+void MainWindow::initFrameSlider()
+{
+	vector<int> sc = vproc.getSceneCuts();
+	vector<int> ft = vproc.getFrameTypes();
+	frame_slider = new myslider(Qt::Horizontal, sc, ft);
 }

@@ -62,8 +62,12 @@ private slots:
 
     void show_context_menu();
 
+	void initFrameSlider();
+
 private:
     int resize_count;
+    int window_current_width;
+    int window_current_height;
     Ui::MainWindow *ui;
     videoprocessor vproc;
     QMediaPlayer *mediaplayer_1;
