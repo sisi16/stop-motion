@@ -29,6 +29,10 @@ void videoprocessor::readVideo(const string& file)
         frames.push_back(frame);
     }
 
+	Mat temp;
+	cvtColor(frames.at(0), temp, CV_BGR2RGB);
+	cv::imwrite("D:/CCCC/Stop Motion/2015_05/preview.png", temp);
+
     num_of_frames = capture.get(CV_CAP_PROP_FRAME_COUNT);
 	cout << num_of_frames << endl;
     frame_width = capture.get(CV_CAP_PROP_FRAME_WIDTH);
@@ -82,21 +86,24 @@ void videoprocessor::cut2Scenes()
 
         Mat current_flow = of.calOpFlow(frames.at(i), frames.at(i+1));
         float current_avg_flow = of.calAvgOpFlow(current_flow);
-        bool hand = hd.isHand(frames.at(i));
+        //bool hand = hd.isHand(frames.at(i));
 
+		if (i == 107) cout << current_avg_flow << endl;
         if (current_avg_flow < 5e-2)
         {
-            if (hand)
+            /*if (hand)
                 frame_types.push_back(1);
             else
-                frame_types.push_back(3);
+                frame_types.push_back(3);*/
+			frame_types.push_back(1);
         }
         else
         {
-            if (hand)
+            /*if (hand)
                 frame_types.push_back(2);
             else
-                frame_types.push_back(4);
+                frame_types.push_back(4);*/
+			frame_types.push_back(2);
         }
 
         if (i == 0)

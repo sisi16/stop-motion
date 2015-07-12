@@ -49,15 +49,15 @@ public:
     QAction *actionZoomIn;
     QAction *actionZoomOut;
     QWidget *centralWidget;
-    QGridLayout *gridLayout_2;
+    QGridLayout *gridLayout;
     QGridLayout *gridLayout_1;
     QSlider *timeLineSlider;
     QScrollArea *scrollArea_1;
     QWidget *scrollAreaWidgetContents_1;
-    QGridLayout *gridLayout;
+    QGridLayout *gridLayout_2;
     QScrollArea *scrollArea_2;
     QWidget *scrollAreaWidgetContents_2;
-    QGridLayout *gridLayout_4;
+    QGridLayout *gridLayout_3;
     QFrame *line_1;
     QPushButton *cancelButton;
     QPushButton *okButton;
@@ -154,10 +154,10 @@ public:
         actionZoomOut->setIcon(icon11);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
-        gridLayout_2 = new QGridLayout(centralWidget);
-        gridLayout_2->setSpacing(6);
-        gridLayout_2->setContentsMargins(11, 11, 11, 11);
-        gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
+        gridLayout = new QGridLayout(centralWidget);
+        gridLayout->setSpacing(6);
+        gridLayout->setContentsMargins(11, 11, 11, 11);
+        gridLayout->setObjectName(QStringLiteral("gridLayout"));
         gridLayout_1 = new QGridLayout();
         gridLayout_1->setSpacing(6);
         gridLayout_1->setObjectName(QStringLiteral("gridLayout_1"));
@@ -168,7 +168,7 @@ public:
         gridLayout_1->addWidget(timeLineSlider, 1, 0, 1, 1);
 
 
-        gridLayout_2->addLayout(gridLayout_1, 11, 1, 1, 5);
+        gridLayout->addLayout(gridLayout_1, 11, 1, 1, 5);
 
         scrollArea_1 = new QScrollArea(centralWidget);
         scrollArea_1->setObjectName(QStringLiteral("scrollArea_1"));
@@ -182,13 +182,13 @@ public:
         scrollAreaWidgetContents_1 = new QWidget();
         scrollAreaWidgetContents_1->setObjectName(QStringLiteral("scrollAreaWidgetContents_1"));
         scrollAreaWidgetContents_1->setGeometry(QRect(0, 0, 1262, 104));
-        gridLayout = new QGridLayout(scrollAreaWidgetContents_1);
-        gridLayout->setSpacing(6);
-        gridLayout->setContentsMargins(11, 11, 11, 11);
-        gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        gridLayout_2 = new QGridLayout(scrollAreaWidgetContents_1);
+        gridLayout_2->setSpacing(6);
+        gridLayout_2->setContentsMargins(11, 11, 11, 11);
+        gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
         scrollArea_1->setWidget(scrollAreaWidgetContents_1);
 
-        gridLayout_2->addWidget(scrollArea_1, 12, 1, 1, 5);
+        gridLayout->addWidget(scrollArea_1, 12, 1, 1, 5);
 
         scrollArea_2 = new QScrollArea(centralWidget);
         scrollArea_2->setObjectName(QStringLiteral("scrollArea_2"));
@@ -199,20 +199,20 @@ public:
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QStringLiteral("scrollAreaWidgetContents_2"));
         scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 1262, 103));
-        gridLayout_4 = new QGridLayout(scrollAreaWidgetContents_2);
-        gridLayout_4->setSpacing(6);
-        gridLayout_4->setContentsMargins(11, 11, 11, 11);
-        gridLayout_4->setObjectName(QStringLiteral("gridLayout_4"));
+        gridLayout_3 = new QGridLayout(scrollAreaWidgetContents_2);
+        gridLayout_3->setSpacing(6);
+        gridLayout_3->setContentsMargins(11, 11, 11, 11);
+        gridLayout_3->setObjectName(QStringLiteral("gridLayout_3"));
         scrollArea_2->setWidget(scrollAreaWidgetContents_2);
 
-        gridLayout_2->addWidget(scrollArea_2, 13, 1, 1, 5);
+        gridLayout->addWidget(scrollArea_2, 13, 1, 1, 5);
 
         line_1 = new QFrame(centralWidget);
         line_1->setObjectName(QStringLiteral("line_1"));
         line_1->setFrameShape(QFrame::HLine);
         line_1->setFrameShadow(QFrame::Sunken);
 
-        gridLayout_2->addWidget(line_1, 8, 1, 1, 5);
+        gridLayout->addWidget(line_1, 8, 1, 1, 5);
 
         cancelButton = new QPushButton(centralWidget);
         cancelButton->setObjectName(QStringLiteral("cancelButton"));
@@ -226,7 +226,7 @@ public:
         cancelButton->setIcon(icon12);
         cancelButton->setIconSize(QSize(20, 20));
 
-        gridLayout_2->addWidget(cancelButton, 5, 4, 1, 1);
+        gridLayout->addWidget(cancelButton, 5, 4, 1, 1);
 
         okButton = new QPushButton(centralWidget);
         okButton->setObjectName(QStringLiteral("okButton"));
@@ -238,7 +238,7 @@ public:
         okButton->setIcon(icon13);
         okButton->setIconSize(QSize(20, 20));
 
-        gridLayout_2->addWidget(okButton, 5, 3, 1, 1);
+        gridLayout->addWidget(okButton, 5, 3, 1, 1);
 
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setSpacing(6);
@@ -288,7 +288,7 @@ public:
         horizontalLayout_3->addWidget(stopButton1);
 
 
-        gridLayout_2->addLayout(horizontalLayout_3, 5, 1, 1, 1);
+        gridLayout->addLayout(horizontalLayout_3, 5, 1, 1, 1);
 
         editCheckBox = new QCheckBox(centralWidget);
         editCheckBox->setObjectName(QStringLiteral("editCheckBox"));
@@ -296,7 +296,7 @@ public:
         editCheckBox->setSizePolicy(sizePolicy2);
         editCheckBox->setStyleSheet(QStringLiteral("font: 75 12pt \"Times New Roman\";"));
 
-        gridLayout_2->addWidget(editCheckBox, 10, 1, 1, 1);
+        gridLayout->addWidget(editCheckBox, 10, 1, 1, 1);
 
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setSpacing(6);
@@ -308,7 +308,7 @@ public:
         horizontalLayout_2->addWidget(bgLabel_2);
 
 
-        gridLayout_2->addLayout(horizontalLayout_2, 0, 3, 2, 3);
+        gridLayout->addLayout(horizontalLayout_2, 0, 3, 2, 3);
 
         horizontalLayout_1 = new QHBoxLayout();
         horizontalLayout_1->setSpacing(6);
@@ -321,7 +321,7 @@ public:
         horizontalLayout_1->addWidget(bgLabel_1);
 
 
-        gridLayout_2->addLayout(horizontalLayout_1, 0, 1, 2, 2);
+        gridLayout->addLayout(horizontalLayout_1, 0, 1, 2, 2);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);

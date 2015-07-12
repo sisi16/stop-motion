@@ -20,7 +20,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout_2">
+   <layout class="QGridLayout" name="gridLayout">
     <item row="11" column="1" colspan="5">
      <layout class="QGridLayout" name="gridLayout_1">
       <item row="1" column="0">
@@ -55,7 +55,7 @@
          <height>104</height>
         </rect>
        </property>
-       <layout class="QGridLayout" name="gridLayout"/>
+       <layout class="QGridLayout" name="gridLayout_2"/>
       </widget>
      </widget>
     </item>
@@ -82,7 +82,7 @@
          <height>103</height>
         </rect>
        </property>
-       <layout class="QGridLayout" name="gridLayout_4"/>
+       <layout class="QGridLayout" name="gridLayout_3"/>
       </widget>
      </widget>
     </item>

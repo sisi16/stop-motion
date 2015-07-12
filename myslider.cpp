@@ -47,7 +47,7 @@ void myslider::paintEvent(QPaintEvent *ev)
         {
             double start, end, size;
 
-			size = 6472;//1425;//size = double(reference.size());
+			size = 1425;//size = double(reference.size());
             if (i == 0)
             {
                 start = 0;
@@ -64,17 +64,17 @@ void myslider::paintEvent(QPaintEvent *ev)
             switch (reference.at(indices.at(i)))
             {
                 case 1:
-                    painter.fillRect(rect, QBrush(Qt::red));
+                    painter.fillRect(rect, QBrush(Qt::blue));
                     break;
                 case 2:
-                    painter.fillRect(rect, QBrush(Qt::yellow));
+                    painter.fillRect(rect, QBrush(Qt::green));
                     break;
-                case 3:
+                /*case 3:
                     painter.fillRect(rect, QBrush(Qt::blue));
                     break;
                 case 4:
                     painter.fillRect(rect, QBrush(Qt::green));
-                    break;
+                    break;*/
             }
         }
     }

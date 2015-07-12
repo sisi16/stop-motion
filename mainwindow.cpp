@@ -27,20 +27,37 @@ MainWindow::~MainWindow()
 void MainWindow::resizeEvent(QResizeEvent* ev)
 {
     resize_count++;
-    int video_current_width, video_current_height;
-    if (resize_count > 0 && videoWidget_1->parent() != 0)
+	int video1_current_width, video1_current_height, video2_current_width, video2_current_height;
+    if (resize_count > 0)
     {
-        video_current_width = videoWidget_1->width();
-        video_current_height = videoWidget_1->height();
+		if (videoWidget_1->parent() != 0)
+		{
+			video1_current_width = videoWidget_1->width();
+			video1_current_height = videoWidget_1->height();
+		}
+		if (videoWidget_2->parent() != 0)
+		{
+			video2_current_width = videoWidget_2->width();
+			video2_current_height = videoWidget_2->height();
+		}
     }
 
 	QMainWindow::resizeEvent(ev);
 
-    if (resize_count > 0 && videoWidget_1->parent() != 0)
+    if (resize_count > 0)
     {
-        int video_width = floor(this->width()*video_current_width/double(window_current_width));
-        int video_height = floor(this->height()*video_current_height/double(window_current_height));
-        videoWidget_1->setFixedSize(video_width, video_height);
+		if (videoWidget_1->parent() != 0)
+		{
+			int video_width = floor(this->width()*video1_current_width / double(window_current_width));
+			int video_height = floor(this->height()*video1_current_height / double(window_current_height));
+			videoWidget_1->setFixedSize(video_width, video_height);
+		}
+		if (videoWidget_2->parent() != 0)
+		{
+			int video_width = floor(this->width()*video2_current_width / double(window_current_width));
+			int video_height = floor(this->height()*video2_current_height / double(window_current_height));
+			videoWidget_2->setFixedSize(video_width, video_height);
+		}
     }
 
     window_current_width = this->width();
@@ -146,8 +163,8 @@ void MainWindow::on_actionLoad_triggered()
     mediaplayer_1 = new QMediaPlayer;
     mediaplayer_2 = new QMediaPlayer;
     videoWidget_1 = new QVideoWidget;
+	videoWidget_2 = new QVideoWidget;
     mediaplayer_1->setVideoOutput(videoWidget_1);
-    //videoWidget_1->setFixedSize(ui->bgLabel_1->width(), ui->bgLabel_1->height());//videoWidget_1->setFixedSize(460, 345);
 
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), ".", tr("Video Files(*.mp4 *.avi *.mov);;All files (*.*)" ));
     if (fileName.isEmpty())
@@ -229,28 +246,13 @@ void MainWindow::on_actionCandidates_triggered()
 
 void MainWindow::on_actionTest_triggered()
 {
-    cliplabel *clip_0 = new cliplabel();
-    clip_0->setScaledContents(true);
 
-    cv::Mat temp;
-    cv::cvtColor(vproc.getFrames().at(0), temp, CV_BGR2RGB);
-    QImage image((const uchar *) temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
-    image.bits();
-
-    clip_0->setPixmap(QPixmap::fromImage(image));
-    clip_0->pixmap()->size().scale(size(), Qt::IgnoreAspectRatio);
-
-	int length = ui->scrollArea_1->height();
-    clip_0->setFixedSize(length, length);
-    //ui->gridLayout_4->addWidget(clip_0, 0, 1);
-	//ui->scrollArea_1->setWidget(clip_0);
-	//ui->scrollArea_1->setBackgroundRole(QPalette::Dark);
-	ui->gridLayout->addWidget(clip_0, 0, 1);
-	//ui->scrollArea_1->layout()->addWidget(clip_0);
+	cliplabel *clip_0 = new cliplabel(vproc.getFrames().at(0), ui->scrollArea_1->height());
+    ui->gridLayout_2->addWidget(clip_0, 0, 0, Qt::AlignLeft);
     this->setAcceptDrops(true);
     clip_0->setMouseTracking(true);
-    clip_0->getMovingParent(this);
-    clip_0->getMovingPixmap(QPixmap::fromImage(image));
+    //clip_0->getMovingParent(this);
+    //clip_0->getMovingPixmap(QPixmap::fromImage(image));
 }
 
 bool MainWindow::eventFilter(QObject *widget, QEvent *event)
@@ -293,8 +295,13 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 
 void MainWindow::playRange()
 {
+	int width, height;
+
 	if (mediaplayer_2->mediaStatus() == QMediaPlayer::EndOfMedia)
 	{
+		width = videoWidget_2->width();
+		height = videoWidget_2->height();
+
 		mediaplayer_2->setMedia(QMediaContent());
 
 		QLayoutItem *child;
@@ -306,14 +313,19 @@ void MainWindow::playRange()
 		}
 		delete mediaplayer_2;
 
+		videoWidget_2 = new QVideoWidget;
 		mediaplayer_2 = new QMediaPlayer;
+	}
+	else
+	{
+		width = ui->bgLabel_2->width();
+		height = ui->bgLabel_2->height();
 	}
 
 	vproc.writeVideo(clickRange, action);
 
-    videoWidget_2 = new QVideoWidget;
     mediaplayer_2->setVideoOutput(videoWidget_2);
-    videoWidget_2->setFixedSize(460, 345);
+    videoWidget_2->setFixedSize(width, height);
 
     QLayoutItem *child;
 	if ((child = ui->horizontalLayout_2->takeAt(0)) != 0)
