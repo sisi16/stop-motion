@@ -17,7 +17,7 @@ class cliplabel : public QLabel
 
 public:
     cliplabel(QWidget* parent = 0, Qt::WindowFlags f = 0);
-	cliplabel(cv::Mat src, int length, QWidget* parent = 0, Qt::WindowFlags f = 0);
+	cliplabel(cv::Mat src, int w, int h, QWidget* parent = 0, Qt::WindowFlags f = 0);
     cliplabel(const QString& text, QWidget* parent = 0, Qt::WindowFlags f = 0);
     void getMovingParent(QWidget* w);
     void getMovingPixmap(QPixmap pm);

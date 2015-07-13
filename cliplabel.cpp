@@ -9,7 +9,7 @@ cliplabel::cliplabel(QWidget* parent, Qt::WindowFlags f)
 {
 }
 
-cliplabel::cliplabel(Mat src, int length, QWidget* parent, Qt::WindowFlags f)
+cliplabel::cliplabel(Mat src, int w, int h, QWidget* parent, Qt::WindowFlags f)
 		 : QLabel(parent, f)
 {
 	this->setScaledContents(true);
@@ -18,7 +18,7 @@ cliplabel::cliplabel(Mat src, int length, QWidget* parent, Qt::WindowFlags f)
 	QImage image((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
 	image.bits();
 	this->setPixmap(QPixmap::fromImage(image));
-	this->setFixedSize(length, length);
+	this->setFixedSize(w, h);
 }
 
 cliplabel::cliplabel(const QString &text, QWidget *parent, Qt::WindowFlags f)

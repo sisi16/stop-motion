@@ -35,6 +35,7 @@ void MainWindow::resizeEvent(QResizeEvent* ev)
 			video1_current_width = videoWidget_1->width();
 			video1_current_height = videoWidget_1->height();
 		}
+
 		if (videoWidget_2->parent() != 0)
 		{
 			video2_current_width = videoWidget_2->width();
@@ -113,10 +114,10 @@ void MainWindow::on_cutButton_clicked()
     ui->gridLayout_1->addWidget(progressBar);
     progressBar->show();
 
-	//vproc.readBuffers();
-	//if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
-	vproc.cut2Scenes();
-	vproc.writeBuffers();
+	vproc.readBuffers();
+	if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
+		vproc.cut2Scenes();
+	//vproc.writeBuffers();
 	frame_slider->updateParams(vproc.getSceneCuts(), vproc.getCutTypes());
     isCut = true;
     statusBar()->clearMessage();
@@ -250,20 +251,37 @@ void MainWindow::on_actionCandidates_triggered()
 void MainWindow::on_actionTest_triggered()
 {
 	vector<int> scene_cuts = vproc.getSceneCuts();
-	vector<int> frame_types = vproc.getFrameTypes();
-	int length = ui->scrollArea_1->height();
+	vector<int> cut_types = vproc.getCutTypes();
+	int height = ui->scrollArea_1->height();
+	int width;
 	int index;
 	
 	for (int i = 0; i < vproc.getSceneCuts().size(); i++)
 	{
-		if (i == 0) index = 0;
-		else index = scene_cuts.at(i - 1) + 1;
-		cliplabel *clip = new cliplabel(vproc.getFrames().at(index), length);
-
-		if (frame_types.at(index) == 1)
-			ui->gridLayout_2->addWidget(clip, 0, i, Qt::AlignLeft);
+		if (i == 0)
+		{
+			index = scene_cuts.at(0) / 2;
+			width = floor(height * 0.02 * (scene_cuts.at(0)+1));
+		}
 		else
+		{
+			index = (scene_cuts.at(i - 1) + 1 + scene_cuts.at(i)) / 2;
+			width = floor(height * 0.02 * (scene_cuts.at(i)-scene_cuts.at(i-1)));
+		}
+		cliplabel *clip = new cliplabel(vproc.getFrames().at(index), width, height);
+		QLabel *empty_clip = new QLabel();
+		empty_clip->setFixedSize(width, height);
+
+		if (cut_types.at(i) == 1)
+		{
+			ui->gridLayout_2->addWidget(clip, 0, i, Qt::AlignLeft);
+			ui->gridLayout_3->addWidget(empty_clip, 0, i, Qt::AlignLeft);
+		}
+		else
+		{
 			ui->gridLayout_3->addWidget(clip, 0, i, Qt::AlignLeft);
+			ui->gridLayout_2->addWidget(empty_clip, 0, i, Qt::AlignLeft);
+		}
 		//this->setAcceptDrops(true);
 		//clip_0->setMouseTracking(true);
 		//clip_0->getMovingParent(this);
