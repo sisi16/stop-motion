@@ -113,8 +113,11 @@ void MainWindow::on_cutButton_clicked()
     ui->gridLayout_1->addWidget(progressBar);
     progressBar->show();
 
-    vproc.cut2Scenes();
-    frame_slider->updateParams(vproc.getSceneCuts(), vproc.getFrameTypes());
+	//vproc.readBuffers();
+	//if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
+	vproc.cut2Scenes();
+	vproc.writeBuffers();
+	frame_slider->updateParams(vproc.getSceneCuts(), vproc.getCutTypes());
     isCut = true;
     statusBar()->clearMessage();
 
@@ -246,13 +249,26 @@ void MainWindow::on_actionCandidates_triggered()
 
 void MainWindow::on_actionTest_triggered()
 {
+	vector<int> scene_cuts = vproc.getSceneCuts();
+	vector<int> frame_types = vproc.getFrameTypes();
+	int length = ui->scrollArea_1->height();
+	int index;
+	
+	for (int i = 0; i < vproc.getSceneCuts().size(); i++)
+	{
+		if (i == 0) index = 0;
+		else index = scene_cuts.at(i - 1) + 1;
+		cliplabel *clip = new cliplabel(vproc.getFrames().at(index), length);
 
-	cliplabel *clip_0 = new cliplabel(vproc.getFrames().at(0), ui->scrollArea_1->height());
-    ui->gridLayout_2->addWidget(clip_0, 0, 0, Qt::AlignLeft);
-    this->setAcceptDrops(true);
-    clip_0->setMouseTracking(true);
-    //clip_0->getMovingParent(this);
-    //clip_0->getMovingPixmap(QPixmap::fromImage(image));
+		if (frame_types.at(index) == 1)
+			ui->gridLayout_2->addWidget(clip, 0, i, Qt::AlignLeft);
+		else
+			ui->gridLayout_3->addWidget(clip, 0, i, Qt::AlignLeft);
+		//this->setAcceptDrops(true);
+		//clip_0->setMouseTracking(true);
+		//clip_0->getMovingParent(this);
+		//clip_0->getMovingPixmap(QPixmap::fromImage(image));
+	}
 }
 
 bool MainWindow::eventFilter(QObject *widget, QEvent *event)
@@ -269,7 +285,6 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
     {
         QMouseEvent *m = (QMouseEvent*)event;
         clickRange = vproc.getRange(m->x(), frame_slider->width());
-        cout << clickRange.x << " " << clickRange.y << endl;
 
         if (m->button() == Qt::LeftButton)
         {
@@ -408,6 +423,6 @@ void MainWindow::show_context_menu()
 void MainWindow::initFrameSlider()
 {
 	vector<int> sc = vproc.getSceneCuts();
-	vector<int> ft = vproc.getFrameTypes();
+	vector<int> ft = vproc.getCutTypes();
 	frame_slider = new myslider(Qt::Horizontal, sc, ft);
 }

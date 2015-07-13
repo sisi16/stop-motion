@@ -61,7 +61,7 @@ void myslider::paintEvent(QPaintEvent *ev)
 
             QRect rect(groove_rect.left()+start*groove_rect.width(), groove_rect.top(), end*groove_rect.width(), groove_rect.height());
 
-            switch (reference.at(indices.at(i)))
+			switch (reference.at(i))
             {
                 case 1:
                     painter.fillRect(rect, QBrush(Qt::blue));

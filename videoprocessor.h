@@ -27,6 +27,7 @@ public:
     void calAvgOpFlows();
     void cut2Scenes();
     std::vector<int> getSceneCuts();
+	std::vector<int> getCutTypes();
     std::vector<int> getFrameTypes();
     int getVideoSize();
     QProgressBar *getProgressBar();
@@ -35,6 +36,8 @@ public:
 	int getFrameRate();
     void writeVideo(cv::Point3i range, clipOperation operation);
     void test();
+	void writeBuffers();
+	void readBuffers();
 
 private:
     QProgressBar *progressBar;
@@ -46,6 +49,7 @@ private:
     std::vector<int> stable_frames;
     std::vector<float> avg_flows;
     std::vector<int> frame_types;
+	std::vector<int> cut_types;
     std::vector<int> scene_cuts;
     cv::VideoWriter out;
     opflow of;

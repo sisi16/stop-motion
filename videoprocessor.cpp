@@ -1,5 +1,6 @@
 #include "videoprocessor.h"
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 using namespace cv;
@@ -22,7 +23,12 @@ void videoprocessor::readVideo(const string& file)
 	if (!capture.isOpened())
 		throw "Error when reading the video file";
 
-    for (int i = 0; i < 149; i++)//for (int i = 0; i < capture.get(CV_CAP_PROP_FRAME_COUNT); i++)
+	num_of_frames = capture.get(CV_CAP_PROP_FRAME_COUNT);
+	frame_width = capture.get(CV_CAP_PROP_FRAME_WIDTH);
+	frame_height = capture.get(CV_CAP_PROP_FRAME_HEIGHT);
+	frame_rate = capture.get(CV_CAP_PROP_FPS);
+
+    for (int i = 0; i < num_of_frames; i++)//for (int i = 0; i < capture.get(CV_CAP_PROP_FRAME_COUNT); i++)
     {
         Mat frame;
         capture >> frame;
@@ -32,12 +38,6 @@ void videoprocessor::readVideo(const string& file)
 	Mat temp;
 	cvtColor(frames.at(0), temp, CV_BGR2RGB);
 	cv::imwrite("D:/CCCC/Stop Motion/2015_05/preview.png", temp);
-
-    num_of_frames = capture.get(CV_CAP_PROP_FRAME_COUNT);
-	cout << num_of_frames << endl;
-    frame_width = capture.get(CV_CAP_PROP_FRAME_WIDTH);
-    frame_height = capture.get(CV_CAP_PROP_FRAME_HEIGHT);
-	frame_rate = capture.get(CV_CAP_PROP_FPS);
 
     progressBar = new QProgressBar;
     progressBar->setRange(0, frames.size()-1);
@@ -88,7 +88,6 @@ void videoprocessor::cut2Scenes()
         float current_avg_flow = of.calAvgOpFlow(current_flow);
         //bool hand = hd.isHand(frames.at(i));
 
-		if (i == 107) cout << current_avg_flow << endl;
         if (current_avg_flow < 5e-2)
         {
             /*if (hand)
@@ -106,25 +105,35 @@ void videoprocessor::cut2Scenes()
 			frame_types.push_back(2);
         }
 
-        if (i == 0)
-            scene_cuts.push_back(0);
+		if (i == 0)
+		{
+			scene_cuts.push_back(0);
+			cut_types.push_back(frame_types.at(0));
+		}
         else if (i != 0 && frame_types.at(i-1) == frame_types.at(i))
             scene_cuts.at(scene_count)++;
         else if (i != 0 && frame_types.at(i-1) != frame_types.at(i))
         {
             scene_count++;
             scene_cuts.push_back(i);
+			cut_types.push_back(frame_types.at(i));
         }
     }
-    for (int j = 0; j < scene_cuts.size(); j++)
+	
+    /*for (int j = 0; j < scene_cuts.size(); j++)
     {
         cout << scene_cuts.at(j) << endl;
-    }
+    }*/
 }
 
 vector<int> videoprocessor::getSceneCuts()
 {
     return scene_cuts;
+}
+
+vector<int> videoprocessor::getCutTypes()
+{
+	return cut_types;
 }
 
 vector<int> videoprocessor::getFrameTypes()
@@ -248,4 +257,54 @@ void videoprocessor::test()
 
     if (hd.isHand(frames.at(91))) cout << "91: YES" << endl;
     imshow("Frame 91", frames.at(91));*/
+}
+
+void videoprocessor::writeBuffers()
+{
+	ofstream cutfile("cuts.txt");
+	if (cutfile.is_open())
+	{
+		for (int i = 0; i < scene_cuts.size(); i++)
+			cutfile << scene_cuts.at(i) << endl;
+		cutfile.close();
+	}
+	else cout << "Unable to open file" << endl;
+
+	ofstream typefile("types.txt");
+	if (typefile.is_open())
+	{
+		for (int j = 0; j < cut_types.size(); j++)
+			typefile << cut_types.at(j) << endl;
+		typefile.close();
+	}
+	else cout << "Unable to open file" << endl;
+}
+
+void videoprocessor::readBuffers()
+{ 
+	if (scene_cuts.empty())
+	{
+		ifstream cutfile("cuts.txt");
+		int num;
+		if (cutfile.is_open())
+		{
+			while (cutfile >> num)
+				scene_cuts.push_back(num);
+			cutfile.close();
+		}
+		else cout << "Unable to open file" << endl;
+	}
+
+	if (cut_types.empty())
+	{
+		ifstream typefile("types.txt");
+		int num;
+		if (typefile.is_open())
+		{
+			while (typefile >> num)
+				cut_types.push_back(num);
+			typefile.close();
+		}
+		else cout << "Unable to open file" << endl;
+	}
 }
