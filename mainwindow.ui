@@ -259,7 +259,8 @@
       <item>
        <widget class="QLabel" name="bgLabel_2">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(130, 130, 130);</string>
+         <string notr="true">background-color: rgb(130, 130, 130);
+</string>
         </property>
         <property name="text">
          <string/>
@@ -274,6 +275,7 @@
        <widget class="QLabel" name="bgLabel_1">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(130, 130, 130);
+
 </string>
         </property>
         <property name="text">

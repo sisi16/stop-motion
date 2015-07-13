@@ -17,20 +17,28 @@ class cliplabel : public QLabel
 
 public:
     cliplabel(QWidget* parent = 0, Qt::WindowFlags f = 0);
-	cliplabel(cv::Mat src, int w, int h, QWidget* parent = 0, Qt::WindowFlags f = 0);
+	cliplabel(cv::Mat src, int w, int h, int index, int type, QWidget* parent = 0, Qt::WindowFlags f = 0);
     cliplabel(const QString& text, QWidget* parent = 0, Qt::WindowFlags f = 0);
-    void getMovingParent(QWidget* w);
+    void getMovingParent(QWidget* mp);
     void getMovingPixmap(QPixmap pm);
+	int getCutIndex();
+	int getCutType();
     ~cliplabel();
+
+signals:
+	void clicked();
 
 protected:
     void mouseDoubleClickEvent(QMouseEvent *ev);
     void mousePressEvent(QMouseEvent *ev);
-    void mouseMoveEvent(QMouseEvent *ev);
+    void enterEvent(QEvent *);
+	void leaveEvent(QEvent *);
 
 private:
+	int cut_index;
+	int cut_type;
     QPoint offset;
-    QWidget* main_window;
+    QWidget* moving_parent;
     QPixmap cursor_pixmap;
 };
 

@@ -9,6 +9,7 @@
 #include <QTimer>
 #include <QMenu>
 #include <QPalette>
+#include <QScrollBar>
 #include "videoprocessor.h"
 #include "myslider.h"
 #include "cliplabel.h"
@@ -24,6 +25,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+	void setClickRange(int index);
 
 protected:
 	void resizeEvent(QResizeEvent* ev);

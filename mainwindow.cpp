@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
     window_current_height = this->height() - ui->menuBar->height() - ui->mainToolBar->height();
 	ui->scrollArea_1->setBackgroundRole(QPalette::Midlight);
 	ui->scrollArea_2->setBackgroundRole(QPalette::Mid);
+	videoWidget_1 = new QVideoWidget;
+	videoWidget_2 = new QVideoWidget;
 }
 
 MainWindow::~MainWindow()
@@ -63,6 +65,14 @@ void MainWindow::resizeEvent(QResizeEvent* ev)
 
     window_current_width = this->width();
     window_current_height = this->height() - ui->menuBar->height() - ui->mainToolBar->height();
+}
+
+void MainWindow::setClickRange(int index)
+{
+	if (index == 0) clickRange.x = 0;
+	else clickRange.x = vproc.getSceneCuts().at(index-1) + 1;
+	clickRange.y = vproc.getSceneCuts().at(index);
+	clickRange.z = index;
 }
 
 void MainWindow::on_playButton1_clicked()
@@ -166,8 +176,8 @@ void MainWindow::on_actionLoad_triggered()
 {
     mediaplayer_1 = new QMediaPlayer;
     mediaplayer_2 = new QMediaPlayer;
-    videoWidget_1 = new QVideoWidget;
-	videoWidget_2 = new QVideoWidget;
+    //videoWidget_1 = new QVideoWidget;
+	//videoWidget_2 = new QVideoWidget;
     mediaplayer_1->setVideoOutput(videoWidget_1);
 
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), ".", tr("Video Files(*.mp4 *.avi *.mov);;All files (*.*)" ));
@@ -268,7 +278,7 @@ void MainWindow::on_actionTest_triggered()
 			index = (scene_cuts.at(i - 1) + 1 + scene_cuts.at(i)) / 2;
 			width = floor(height * 0.02 * (scene_cuts.at(i)-scene_cuts.at(i-1)));
 		}
-		cliplabel *clip = new cliplabel(vproc.getFrames().at(index), width, height);
+		cliplabel *clip = new cliplabel(vproc.getFrames().at(index), width, height, i, cut_types.at(i));
 		QLabel *empty_clip = new QLabel();
 		empty_clip->setFixedSize(width, height);
 
@@ -282,11 +292,15 @@ void MainWindow::on_actionTest_triggered()
 			ui->gridLayout_3->addWidget(clip, 0, i, Qt::AlignLeft);
 			ui->gridLayout_2->addWidget(empty_clip, 0, i, Qt::AlignLeft);
 		}
+
+		connect(clip, SIGNAL(clicked()), this, SLOT(playRange()));
 		//this->setAcceptDrops(true);
-		//clip_0->setMouseTracking(true);
 		//clip_0->getMovingParent(this);
 		//clip_0->getMovingPixmap(QPixmap::fromImage(image));
 	}
+
+	connect(ui->scrollArea_1->horizontalScrollBar(), SIGNAL(valueChanged(int)), ui->scrollArea_2->horizontalScrollBar(), SLOT(setValue(int)));
+	connect(ui->scrollArea_2->horizontalScrollBar(), SIGNAL(valueChanged(int)), ui->scrollArea_1->horizontalScrollBar(), SLOT(setValue(int)));
 }
 
 bool MainWindow::eventFilter(QObject *widget, QEvent *event)
@@ -355,6 +369,11 @@ void MainWindow::playRange()
 		height = ui->bgLabel_2->height();
 	}
 
+	if (sender() != frame_slider)
+	{
+		cliplabel* clip = dynamic_cast<cliplabel*>(sender());
+		setClickRange(clip->getCutIndex());
+	}
 	vproc.writeVideo(clickRange, action);
 
     mediaplayer_2->setVideoOutput(videoWidget_2);
