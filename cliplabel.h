@@ -11,6 +11,12 @@
 #include <QCursor>
 #include <QWidget>
 
+enum OperationSender
+{
+	FrameSlider,
+	ClipLabel
+};
+
 class cliplabel : public QLabel
 {
     Q_OBJECT
@@ -26,11 +32,10 @@ public:
     ~cliplabel();
 
 signals:
-	void clicked();
+	void dblClicked();
 
 protected:
     void mouseDoubleClickEvent(QMouseEvent *ev);
-    void mousePressEvent(QMouseEvent *ev);
     void enterEvent(QEvent *);
 	void leaveEvent(QEvent *);
 

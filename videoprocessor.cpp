@@ -28,7 +28,7 @@ void videoprocessor::readVideo(const string& file)
 	frame_height = capture.get(CV_CAP_PROP_FRAME_HEIGHT);
 	frame_rate = capture.get(CV_CAP_PROP_FPS);
 
-    for (int i = 0; i < num_of_frames; i++)//for (int i = 0; i < capture.get(CV_CAP_PROP_FRAME_COUNT); i++)
+	for (int i = 0; i < num_of_frames; i++)//for (int i = 0; i < 150; i++)//for (int i = 0; i < num_of_frames; i++)
     {
         Mat frame;
         capture >> frame;
@@ -71,8 +71,8 @@ void videoprocessor::calAvgOpFlows()
         cout << current_avg_flow << endl;
         avg_flows.push_back(current_avg_flow);
 
-        if (current_avg_flow < 5e-2)
-            stable_frames.push_back(i);
+        //if (current_avg_flow < 5e-2)
+            //stable_frames.push_back(i);
     }
 }
 
@@ -86,9 +86,10 @@ void videoprocessor::cut2Scenes()
 
         Mat current_flow = of.calOpFlow(frames.at(i), frames.at(i+1));
         float current_avg_flow = of.calAvgOpFlow(current_flow);
+		//cout << current_avg_flow << endl;
         //bool hand = hd.isHand(frames.at(i));
 
-        if (current_avg_flow < 5e-2)
+        if (current_avg_flow < 5.1e-3)
         {
             /*if (hand)
                 frame_types.push_back(1);
@@ -120,10 +121,10 @@ void videoprocessor::cut2Scenes()
         }
     }
 	
-    /*for (int j = 0; j < scene_cuts.size(); j++)
+    for (int j = 0; j < scene_cuts.size(); j++)
     {
         cout << scene_cuts.at(j) << endl;
-    }*/
+    }
 }
 
 vector<int> videoprocessor::getSceneCuts()
@@ -180,7 +181,7 @@ void videoprocessor::writeVideo(Point3i range, clipOperation operation)
     }
 
     Mat frame;
-    out.open("D:/CCCC/Stop Motion/2015_05/range.avi", CV_FOURCC('M', 'J', 'P', 'G'), 10, Size(frame_width, frame_height));
+    out.open("D:/CCCC/Stop Motion/2015_05/range.avi", CV_FOURCC('M', 'J', 'P', 'G'), 5, Size(frame_width, frame_height));
 
     if(!out.isOpened()) {
 		throw "Error! Unable to open video file for output.";
@@ -261,7 +262,7 @@ void videoprocessor::test()
 
 void videoprocessor::writeBuffers()
 {
-	ofstream cutfile("cuts.txt");
+	ofstream cutfile("cuts2.txt");
 	if (cutfile.is_open())
 	{
 		for (int i = 0; i < scene_cuts.size(); i++)
@@ -270,7 +271,7 @@ void videoprocessor::writeBuffers()
 	}
 	else cout << "Unable to open file" << endl;
 
-	ofstream typefile("types.txt");
+	ofstream typefile("types2.txt");
 	if (typefile.is_open())
 	{
 		for (int j = 0; j < cut_types.size(); j++)

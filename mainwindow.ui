@@ -337,6 +337,8 @@
    </attribute>
    <addaction name="actionConfirm"/>
    <addaction name="separator"/>
+   <addaction name="actionSwap"/>
+   <addaction name="separator"/>
    <addaction name="actionDelete"/>
    <addaction name="separator"/>
    <addaction name="actionResume"/>
@@ -503,6 +505,18 @@
    </property>
    <property name="toolTip">
     <string>Zoom out</string>
+   </property>
+  </action>
+  <action name="actionSwap">
+   <property name="icon">
+    <iconset resource="myres.qrc">
+     <normaloff>:/Images/icons/swap.png</normaloff>:/Images/icons/swap.png</iconset>
+   </property>
+   <property name="text">
+    <string>Swap</string>
+   </property>
+   <property name="toolTip">
+    <string>Swap</string>
    </property>
   </action>
  </widget>

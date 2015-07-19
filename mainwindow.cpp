@@ -125,8 +125,8 @@ void MainWindow::on_cutButton_clicked()
     progressBar->show();
 
 	vproc.readBuffers();
-	if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
-		vproc.cut2Scenes();
+	//if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
+		//vproc.cut2Scenes();
 	//vproc.writeBuffers();
 	frame_slider->updateParams(vproc.getSceneCuts(), vproc.getCutTypes());
     isCut = true;
@@ -270,14 +270,15 @@ void MainWindow::on_actionTest_triggered()
 	{
 		if (i == 0)
 		{
-			index = scene_cuts.at(0) / 2;
+			index = floor(scene_cuts.at(0) / 2.0);
 			width = floor(height * 0.02 * (scene_cuts.at(0)+1));
 		}
 		else
 		{
-			index = (scene_cuts.at(i - 1) + 1 + scene_cuts.at(i)) / 2;
+			index = floor((scene_cuts.at(i - 1) + 1 + scene_cuts.at(i)) / 2.0);
 			width = floor(height * 0.02 * (scene_cuts.at(i)-scene_cuts.at(i-1)));
 		}
+
 		cliplabel *clip = new cliplabel(vproc.getFrames().at(index), width, height, i, cut_types.at(i));
 		QLabel *empty_clip = new QLabel();
 		empty_clip->setFixedSize(width, height);
@@ -293,49 +294,147 @@ void MainWindow::on_actionTest_triggered()
 			ui->gridLayout_2->addWidget(empty_clip, 0, i, Qt::AlignLeft);
 		}
 
-		connect(clip, SIGNAL(clicked()), this, SLOT(playRange()));
-		//this->setAcceptDrops(true);
-		//clip_0->getMovingParent(this);
-		//clip_0->getMovingPixmap(QPixmap::fromImage(image));
+		connect(clip, SIGNAL(dblClicked()), this, SLOT(playRange()));
 	}
 
 	connect(ui->scrollArea_1->horizontalScrollBar(), SIGNAL(valueChanged(int)), ui->scrollArea_2->horizontalScrollBar(), SLOT(setValue(int)));
 	connect(ui->scrollArea_2->horizontalScrollBar(), SIGNAL(valueChanged(int)), ui->scrollArea_1->horizontalScrollBar(), SLOT(setValue(int)));
 }
 
+void MainWindow::on_actionSwap_triggered()
+{
+	if (!ui->actionSwap->isCheckable())
+	{
+		QString tip = "Please enable edit mode first.";
+		statusBar()->showMessage(tip);
+	}
+	else if (ui->actionSwap->isChecked())
+		action = MoveClip;
+	else
+		action = NullOperation;
+}
+
+void MainWindow::on_actionDelete_triggered()
+{
+	if (!ui->actionDelete->isCheckable())
+	{
+		QString tip = "Please enable edit mode first.";
+		statusBar()->showMessage(tip);
+	}
+	else if (ui->actionDelete->isChecked())
+		action = DeleteClip;
+	else
+		action = NullOperation;
+}
+
 bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 {
-    if (widget != frame_slider) return false;
+    if (widget != frame_slider && widget != ui->scrollAreaWidgetContents_1) return false;
 
-    if (event->type() == QEvent::MouseMove)
-    {
-        QMouseEvent *m = (QMouseEvent*)event;
-        QString tip = "position: (" + QString::number(m->x()) + ", " + QString::number(m->y()) + ")";
-        statusBar()->showMessage(tip);
-    }
-    else if (event->type() == QEvent::MouseButtonPress)
-    {
-        QMouseEvent *m = (QMouseEvent*)event;
-        clickRange = vproc.getRange(m->x(), frame_slider->width());
+	else if (widget == frame_slider)
+	{
+		if (event->type() == QEvent::MouseMove)
+		{
+			QMouseEvent *m = (QMouseEvent*)event;
+			QString tip = "position: (" + QString::number(m->x()) + ", " + QString::number(m->y()) + ")";
+			statusBar()->showMessage(tip);
+		}
+		else if (event->type() == QEvent::MouseButtonPress)
+		{
+			QMouseEvent *m = (QMouseEvent*)event;
+			clickRange = vproc.getRange(m->x(), frame_slider->width());
 
-        if (m->button() == Qt::LeftButton)
-        {
-			action = ViewClip;
-            playRange();
-        }
-        else if (m->button() == Qt::RightButton)
-        {
-            frame_slider->setContextMenuPolicy(Qt::CustomContextMenu);
-            connect(frame_slider, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(show_context_menu()));
-        }
+			if (m->button() == Qt::LeftButton)
+			{
+				action = ViewClip;
+				playRange();
+			}
+			else if (m->button() == Qt::RightButton)
+			{
+				frame_slider->setContextMenuPolicy(Qt::CustomContextMenu);
+				connect(frame_slider, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(show_context_menu()));
+			}
 
-        return true;
-    }
-    else if (event->type() == QEvent::Leave)
-    {
-        statusBar()->clearMessage();
-        return true;
-    }
+			return true;
+		}
+		else if (event->type() == QEvent::Leave)
+		{
+			statusBar()->clearMessage();
+			return true;
+		}
+	}
+
+	else if (widget == ui->scrollAreaWidgetContents_1)
+	{
+		if (event->type() == QEvent::MouseButtonPress)
+		{
+			QMouseEvent *m = (QMouseEvent*)event;
+			if (m->button() == Qt::LeftButton)
+			{
+				if (action == DeleteClip)
+				{
+					cliplabel *item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(m->pos()));
+					setClickRange(item->getCutIndex());
+				}
+
+				else if (action == MoveClip)
+				{
+					QLabel *item = static_cast<QLabel*>(ui->scrollAreaWidgetContents_1->childAt(m->pos()));
+					QPixmap pixmap = *item->pixmap();
+					QMimeData *mimeData = new QMimeData;
+					QByteArray exData;
+					QDataStream dataStream(&exData, QIODevice::WriteOnly);
+					dataStream << pixmap << m->pos() << QPoint(m->pos() - item->pos());
+					mimeData->setData("application/x-dnditemdata", exData);
+					mimeData->setText(tr("Drag and Drop"));
+					QDrag *drag = new QDrag(ui->scrollAreaWidgetContents_1);
+					drag->setMimeData(mimeData);
+					drag->setPixmap(pixmap.scaledToHeight(50));
+					drag->setHotSpot(m->pos() - item->pos());
+					//item->hide();
+					if (drag->exec(Qt::MoveAction) == Qt::MoveAction)
+						item->close();
+					else
+						item->show();
+				}
+			}
+
+			return true;
+		}
+
+		else if (event->type() == QEvent::DragEnter)
+		{
+			QDragEnterEvent *drag = (QDragEnterEvent*)event;
+			if (drag->mimeData()->hasFormat("application/x-dnditemdata"))
+				drag->accept();
+			else
+				drag->ignore();
+			return true;
+		}
+
+		else if (event->type() == QEvent::Drop)
+		{
+			QDropEvent *drop = (QDropEvent*)event;
+			if (drop->mimeData()->hasFormat("application/x-dnditemdata"))
+			{
+				const QMimeData *mimeData = drop->mimeData();
+				QByteArray exData = mimeData->data("application/x-dnditemdata");
+				QDataStream dataStream(&exData, QIODevice::ReadOnly);
+				QPixmap pixmap;
+				QPoint origin_pos, pos;
+				dataStream >> pixmap >> origin_pos >> pos;
+				QLabel *item = new QLabel();
+				//item->setStyleSheet("background-color: red");
+				item->setPixmap(pixmap);
+				item->setAttribute(Qt::WA_DeleteOnClose);
+				//ui->gridLayout_2->addWidget(item);
+				//item->show();
+				QLabel *origin = static_cast<QLabel*>(ui->scrollAreaWidgetContents_1->childAt(origin_pos));
+				origin->setStyleSheet("border: 3px dashed rgb(0, 0, 0)");
+			}
+			return true;
+		}
+	}
 
     return false;
 }
@@ -369,11 +468,6 @@ void MainWindow::playRange()
 		height = ui->bgLabel_2->height();
 	}
 
-	if (sender() != frame_slider)
-	{
-		cliplabel* clip = dynamic_cast<cliplabel*>(sender());
-		setClickRange(clip->getCutIndex());
-	}
 	vproc.writeVideo(clickRange, action);
 
     mediaplayer_2->setVideoOutput(videoWidget_2);
@@ -401,12 +495,23 @@ void MainWindow::on_editCheckBox_clicked()
             frame_slider->setMouseTracking(true);
             frame_slider->setCursor(Qt::PointingHandCursor);
             frame_slider->installEventFilter(this);
+
+			ui->scrollAreaWidgetContents_1->setAcceptDrops(true);
+			ui->scrollAreaWidgetContents_1->installEventFilter(this);
+
+			ui->actionSwap->setCheckable(true);
+			ui->actionDelete->setCheckable(true);
         }
         else
         {
             frame_slider->setMouseTracking(false);
             frame_slider->setCursor(Qt::ArrowCursor);
             frame_slider->removeEventFilter(this);
+
+			ui->scrollAreaWidgetContents_1->removeEventFilter(this);
+
+			ui->actionSwap->setCheckable(false);
+			ui->actionDelete->setCheckable(false);
         }
     }
     else

@@ -10,6 +10,8 @@
 #include <QMenu>
 #include <QPalette>
 #include <QScrollBar>
+#include <QMimeData>
+#include <QDrag>
 #include "videoprocessor.h"
 #include "myslider.h"
 #include "cliplabel.h"
@@ -51,6 +53,10 @@ private slots:
     void on_actionCandidates_triggered();
 
     void on_actionTest_triggered();
+
+	void on_actionSwap_triggered();
+
+	void on_actionDelete_triggered();
 
     bool eventFilter(QObject *widget, QEvent *event);
 

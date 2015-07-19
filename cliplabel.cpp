@@ -59,21 +59,13 @@ int cliplabel::getCutType()
 
 void cliplabel::mouseDoubleClickEvent(QMouseEvent *ev)
 {
-    if (ev->button() == Qt::LeftButton)
-    {
-        moving_parent->setCursor(QCursor(cursor_pixmap, -1, -1));
-    }
-}
-
-void cliplabel::mousePressEvent(QMouseEvent *ev)
-{
     if(ev->button() == Qt::LeftButton)
     {
 		if (cut_type == 1)
 			this->setStyleSheet("border: 5px inset rgb(0, 0, 255)");
 		if (cut_type == 2)
 			this->setStyleSheet("border: 5px inset rgb(0, 255, 0)");
-		emit clicked();
+		emit dblClicked();
     }
 }
 

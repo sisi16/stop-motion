@@ -11,7 +11,9 @@
 
 enum clipOperation
 {
+	NullOperation,
 	ViewClip,
+	MoveClip,
 	DeleteClip,
 	ReverseClip
 };
