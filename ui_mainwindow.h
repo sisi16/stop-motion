@@ -49,6 +49,8 @@ public:
     QAction *actionZoomIn;
     QAction *actionZoomOut;
     QAction *actionSwap;
+    QAction *actionView;
+    QAction *actionCast;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QGridLayout *gridLayout_1;
@@ -158,6 +160,16 @@ public:
         QIcon icon12;
         icon12.addFile(QStringLiteral(":/Images/icons/swap.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionSwap->setIcon(icon12);
+        actionView = new QAction(MainWindow);
+        actionView->setObjectName(QStringLiteral("actionView"));
+        QIcon icon13;
+        icon13.addFile(QStringLiteral(":/Images/icons/play_32.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionView->setIcon(icon13);
+        actionCast = new QAction(MainWindow);
+        actionCast->setObjectName(QStringLiteral("actionCast"));
+        QIcon icon14;
+        icon14.addFile(QStringLiteral(":/Images/icons/cast.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionCast->setIcon(icon14);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -227,9 +239,9 @@ public:
         sizePolicy2.setVerticalStretch(0);
         sizePolicy2.setHeightForWidth(cancelButton->sizePolicy().hasHeightForWidth());
         cancelButton->setSizePolicy(sizePolicy2);
-        QIcon icon13;
-        icon13.addFile(QStringLiteral(":/Images/icons/cancel.png"), QSize(), QIcon::Normal, QIcon::Off);
-        cancelButton->setIcon(icon13);
+        QIcon icon15;
+        icon15.addFile(QStringLiteral(":/Images/icons/cancel.png"), QSize(), QIcon::Normal, QIcon::Off);
+        cancelButton->setIcon(icon15);
         cancelButton->setIconSize(QSize(20, 20));
 
         gridLayout->addWidget(cancelButton, 5, 4, 1, 1);
@@ -239,9 +251,9 @@ public:
         sizePolicy2.setHeightForWidth(okButton->sizePolicy().hasHeightForWidth());
         okButton->setSizePolicy(sizePolicy2);
         okButton->setStyleSheet(QStringLiteral(""));
-        QIcon icon14;
-        icon14.addFile(QStringLiteral(":/Images/icons/tick.png"), QSize(), QIcon::Normal, QIcon::Off);
-        okButton->setIcon(icon14);
+        QIcon icon16;
+        icon16.addFile(QStringLiteral(":/Images/icons/tick.png"), QSize(), QIcon::Normal, QIcon::Off);
+        okButton->setIcon(icon16);
         okButton->setIconSize(QSize(20, 20));
 
         gridLayout->addWidget(okButton, 5, 3, 1, 1);
@@ -253,9 +265,9 @@ public:
         cutButton->setObjectName(QStringLiteral("cutButton"));
         sizePolicy2.setHeightForWidth(cutButton->sizePolicy().hasHeightForWidth());
         cutButton->setSizePolicy(sizePolicy2);
-        QIcon icon15;
-        icon15.addFile(QStringLiteral(":/Images/icons/cut_32.png"), QSize(), QIcon::Normal, QIcon::Off);
-        cutButton->setIcon(icon15);
+        QIcon icon17;
+        icon17.addFile(QStringLiteral(":/Images/icons/cut_32.png"), QSize(), QIcon::Normal, QIcon::Off);
+        cutButton->setIcon(icon17);
         cutButton->setIconSize(QSize(20, 20));
 
         horizontalLayout_3->addWidget(cutButton);
@@ -264,9 +276,9 @@ public:
         playButton1->setObjectName(QStringLiteral("playButton1"));
         sizePolicy2.setHeightForWidth(playButton1->sizePolicy().hasHeightForWidth());
         playButton1->setSizePolicy(sizePolicy2);
-        QIcon icon16;
-        icon16.addFile(QStringLiteral(":/Images/icons/play_24.png"), QSize(), QIcon::Normal, QIcon::Off);
-        playButton1->setIcon(icon16);
+        QIcon icon18;
+        icon18.addFile(QStringLiteral(":/Images/icons/play_24.png"), QSize(), QIcon::Normal, QIcon::Off);
+        playButton1->setIcon(icon18);
         playButton1->setIconSize(QSize(20, 20));
 
         horizontalLayout_3->addWidget(playButton1);
@@ -275,9 +287,9 @@ public:
         pauseButton1->setObjectName(QStringLiteral("pauseButton1"));
         sizePolicy2.setHeightForWidth(pauseButton1->sizePolicy().hasHeightForWidth());
         pauseButton1->setSizePolicy(sizePolicy2);
-        QIcon icon17;
-        icon17.addFile(QStringLiteral(":/Images/icons/pause_24.png"), QSize(), QIcon::Normal, QIcon::Off);
-        pauseButton1->setIcon(icon17);
+        QIcon icon19;
+        icon19.addFile(QStringLiteral(":/Images/icons/pause_24.png"), QSize(), QIcon::Normal, QIcon::Off);
+        pauseButton1->setIcon(icon19);
         pauseButton1->setIconSize(QSize(20, 20));
 
         horizontalLayout_3->addWidget(pauseButton1);
@@ -286,9 +298,9 @@ public:
         stopButton1->setObjectName(QStringLiteral("stopButton1"));
         sizePolicy2.setHeightForWidth(stopButton1->sizePolicy().hasHeightForWidth());
         stopButton1->setSizePolicy(sizePolicy2);
-        QIcon icon18;
-        icon18.addFile(QStringLiteral(":/Images/icons/stop_24.png"), QSize(), QIcon::Normal, QIcon::Off);
-        stopButton1->setIcon(icon18);
+        QIcon icon20;
+        icon20.addFile(QStringLiteral(":/Images/icons/stop_24.png"), QSize(), QIcon::Normal, QIcon::Off);
+        stopButton1->setIcon(icon20);
         stopButton1->setIconSize(QSize(20, 20));
 
         horizontalLayout_3->addWidget(stopButton1);
@@ -360,11 +372,13 @@ public:
         menuEdit->addAction(actionTest);
         mainToolBar->addAction(actionConfirm);
         mainToolBar->addSeparator();
+        mainToolBar->addAction(actionResume);
+        mainToolBar->addSeparator();
+        mainToolBar->addAction(actionView);
+        mainToolBar->addSeparator();
         mainToolBar->addAction(actionSwap);
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionDelete);
-        mainToolBar->addSeparator();
-        mainToolBar->addAction(actionResume);
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionReverse);
         mainToolBar->addSeparator();
@@ -372,11 +386,13 @@ public:
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionUngroup);
         mainToolBar->addSeparator();
-        mainToolBar->addAction(actionItpl);
-        mainToolBar->addSeparator();
         mainToolBar->addAction(actionZoomIn);
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionZoomOut);
+        mainToolBar->addSeparator();
+        mainToolBar->addAction(actionItpl);
+        mainToolBar->addSeparator();
+        mainToolBar->addAction(actionCast);
 
         retranslateUi(MainWindow);
 
@@ -436,6 +452,14 @@ public:
         actionSwap->setText(QApplication::translate("MainWindow", "Swap", 0));
 #ifndef QT_NO_TOOLTIP
         actionSwap->setToolTip(QApplication::translate("MainWindow", "Swap", 0));
+#endif // QT_NO_TOOLTIP
+        actionView->setText(QApplication::translate("MainWindow", "View", 0));
+#ifndef QT_NO_TOOLTIP
+        actionView->setToolTip(QApplication::translate("MainWindow", "View", 0));
+#endif // QT_NO_TOOLTIP
+        actionCast->setText(QApplication::translate("MainWindow", "Cast", 0));
+#ifndef QT_NO_TOOLTIP
+        actionCast->setToolTip(QApplication::translate("MainWindow", "Cast", 0));
 #endif // QT_NO_TOOLTIP
         cancelButton->setText(QString());
         okButton->setText(QString());

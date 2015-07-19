@@ -337,11 +337,13 @@
    </attribute>
    <addaction name="actionConfirm"/>
    <addaction name="separator"/>
+   <addaction name="actionResume"/>
+   <addaction name="separator"/>
+   <addaction name="actionView"/>
+   <addaction name="separator"/>
    <addaction name="actionSwap"/>
    <addaction name="separator"/>
    <addaction name="actionDelete"/>
-   <addaction name="separator"/>
-   <addaction name="actionResume"/>
    <addaction name="separator"/>
    <addaction name="actionReverse"/>
    <addaction name="separator"/>
@@ -349,11 +351,13 @@
    <addaction name="separator"/>
    <addaction name="actionUngroup"/>
    <addaction name="separator"/>
-   <addaction name="actionItpl"/>
-   <addaction name="separator"/>
    <addaction name="actionZoomIn"/>
    <addaction name="separator"/>
    <addaction name="actionZoomOut"/>
+   <addaction name="separator"/>
+   <addaction name="actionItpl"/>
+   <addaction name="separator"/>
+   <addaction name="actionCast"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionLoad">
@@ -517,6 +521,30 @@
    </property>
    <property name="toolTip">
     <string>Swap</string>
+   </property>
+  </action>
+  <action name="actionView">
+   <property name="icon">
+    <iconset resource="myres.qrc">
+     <normaloff>:/Images/icons/play_32.png</normaloff>:/Images/icons/play_32.png</iconset>
+   </property>
+   <property name="text">
+    <string>View</string>
+   </property>
+   <property name="toolTip">
+    <string>View</string>
+   </property>
+  </action>
+  <action name="actionCast">
+   <property name="icon">
+    <iconset resource="myres.qrc">
+     <normaloff>:/Images/icons/cast.png</normaloff>:/Images/icons/cast.png</iconset>
+   </property>
+   <property name="text">
+    <string>Cast</string>
+   </property>
+   <property name="toolTip">
+    <string>Cast</string>
    </property>
   </action>
  </widget>

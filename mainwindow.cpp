@@ -293,12 +293,36 @@ void MainWindow::on_actionTest_triggered()
 			ui->gridLayout_3->addWidget(clip, 0, i, Qt::AlignLeft);
 			ui->gridLayout_2->addWidget(empty_clip, 0, i, Qt::AlignLeft);
 		}
-
-		connect(clip, SIGNAL(dblClicked()), this, SLOT(playRange()));
 	}
 
 	connect(ui->scrollArea_1->horizontalScrollBar(), SIGNAL(valueChanged(int)), ui->scrollArea_2->horizontalScrollBar(), SLOT(setValue(int)));
 	connect(ui->scrollArea_2->horizontalScrollBar(), SIGNAL(valueChanged(int)), ui->scrollArea_1->horizontalScrollBar(), SLOT(setValue(int)));
+}
+
+void MainWindow::on_actionResume_triggered()
+{
+	if (!ui->actionResume->isCheckable())
+	{
+		QString tip = "Please enable edit mode first.";
+		statusBar()->showMessage(tip);
+	}
+	else if (ui->actionResume->isChecked())
+		action = ResumeClip;
+	else
+		action = NullOperation;
+}
+
+void MainWindow::on_actionView_triggered()
+{
+	if (!ui->actionView->isCheckable())
+	{
+		QString tip = "Please enable edit mode first.";
+		statusBar()->showMessage(tip);
+	}
+	else if (ui->actionView->isChecked())
+		action = ViewClip;
+	else
+		action = NullOperation;
 }
 
 void MainWindow::on_actionSwap_triggered()
@@ -369,12 +393,20 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 		if (event->type() == QEvent::MouseButtonPress)
 		{
 			QMouseEvent *m = (QMouseEvent*)event;
+
 			if (m->button() == Qt::LeftButton)
 			{
-				if (action == DeleteClip)
+				if (action == ResumeClip || action == ViewClip || action == DeleteClip)
 				{
 					cliplabel *item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(m->pos()));
 					setClickRange(item->getCutIndex());
+					if (action == ResumeClip) item->setIsResumed(true);
+					else if (action == ViewClip) playRange();
+					else
+					{
+						item->setIsDeleted(true);
+						playRange();
+					}
 				}
 
 				else if (action == MoveClip)
@@ -429,8 +461,8 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 				item->setAttribute(Qt::WA_DeleteOnClose);
 				//ui->gridLayout_2->addWidget(item);
 				//item->show();
-				QLabel *origin = static_cast<QLabel*>(ui->scrollAreaWidgetContents_1->childAt(origin_pos));
-				origin->setStyleSheet("border: 3px dashed rgb(0, 0, 0)");
+				cliplabel *origin = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(origin_pos));
+				origin->setIsMoved(true);
 			}
 			return true;
 		}
@@ -499,6 +531,8 @@ void MainWindow::on_editCheckBox_clicked()
 			ui->scrollAreaWidgetContents_1->setAcceptDrops(true);
 			ui->scrollAreaWidgetContents_1->installEventFilter(this);
 
+			ui->actionResume->setCheckable(true);
+			ui->actionView->setCheckable(true);
 			ui->actionSwap->setCheckable(true);
 			ui->actionDelete->setCheckable(true);
         }
@@ -510,6 +544,8 @@ void MainWindow::on_editCheckBox_clicked()
 
 			ui->scrollAreaWidgetContents_1->removeEventFilter(this);
 
+			ui->actionResume->setCheckable(false);
+			ui->actionView->setCheckable(false);
 			ui->actionSwap->setCheckable(false);
 			ui->actionDelete->setCheckable(false);
         }

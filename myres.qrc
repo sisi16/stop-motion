@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="/Images">
+    <file>icons/cast.png</file>
+    <file>icons/play_32.png</file>
     <file>icons/swap.png</file>
     <file>icons/zoom-in.png</file>
     <file>icons/zoom-out.png</file>

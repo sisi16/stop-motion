@@ -25,23 +25,30 @@ public:
     cliplabel(QWidget* parent = 0, Qt::WindowFlags f = 0);
 	cliplabel(cv::Mat src, int w, int h, int index, int type, QWidget* parent = 0, Qt::WindowFlags f = 0);
     cliplabel(const QString& text, QWidget* parent = 0, Qt::WindowFlags f = 0);
-    void getMovingParent(QWidget* mp);
+    ~cliplabel();
+	void getMovingParent(QWidget* mp);
     void getMovingPixmap(QPixmap pm);
 	int getCutIndex();
 	int getCutType();
-    ~cliplabel();
+	void setIsResumed(bool state);
+	void setIsMoved(bool isEdited);
+	void setIsDeleted(bool isEdited);
+	void setIsReversed(bool isEdited);
 
 signals:
 	void dblClicked();
 
 protected:
-    void mouseDoubleClickEvent(QMouseEvent *ev);
     void enterEvent(QEvent *);
 	void leaveEvent(QEvent *);
 
 private:
 	int cut_index;
 	int cut_type;
+	bool isResumed;
+	bool isMoved;
+	bool isDeleted;
+	bool isReversed;
     QPoint offset;
     QWidget* moving_parent;
     QPixmap cursor_pixmap;

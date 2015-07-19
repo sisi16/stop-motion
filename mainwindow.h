@@ -54,6 +54,10 @@ private slots:
 
     void on_actionTest_triggered();
 
+	void on_actionResume_triggered();
+
+	void on_actionView_triggered();
+
 	void on_actionSwap_triggered();
 
 	void on_actionDelete_triggered();
