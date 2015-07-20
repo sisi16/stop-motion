@@ -16,7 +16,8 @@ enum clipOperation
 	ViewClip,
 	MoveClip,
 	DeleteClip,
-	ReverseClip
+	ReverseClip,
+	CastClip
 };
 
 class videoprocessor

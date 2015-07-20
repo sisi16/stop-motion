@@ -79,9 +79,9 @@
     <CustomBuild Include="mainwindow.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <ClInclude Include="myslider.h">
+    <CustomBuild Include="myslider.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
+    </CustomBuild>
     <ClInclude Include="opflow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -102,6 +102,12 @@
     <ClCompile Include="release\moc_mainwindow.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="debug\moc_myslider.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="release\moc_myslider.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
     <ClCompile Include="debug\qrc_myres.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
@@ -119,6 +125,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="icons\cancel.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\cast.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="icons\cut_32.png">
@@ -145,6 +154,9 @@
     <None Include="icons\play_24.png">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="icons\play_32.png">
+      <Filter>Resource Files</Filter>
+    </None>
     <None Include="icons\resume_32.png">
       <Filter>Resource Files</Filter>
     </None>
@@ -158,6 +170,9 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="icons\stop_24.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\swap.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="icons\tick.png">

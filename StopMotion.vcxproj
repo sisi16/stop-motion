@@ -182,7 +182,24 @@ endlocal</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC mainwindow.h</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debug\moc_mainwindow.cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <ClInclude Include="myslider.h" />
+    <CustomBuild Include="myslider.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">myslider.h;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+if errorlevel 1 goto VCEnd
+D:\Software\OtProject\5.4\msvc2013_64\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DQT_MULTIMEDIAWIDGETS_LIB -DQT_WIDGETS_LIB -DQT_MULTIMEDIA_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -ID:/Software/OtProject/5.4/msvc2013_64/mkspecs/win32-msvc2013 -I"D:/CCCC/Stop Motion/StopMotion" -ID:/Software/OtProject/5.4/msvc2013_64/include -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimediaWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimedia -ID:/Software/OtProject/5.4/msvc2013_64/include/QtGui -ID:/Software/OtProject/5.4/msvc2013_64/include/QtANGLE -ID:/Software/OtProject/5.4/msvc2013_64/include/QtNetwork -ID:/Software/OtProject/5.4/msvc2013_64/include/QtCore myslider.h -o release\moc_myslider.cpp
+if errorlevel 1 goto VCEnd
+endlocal</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MOC myslider.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\moc_myslider.cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">myslider.h;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+if errorlevel 1 goto VCEnd
+D:\Software\OtProject\5.4\msvc2013_64\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_MULTIMEDIAWIDGETS_LIB -DQT_WIDGETS_LIB -DQT_MULTIMEDIA_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -ID:/Software/OtProject/5.4/msvc2013_64/mkspecs/win32-msvc2013 -I"D:/CCCC/Stop Motion/StopMotion" -ID:/Software/OtProject/5.4/msvc2013_64/include -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimediaWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimedia -ID:/Software/OtProject/5.4/msvc2013_64/include/QtGui -ID:/Software/OtProject/5.4/msvc2013_64/include/QtANGLE -ID:/Software/OtProject/5.4/msvc2013_64/include/QtNetwork -ID:/Software/OtProject/5.4/msvc2013_64/include/QtCore myslider.h -o debug\moc_myslider.cpp
+if errorlevel 1 goto VCEnd
+endlocal</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC myslider.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debug\moc_myslider.cpp;%(Outputs)</Outputs>
+    </CustomBuild>
     <ClInclude Include="opflow.h" />
     <ClInclude Include="videoprocessor.h" />
   </ItemGroup>
@@ -197,6 +214,12 @@ endlocal</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="release\moc_mainwindow.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="debug\moc_myslider.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="release\moc_myslider.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="debug\qrc_myres.cpp">
@@ -230,6 +253,7 @@ endlocal</Command>
   </ItemGroup>
   <ItemGroup>
     <None Include="icons\cancel.png" />
+    <None Include="icons\cast.png" />
     <None Include="icons\cut_32.png" />
     <None Include="icons\delete_32.png" />
     <None Include="icons\group_48.png" />
@@ -237,7 +261,7 @@ endlocal</Command>
     <None Include="icons\load.png" />
     <CustomBuild Include="myres.qrc">
       <FileType>Document</FileType>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">myres.qrc;icons\delete_32.png;icons\reverse_32.png;icons\play_24.png;icons\resume_32.png;icons\zoom-out.png;icons\tick_32.png;icons\interpolation_48.png;icons\tick.png;icons\cut_32.png;icons\load.png;icons\settings.png;icons\group_48.png;icons\pause_24.png;icons\save.png;icons\cancel.png;icons\zoom-in.png;icons\stop_24.png;icons\ungroup_48.png;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">myres.qrc;icons\delete_32.png;icons\reverse_32.png;icons\play_24.png;icons\swap.png;icons\resume_32.png;icons\zoom-out.png;icons\cast.png;icons\tick_32.png;icons\interpolation_48.png;icons\tick.png;icons\cut_32.png;icons\load.png;icons\settings.png;icons\group_48.png;icons\pause_24.png;icons\save.png;icons\cancel.png;icons\play_32.png;icons\zoom-in.png;icons\stop_24.png;icons\ungroup_48.png;%(AdditionalInputs)</AdditionalInputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
 if errorlevel 1 goto VCEnd
 D:\Software\OtProject\5.4\msvc2013_64\bin\rcc.exe -name myres myres.qrc -o release\qrc_myres.cpp
@@ -245,7 +269,7 @@ if errorlevel 1 goto VCEnd
 endlocal</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">RCC myres.qrc</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\qrc_myres.cpp;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">myres.qrc;icons\delete_32.png;icons\reverse_32.png;icons\play_24.png;icons\resume_32.png;icons\zoom-out.png;icons\tick_32.png;icons\interpolation_48.png;icons\tick.png;icons\cut_32.png;icons\load.png;icons\settings.png;icons\group_48.png;icons\pause_24.png;icons\save.png;icons\cancel.png;icons\zoom-in.png;icons\stop_24.png;icons\ungroup_48.png;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">myres.qrc;icons\delete_32.png;icons\reverse_32.png;icons\play_24.png;icons\swap.png;icons\resume_32.png;icons\zoom-out.png;icons\cast.png;icons\tick_32.png;icons\interpolation_48.png;icons\tick.png;icons\cut_32.png;icons\load.png;icons\settings.png;icons\group_48.png;icons\pause_24.png;icons\save.png;icons\cancel.png;icons\play_32.png;icons\zoom-in.png;icons\stop_24.png;icons\ungroup_48.png;%(AdditionalInputs)</AdditionalInputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
 if errorlevel 1 goto VCEnd
 D:\Software\OtProject\5.4\msvc2013_64\bin\rcc.exe -name myres myres.qrc -o debug\qrc_myres.cpp
@@ -256,11 +280,13 @@ endlocal</Command>
     </CustomBuild>
     <None Include="icons\pause_24.png" />
     <None Include="icons\play_24.png" />
+    <None Include="icons\play_32.png" />
     <None Include="icons\resume_32.png" />
     <None Include="icons\reverse_32.png" />
     <None Include="icons\save.png" />
     <None Include="icons\settings.png" />
     <None Include="icons\stop_24.png" />
+    <None Include="icons\swap.png" />
     <None Include="icons\tick.png" />
     <None Include="icons\tick_32.png" />
     <None Include="icons\ungroup_48.png" />

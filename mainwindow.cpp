@@ -280,7 +280,7 @@ void MainWindow::on_actionTest_triggered()
 		}
 
 		cliplabel *clip = new cliplabel(vproc.getFrames().at(index), width, height, i, cut_types.at(i));
-		QLabel *empty_clip = new QLabel();
+		cliplabel *empty_clip = new cliplabel();
 		empty_clip->setFixedSize(width, height);
 
 		if (cut_types.at(i) == 1)
@@ -293,6 +293,8 @@ void MainWindow::on_actionTest_triggered()
 			ui->gridLayout_3->addWidget(clip, 0, i, Qt::AlignLeft);
 			ui->gridLayout_2->addWidget(empty_clip, 0, i, Qt::AlignLeft);
 		}
+
+		connect(clip, SIGNAL(enter(int)), frame_slider, SLOT(highLight(int)));
 	}
 
 	connect(ui->scrollArea_1->horizontalScrollBar(), SIGNAL(valueChanged(int)), ui->scrollArea_2->horizontalScrollBar(), SLOT(setValue(int)));
@@ -351,9 +353,22 @@ void MainWindow::on_actionDelete_triggered()
 		action = NullOperation;
 }
 
+void MainWindow::on_actionCast_triggered()
+{
+	if (!ui->actionCast->isCheckable())
+	{
+		QString tip = "Please enable edit mode first.";
+		statusBar()->showMessage(tip);
+	}
+	else if (ui->actionCast->isChecked())
+		action = CastClip;
+	else
+		action = NullOperation;
+}
+
 bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 {
-    if (widget != frame_slider && widget != ui->scrollAreaWidgetContents_1) return false;
+    if (widget != frame_slider && widget != ui->scrollAreaWidgetContents_1 && widget != ui->scrollAreaWidgetContents_2) return false;
 
 	else if (widget == frame_slider)
 	{
@@ -388,7 +403,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 		}
 	}
 
-	else if (widget == ui->scrollAreaWidgetContents_1)
+	else if (widget == ui->scrollAreaWidgetContents_1 || widget == ui->scrollAreaWidgetContents_2)
 	{
 		if (event->type() == QEvent::MouseButtonPress)
 		{
@@ -396,22 +411,47 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 
 			if (m->button() == Qt::LeftButton)
 			{
-				if (action == ResumeClip || action == ViewClip || action == DeleteClip)
+				cliplabel *item;
+				if (widget == ui->scrollAreaWidgetContents_1)
+					item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(m->pos()));
+				else
+					item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(m->pos()));
+
+				if (action == ResumeClip || action == ViewClip || action == DeleteClip || action == CastClip)
 				{
-					cliplabel *item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(m->pos()));
 					setClickRange(item->getCutIndex());
-					if (action == ResumeClip) item->setIsResumed(true);
+					
+					if (action == ResumeClip) item->setEditedMode(isResumed);
+					
 					else if (action == ViewClip) playRange();
-					else
+					
+					else if (action == DeleteClip)
 					{
-						item->setIsDeleted(true);
+						item->setEditedMode(isDeleted);
 						playRange();
+					}
+					
+					else if (action == CastClip)
+					{
+						item->setEditedMode(isCasted);
+						cliplabel *cast2item;
+						if (widget == ui->scrollAreaWidgetContents_1)
+							cast2item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(m->pos()));
+						else
+							cast2item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(m->pos()));
+						cast2item->setScaledContents(true);
+						cast2item->setPixmap(*item->pixmap());
+						cast2item->setEditedMode(NotEdited);
+						cast2item->setCutIndex(item->getCutIndex());
+						if (item->getCutType() == 1) cast2item->setCutType(2);
+						else cast2item->setCutType(1);
+						cast2item->setMouseTracking(true);
+						cast2item->setCursor(Qt::PointingHandCursor);
 					}
 				}
 
 				else if (action == MoveClip)
 				{
-					QLabel *item = static_cast<QLabel*>(ui->scrollAreaWidgetContents_1->childAt(m->pos()));
 					QPixmap pixmap = *item->pixmap();
 					QMimeData *mimeData = new QMimeData;
 					QByteArray exData;
@@ -419,7 +459,11 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 					dataStream << pixmap << m->pos() << QPoint(m->pos() - item->pos());
 					mimeData->setData("application/x-dnditemdata", exData);
 					mimeData->setText(tr("Drag and Drop"));
-					QDrag *drag = new QDrag(ui->scrollAreaWidgetContents_1);
+					QDrag *drag;
+					if (widget == ui->scrollAreaWidgetContents_1)
+						drag = new QDrag(ui->scrollAreaWidgetContents_1);
+					else
+						drag = new QDrag(ui->scrollAreaWidgetContents_2);
 					drag->setMimeData(mimeData);
 					drag->setPixmap(pixmap.scaledToHeight(50));
 					drag->setHotSpot(m->pos() - item->pos());
@@ -461,8 +505,12 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 				item->setAttribute(Qt::WA_DeleteOnClose);
 				//ui->gridLayout_2->addWidget(item);
 				//item->show();
-				cliplabel *origin = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(origin_pos));
-				origin->setIsMoved(true);
+				cliplabel *origin;
+				if (widget == ui->scrollAreaWidgetContents_1)
+					origin = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(origin_pos));
+				else
+					origin = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(origin_pos));
+				origin->setEditedMode(isMoved);
 			}
 			return true;
 		}
@@ -529,12 +577,15 @@ void MainWindow::on_editCheckBox_clicked()
             frame_slider->installEventFilter(this);
 
 			ui->scrollAreaWidgetContents_1->setAcceptDrops(true);
+			ui->scrollAreaWidgetContents_2->setAcceptDrops(true);
 			ui->scrollAreaWidgetContents_1->installEventFilter(this);
+			ui->scrollAreaWidgetContents_2->installEventFilter(this);
 
 			ui->actionResume->setCheckable(true);
 			ui->actionView->setCheckable(true);
 			ui->actionSwap->setCheckable(true);
 			ui->actionDelete->setCheckable(true);
+			ui->actionCast->setCheckable(true);
         }
         else
         {
@@ -542,12 +593,16 @@ void MainWindow::on_editCheckBox_clicked()
             frame_slider->setCursor(Qt::ArrowCursor);
             frame_slider->removeEventFilter(this);
 
+			ui->scrollAreaWidgetContents_1->setAcceptDrops(false);
+			ui->scrollAreaWidgetContents_2->setAcceptDrops(false);
 			ui->scrollAreaWidgetContents_1->removeEventFilter(this);
+			ui->scrollAreaWidgetContents_2->removeEventFilter(this);
 
 			ui->actionResume->setCheckable(false);
 			ui->actionView->setCheckable(false);
 			ui->actionSwap->setCheckable(false);
 			ui->actionDelete->setCheckable(false);
+			ui->actionCast->setCheckable(false);
         }
     }
     else

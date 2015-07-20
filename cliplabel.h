@@ -11,10 +11,14 @@
 #include <QCursor>
 #include <QWidget>
 
-enum OperationSender
+enum isEdited
 {
-	FrameSlider,
-	ClipLabel
+	NotEdited,
+	isMoved,
+	isDeleted,
+	isResumed,
+	isReversed,
+	isCasted
 };
 
 class cliplabel : public QLabel
@@ -26,17 +30,16 @@ public:
 	cliplabel(cv::Mat src, int w, int h, int index, int type, QWidget* parent = 0, Qt::WindowFlags f = 0);
     cliplabel(const QString& text, QWidget* parent = 0, Qt::WindowFlags f = 0);
     ~cliplabel();
-	void getMovingParent(QWidget* mp);
-    void getMovingPixmap(QPixmap pm);
 	int getCutIndex();
 	int getCutType();
-	void setIsResumed(bool state);
-	void setIsMoved(bool isEdited);
-	void setIsDeleted(bool isEdited);
-	void setIsReversed(bool isEdited);
+	cv::Mat getSrcImage();
+	void setEditedMode(isEdited mode);
+	void setCutType(int type);
+	void setCutIndex(int index);
+	void setSrcImage(cv::Mat src);
 
 signals:
-	void dblClicked();
+	void enter(int value);
 
 protected:
     void enterEvent(QEvent *);
@@ -45,13 +48,8 @@ protected:
 private:
 	int cut_index;
 	int cut_type;
-	bool isResumed;
-	bool isMoved;
-	bool isDeleted;
-	bool isReversed;
-    QPoint offset;
-    QWidget* moving_parent;
-    QPixmap cursor_pixmap;
+	isEdited edited_mode;
+	cv::Mat srcImage;
 };
 
 #endif // CLIPLABEL_H

@@ -6,6 +6,7 @@ using namespace std;
 myslider::myslider(Qt::Orientation orientation, QWidget *parent)
         : QSlider(orientation, parent)
 {
+	highLightIndex = -1;
 }
 
 myslider::myslider(Qt::Orientation orientation, vector<int> idc, vector<int> ref, QWidget *parent)
@@ -13,6 +14,7 @@ myslider::myslider(Qt::Orientation orientation, vector<int> idc, vector<int> ref
 {
     indices = idc;
     reference = ref;
+	highLightIndex = -1;
 }
 
 myslider::~myslider()
@@ -23,6 +25,11 @@ void myslider::updateParams(std::vector<int> idc, std::vector<int> ref)
 {
     indices = idc;
     reference = ref;
+}
+
+void myslider::highLight(int value)
+{
+	highLightIndex = value;
 }
 
 void myslider::paintEvent(QPaintEvent *ev)
@@ -60,15 +67,25 @@ void myslider::paintEvent(QPaintEvent *ev)
             }
 
             QRect rect(groove_rect.left()+start*groove_rect.width(), groove_rect.top(), end*groove_rect.width(), groove_rect.height());
-
+			
 			switch (reference.at(i))
             {
-                case 1:
-                    painter.fillRect(rect, QBrush(Qt::blue));
-                    break;
-                case 2:
-                    painter.fillRect(rect, QBrush(Qt::green));
-                    break;
+				case 1:
+				{
+					if (i != highLightIndex)
+						painter.fillRect(rect, QBrush(Qt::darkBlue));
+					else
+						painter.fillRect(rect, QBrush(Qt::cyan));
+					break;
+				}
+				case 2:
+				{
+					if (i != highLightIndex)
+						painter.fillRect(rect, QBrush(Qt::darkGreen));
+					else
+						painter.fillRect(rect, QBrush(Qt::green));
+					break;
+				}
                 /*case 3:
                     painter.fillRect(rect, QBrush(Qt::blue));
                     break;

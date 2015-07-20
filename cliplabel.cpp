@@ -12,13 +12,11 @@ cliplabel::cliplabel(QWidget* parent, Qt::WindowFlags f)
 cliplabel::cliplabel(Mat src, int w, int h, int index, int type, QWidget* parent, Qt::WindowFlags f)
 		 : QLabel(parent, f)
 {
+	srcImage = src;
 	cut_index = index;
 	cut_type = type;
 
-	isResumed = false;
-	isMoved = false;
-	isDeleted = false;
-	isReversed = false;
+	edited_mode = NotEdited;
 
 	this->setScaledContents(true);
 	cv::Mat temp;
@@ -42,16 +40,6 @@ cliplabel::~cliplabel()
 
 }
 
-void cliplabel::getMovingParent(QWidget *mp)
-{
-    moving_parent = mp;
-}
-
-void cliplabel::getMovingPixmap(QPixmap pm)
-{
-    cursor_pixmap = pm.scaled(QSize(100,100),  Qt::IgnoreAspectRatio);
-}
-
 int cliplabel::getCutIndex()
 {
 	return cut_index;
@@ -62,44 +50,67 @@ int cliplabel::getCutType()
 	return cut_type;
 }
 
+Mat cliplabel::getSrcImage()
+{
+	return srcImage;
+}
+
 void cliplabel::enterEvent(QEvent *)
 {
-	if (!isMoved && !isDeleted)
+	if (edited_mode != isMoved && edited_mode != isDeleted && edited_mode != isCasted)
 	{
 		if (cut_type == 1)
 			this->setStyleSheet("border: 5px outset rgb(85, 170, 255)");
-		if (cut_type == 2)
+		else if (cut_type == 2)
 			this->setStyleSheet("border: 5px outset rgb(170, 255, 127)");
+		//emit enter(cut_index);
 	}
 }
 
 void cliplabel::leaveEvent(QEvent *)
 {
-	if (!isMoved && !isDeleted)
+	if (edited_mode != isMoved && edited_mode != isDeleted && edited_mode != isCasted)
 		this->setStyleSheet("border: none");
 }
 
-void cliplabel::setIsResumed(bool state)
+void cliplabel::setEditedMode(isEdited mode)
 {
-	isResumed = state;
-	if (isMoved) isMoved = false;
-	else if (isDeleted) isDeleted = false;
-	this->setStyleSheet("border: none");
+	edited_mode = mode;
+
+	switch (mode)
+	{
+	case isResumed:
+		this->setStyleSheet("border: none");
+		break;
+
+	case isMoved:
+		this->setStyleSheet("border: 3px dashed rgb(0, 0, 0)");
+		break;
+
+	case isDeleted:
+		this->setStyleSheet("border: 3px dashed rgb(0, 0, 0)");
+		break;
+
+	case isCasted:
+		this->setStyleSheet("border: 3px dashed rgb(0, 0, 0)");
+		break;
+
+	default:
+		break;
+	}
 }
 
-void cliplabel::setIsMoved(bool isEdited)
+void cliplabel::setCutIndex(int index)
 {
-	isMoved = isEdited;
-	this->setStyleSheet("border: 3px dashed rgb(0, 0, 0)");
+	cut_index = index;
 }
 
-void cliplabel::setIsDeleted(bool isEdited)
+void cliplabel::setCutType(int type)
 {
-	isDeleted = isEdited;
-	this->setStyleSheet("border: 3px dashed rgb(0, 0, 0)");
+	cut_type = type;
 }
 
-void cliplabel::setIsReversed(bool isEdited)
+void cliplabel::setSrcImage(Mat src)
 {
-	isReversed = isEdited;
+	srcImage = src;
 }
