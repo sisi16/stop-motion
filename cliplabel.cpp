@@ -7,6 +7,9 @@ using namespace cv;
 cliplabel::cliplabel(QWidget* parent, Qt::WindowFlags f)
          : QLabel(parent, f)
 {
+	cut_index = -1;
+	cut_type = -1;
+	edited_mode = NotEdited;
 }
 
 cliplabel::cliplabel(Mat src, int w, int h, int index, int type, QWidget* parent, Qt::WindowFlags f)
@@ -53,6 +56,11 @@ int cliplabel::getCutType()
 Mat cliplabel::getSrcImage()
 {
 	return srcImage;
+}
+
+isEdited cliplabel::getEditedMode()
+{
+	return edited_mode;
 }
 
 void cliplabel::enterEvent(QEvent *)
@@ -113,4 +121,27 @@ void cliplabel::setCutType(int type)
 void cliplabel::setSrcImage(Mat src)
 {
 	srcImage = src;
+}
+
+void cliplabel::cast(cliplabel *castedClip)
+{
+	this->setScaledContents(true);
+	this->setPixmap(*castedClip->pixmap());
+	edited_mode = NotEdited;
+	cut_index = castedClip->getCutIndex();
+	if (cut_type == 1) cut_type = 2;
+	else cut_type = 1;
+	this->setMouseTracking(true);
+	this->setCursor(Qt::PointingHandCursor);
+}
+
+void cliplabel::uncast()
+{
+	this->setPixmap(QPixmap(""));
+	this->setScaledContents(false);
+	edited_mode = NotEdited;
+	cut_index = -1;
+	cut_type = -1;
+	this->setMouseTracking(false);
+	this->setCursor(Qt::ArrowCursor);
 }

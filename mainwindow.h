@@ -62,6 +62,8 @@ private slots:
 
 	void on_actionDelete_triggered();
 
+	void on_actionReverse_triggered();
+
 	void on_actionCast_triggered();
 
     bool eventFilter(QObject *widget, QEvent *event);

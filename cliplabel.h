@@ -33,10 +33,13 @@ public:
 	int getCutIndex();
 	int getCutType();
 	cv::Mat getSrcImage();
+	isEdited getEditedMode();
 	void setEditedMode(isEdited mode);
 	void setCutType(int type);
 	void setCutIndex(int index);
 	void setSrcImage(cv::Mat src);
+	void cast(cliplabel *castedClip);
+	void uncast();
 
 signals:
 	void enter(int value);

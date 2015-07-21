@@ -353,6 +353,19 @@ void MainWindow::on_actionDelete_triggered()
 		action = NullOperation;
 }
 
+void MainWindow::on_actionReverse_triggered()
+{
+	if (!ui->actionReverse->isCheckable())
+	{
+		QString tip = "Please enable edit mode first.";
+		statusBar()->showMessage(tip);
+	}
+	else if (ui->actionReverse->isChecked())
+		action = ReverseClip;
+	else
+		action = NullOperation;
+}
+
 void MainWindow::on_actionCast_triggered()
 {
 	if (!ui->actionCast->isCheckable())
@@ -417,17 +430,34 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 				else
 					item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(m->pos()));
 
-				if (action == ResumeClip || action == ViewClip || action == DeleteClip || action == CastClip)
+				if (action == ResumeClip || action == ViewClip || action == DeleteClip || action == ReverseClip ||action == CastClip)
 				{
 					setClickRange(item->getCutIndex());
 					
-					if (action == ResumeClip) item->setEditedMode(isResumed);
-					
+					if (action == ResumeClip)
+					{
+						if (item->getEditedMode() == isCasted)
+						{
+							cliplabel *cast2item;
+							if (widget == ui->scrollAreaWidgetContents_1)
+								cast2item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(m->pos()));
+							else
+								cast2item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(m->pos()));
+							cast2item->uncast();
+						}
+						item->setEditedMode(isResumed);
+					}
 					else if (action == ViewClip) playRange();
 					
 					else if (action == DeleteClip)
 					{
 						item->setEditedMode(isDeleted);
+						playRange();
+					}
+
+					else if (action == ReverseClip)
+					{
+						item->setEditedMode(isReversed);
 						playRange();
 					}
 					
@@ -439,14 +469,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 							cast2item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(m->pos()));
 						else
 							cast2item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(m->pos()));
-						cast2item->setScaledContents(true);
-						cast2item->setPixmap(*item->pixmap());
-						cast2item->setEditedMode(NotEdited);
-						cast2item->setCutIndex(item->getCutIndex());
-						if (item->getCutType() == 1) cast2item->setCutType(2);
-						else cast2item->setCutType(1);
-						cast2item->setMouseTracking(true);
-						cast2item->setCursor(Qt::PointingHandCursor);
+						cast2item->cast(item);
 					}
 				}
 
@@ -585,6 +608,7 @@ void MainWindow::on_editCheckBox_clicked()
 			ui->actionView->setCheckable(true);
 			ui->actionSwap->setCheckable(true);
 			ui->actionDelete->setCheckable(true);
+			ui->actionReverse->setCheckable(true);
 			ui->actionCast->setCheckable(true);
         }
         else
@@ -602,6 +626,7 @@ void MainWindow::on_editCheckBox_clicked()
 			ui->actionView->setCheckable(false);
 			ui->actionSwap->setCheckable(false);
 			ui->actionDelete->setCheckable(false);
+			ui->actionReverse->setCheckable(false);
 			ui->actionCast->setCheckable(false);
         }
     }
