@@ -34,6 +34,8 @@ public:
 	std::vector<int> getCutTypes();
     std::vector<int> getFrameTypes();
     int getVideoSize();
+	int getFrameWidth();
+	int getFrameHeight();
     QProgressBar *getProgressBar();
     cv::Point3i getRange(int current, int width);
     int getNumOfFrames();

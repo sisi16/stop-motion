@@ -59,6 +59,16 @@ int videoprocessor::getVideoSize()
     return num_of_frames;
 }
 
+int videoprocessor::getFrameWidth()
+{
+	return frame_width;
+}
+
+int videoprocessor::getFrameHeight()
+{
+	return frame_height;
+}
+
 void videoprocessor::calAvgOpFlows()
 {
     if (!avg_flows.empty()) avg_flows.clear();

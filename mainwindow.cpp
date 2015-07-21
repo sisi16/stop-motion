@@ -262,24 +262,25 @@ void MainWindow::on_actionTest_triggered()
 {
 	vector<int> scene_cuts = vproc.getSceneCuts();
 	vector<int> cut_types = vproc.getCutTypes();
-	int height = ui->scrollArea_1->height();
-	int width;
-	int index;
+	vector<Mat> frames = vproc.getFrames();
+	int frameRate = vproc.getFrameRate();
+	int height = floor(0.8 * ui->scrollArea_1->height());
+	int base_width = ceil(height * vproc.getFrameWidth() / double(vproc.getFrameHeight()));
+	int base, width, length;
 	
 	for (int i = 0; i < vproc.getSceneCuts().size(); i++)
 	{
+		vector<Mat> srcImages;
 		if (i == 0)
-		{
-			index = floor(scene_cuts.at(0) / 2.0);
-			width = floor(height * 0.02 * (scene_cuts.at(0)+1));
-		}
+			base = 0;
 		else
-		{
-			index = floor((scene_cuts.at(i - 1) + 1 + scene_cuts.at(i)) / 2.0);
-			width = floor(height * 0.02 * (scene_cuts.at(i)-scene_cuts.at(i-1)));
-		}
-
-		cliplabel *clip = new cliplabel(vproc.getFrames().at(index), width, height, i, cut_types.at(i));
+			base = scene_cuts.at(i-1) + 1;
+		length = (scene_cuts.at(i) - base + 1) / frameRate + 1;
+		width = base_width * length;
+		for (int j = 0; j < length; j++)
+			srcImages.push_back(frames.at(base+j*frameRate));
+		
+		cliplabel *clip = new cliplabel(srcImages, width, height, i, cut_types.at(i));
 		cliplabel *empty_clip = new cliplabel();
 		empty_clip->setFixedSize(width, height);
 
@@ -523,11 +524,8 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 				QPoint origin_pos, pos;
 				dataStream >> pixmap >> origin_pos >> pos;
 				QLabel *item = new QLabel();
-				//item->setStyleSheet("background-color: red");
 				item->setPixmap(pixmap);
 				item->setAttribute(Qt::WA_DeleteOnClose);
-				//ui->gridLayout_2->addWidget(item);
-				//item->show();
 				cliplabel *origin;
 				if (widget == ui->scrollAreaWidgetContents_1)
 					origin = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(origin_pos));

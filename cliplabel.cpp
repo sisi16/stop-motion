@@ -12,10 +12,10 @@ cliplabel::cliplabel(QWidget* parent, Qt::WindowFlags f)
 	edited_mode = NotEdited;
 }
 
-cliplabel::cliplabel(Mat src, int w, int h, int index, int type, QWidget* parent, Qt::WindowFlags f)
+cliplabel::cliplabel(vector<Mat> src, int w, int h, int index, int type, QWidget* parent, Qt::WindowFlags f)
 		 : QLabel(parent, f)
 {
-	srcImage = src;
+	srcImages = src;
 	cut_index = index;
 	cut_type = type;
 
@@ -23,10 +23,21 @@ cliplabel::cliplabel(Mat src, int w, int h, int index, int type, QWidget* parent
 
 	this->setScaledContents(true);
 	cv::Mat temp;
-	cv::cvtColor(src, temp, CV_BGR2RGB);
-	QImage image((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
-	image.bits();
-	this->setPixmap(QPixmap::fromImage(image));
+	QPixmap *pixmap = new QPixmap(w, h);
+	//pixmap->fill(Qt::transparent);
+	QPainter *painter = new QPainter(pixmap);
+
+	int length = src.size();
+	int base_width = w / length;
+	for (int i = 0; i < length; i++)
+	{
+		cv::cvtColor(src.at(i), temp, CV_BGR2RGB);
+		QImage image((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+		image.bits();
+		painter->drawPixmap(i*base_width, 0, base_width, h, QPixmap::fromImage(image));
+	}
+	painter->end();
+	this->setPixmap(*pixmap);
 	this->setFixedSize(w, h);
 
 	this->setMouseTracking(true);
@@ -53,9 +64,9 @@ int cliplabel::getCutType()
 	return cut_type;
 }
 
-Mat cliplabel::getSrcImage()
+vector<Mat> cliplabel::getSrcImages()
 {
-	return srcImage;
+	return srcImages;
 }
 
 isEdited cliplabel::getEditedMode()
@@ -118,9 +129,9 @@ void cliplabel::setCutType(int type)
 	cut_type = type;
 }
 
-void cliplabel::setSrcImage(Mat src)
+void cliplabel::setSrcImages(vector<Mat> src)
 {
-	srcImage = src;
+	srcImages = src;
 }
 
 void cliplabel::cast(cliplabel *castedClip)

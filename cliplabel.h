@@ -8,6 +8,7 @@
 #include <QMouseEvent>
 #include <QApplication>
 #include <QPixmap>
+#include <QPainter>
 #include <QCursor>
 #include <QWidget>
 
@@ -27,17 +28,17 @@ class cliplabel : public QLabel
 
 public:
     cliplabel(QWidget* parent = 0, Qt::WindowFlags f = 0);
-	cliplabel(cv::Mat src, int w, int h, int index, int type, QWidget* parent = 0, Qt::WindowFlags f = 0);
+	cliplabel(std::vector<cv::Mat> src, int w, int h, int index, int type, QWidget* parent = 0, Qt::WindowFlags f = 0);
     cliplabel(const QString& text, QWidget* parent = 0, Qt::WindowFlags f = 0);
     ~cliplabel();
 	int getCutIndex();
 	int getCutType();
-	cv::Mat getSrcImage();
+	std::vector<cv::Mat> getSrcImages();
 	isEdited getEditedMode();
 	void setEditedMode(isEdited mode);
 	void setCutType(int type);
 	void setCutIndex(int index);
-	void setSrcImage(cv::Mat src);
+	void setSrcImages(std::vector<cv::Mat> src);
 	void cast(cliplabel *castedClip);
 	void uncast();
 
@@ -52,7 +53,7 @@ private:
 	int cut_index;
 	int cut_type;
 	isEdited edited_mode;
-	cv::Mat srcImage;
+	std::vector<cv::Mat> srcImages;
 };
 
 #endif // CLIPLABEL_H
