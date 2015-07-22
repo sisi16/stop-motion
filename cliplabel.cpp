@@ -88,7 +88,7 @@ void cliplabel::enterEvent(QEvent *)
 
 void cliplabel::leaveEvent(QEvent *)
 {
-	if (edited_mode != isMoved && edited_mode != isDeleted && edited_mode != isCasted)
+	if (edited_mode != isSelected && edited_mode != isMoved && edited_mode != isDeleted && edited_mode != isCasted)
 		this->setStyleSheet("border: none");
 }
 
@@ -98,6 +98,17 @@ void cliplabel::setEditedMode(isEdited mode)
 
 	switch (mode)
 	{
+	case NotEdited:
+		this->setStyleSheet("border: none");
+		break;
+
+	case isSelected:
+		if (cut_type == 1)
+			this->setStyleSheet("border: 5px outset rgb(85, 170, 255)");
+		else if (cut_type == 2)
+			this->setStyleSheet("border: 5px outset rgb(170, 255, 127)");
+		break;
+
 	case isResumed:
 		this->setStyleSheet("border: none");
 		break;

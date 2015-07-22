@@ -12,12 +12,14 @@
 enum clipOperation
 {
 	NullOperation,
+	SelectClip,
 	ResumeClip,
 	ViewClip,
 	MoveClip,
 	DeleteClip,
 	ReverseClip,
-	CastClip
+	CastClip,
+	GroupClip
 };
 
 class videoprocessor

@@ -9,6 +9,9 @@
 #include <QTimer>
 #include <QMenu>
 #include <QPalette>
+#include <QPainter>
+#include <QPainterPath>
+#include <QPen>
 #include <QScrollBar>
 #include <QMimeData>
 #include <QDrag>
@@ -54,6 +57,8 @@ private slots:
 
     void on_actionTest_triggered();
 
+	void on_actionSelect_triggered();
+
 	void on_actionResume_triggered();
 
 	void on_actionView_triggered();
@@ -65,6 +70,14 @@ private slots:
 	void on_actionReverse_triggered();
 
 	void on_actionCast_triggered();
+
+	void on_actionGroup_triggered();
+
+	void on_actionUngroup_triggered();
+
+	void on_actionZoomIn_triggered();
+
+	void on_actionZoomOut_triggered();
 
     bool eventFilter(QObject *widget, QEvent *event);
 
@@ -98,6 +111,8 @@ private:
     cv::Point3i clickRange;
 	clipOperation action;
     QMenu *sliderMenu;
+	std::vector<cliplabel *> selectedClip;
+	std::vector<QPoint> seletedPos;
 };
 
 #endif // MAINWINDOW_H

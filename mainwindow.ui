@@ -335,17 +335,23 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionSelect"/>
+   <addaction name="separator"/>
+   <addaction name="actionSwap"/>
+   <addaction name="separator"/>
    <addaction name="actionConfirm"/>
+   <addaction name="separator"/>
    <addaction name="separator"/>
    <addaction name="actionResume"/>
    <addaction name="separator"/>
    <addaction name="actionView"/>
    <addaction name="separator"/>
-   <addaction name="actionSwap"/>
-   <addaction name="separator"/>
    <addaction name="actionDelete"/>
    <addaction name="separator"/>
    <addaction name="actionReverse"/>
+   <addaction name="separator"/>
+   <addaction name="actionCast"/>
+   <addaction name="separator"/>
    <addaction name="separator"/>
    <addaction name="actionGroup"/>
    <addaction name="separator"/>
@@ -355,9 +361,8 @@
    <addaction name="separator"/>
    <addaction name="actionZoomOut"/>
    <addaction name="separator"/>
-   <addaction name="actionItpl"/>
    <addaction name="separator"/>
-   <addaction name="actionCast"/>
+   <addaction name="actionItpl"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionLoad">
@@ -545,6 +550,18 @@
    </property>
    <property name="toolTip">
     <string>Cast</string>
+   </property>
+  </action>
+  <action name="actionSelect">
+   <property name="icon">
+    <iconset resource="myres.qrc">
+     <normaloff>:/Images/icons/select.png</normaloff>:/Images/icons/select.png</iconset>
+   </property>
+   <property name="text">
+    <string>Select</string>
+   </property>
+   <property name="toolTip">
+    <string>Select</string>
    </property>
   </action>
  </widget>

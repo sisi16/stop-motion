@@ -15,6 +15,7 @@
 enum isEdited
 {
 	NotEdited,
+	isSelected,
 	isMoved,
 	isDeleted,
 	isResumed,

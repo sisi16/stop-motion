@@ -97,10 +97,10 @@ void MainWindow::on_playButton1_clicked()
 		ui->gridLayout_1->removeWidget(child->widget());
 		delete child;
 
-		frame_slider->setRange(0, mediaplayer_1->duration() / 1000);
+		frame_slider->setRange(0, 30000);//frame_slider->setRange(0, mediaplayer_1->duration() / 1000);
 		frame_slider->setValue(0);
 		frame_slider->setTickPosition(QSlider::TicksAbove);
-		frame_slider->setTickInterval(5);
+		frame_slider->setTickInterval(500);
 		connect(frame_slider, SIGNAL(sliderMoved(int)), this, SLOT(seek(int)));
 		ui->gridLayout_1->addWidget(frame_slider);
     }
@@ -124,10 +124,10 @@ void MainWindow::on_cutButton_clicked()
     ui->gridLayout_1->addWidget(progressBar);
     progressBar->show();
 
-	vproc.readBuffers();
-	//if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
-		//vproc.cut2Scenes();
-	//vproc.writeBuffers();
+	//vproc.readBuffers();
+	if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
+		vproc.cut2Scenes();
+	vproc.writeBuffers();
 	frame_slider->updateParams(vproc.getSceneCuts(), vproc.getCutTypes());
     isCut = true;
     statusBar()->clearMessage();
@@ -169,7 +169,7 @@ void MainWindow::refresh(int value)
 
 void MainWindow::seek(int seconds)
 {
-    mediaplayer_1->setPosition(seconds * 1000);
+	mediaplayer_1->setPosition(seconds);//mediaplayer_1->setPosition(seconds * 1000);
 }
 
 void MainWindow::on_actionLoad_triggered()
@@ -302,6 +302,23 @@ void MainWindow::on_actionTest_triggered()
 	connect(ui->scrollArea_2->horizontalScrollBar(), SIGNAL(valueChanged(int)), ui->scrollArea_1->horizontalScrollBar(), SLOT(setValue(int)));
 }
 
+void MainWindow::on_actionSelect_triggered()
+{
+	if (!ui->actionSelect->isCheckable())
+	{
+		QString tip = "Please enable edit mode first.";
+		statusBar()->showMessage(tip);
+	}
+	else if (ui->actionSelect->isChecked())
+	{
+		selectedClip.clear();
+		seletedPos.clear();
+		action = SelectClip;
+	}
+	else
+		action = NullOperation;
+}
+
 void MainWindow::on_actionResume_triggered()
 {
 	if (!ui->actionResume->isCheckable())
@@ -309,8 +326,27 @@ void MainWindow::on_actionResume_triggered()
 		QString tip = "Please enable edit mode first.";
 		statusBar()->showMessage(tip);
 	}
-	else if (ui->actionResume->isChecked())
+	else if (ui->actionResume->isChecked() && !selectedClip.empty() && !seletedPos.empty())
+	{
+		ui->actionSelect->setChecked(false);
+		for (int i = 0; i < selectedClip.size(); i++)
+		{
+			cliplabel *item = selectedClip.at(i);
+			QPoint pos = seletedPos.at(i);
+			if (item->getEditedMode() == isCasted)
+			{
+				cliplabel *cast2item;
+				if (item->getCutType() == 1)
+					cast2item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(pos));
+				else
+					cast2item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(pos));
+				cast2item->uncast();
+			}
+			item->setEditedMode(isResumed);
+		}
 		action = ResumeClip;
+		ui->actionResume->setChecked(false);
+	}
 	else
 		action = NullOperation;
 }
@@ -322,8 +358,29 @@ void MainWindow::on_actionView_triggered()
 		QString tip = "Please enable edit mode first.";
 		statusBar()->showMessage(tip);
 	}
-	else if (ui->actionView->isChecked())
-		action = ViewClip;
+	else if (ui->actionView->isChecked() && !selectedClip.empty() && !seletedPos.empty())
+	{
+		ui->actionSelect->setChecked(false);
+		if (selectedClip.size() == 1)
+		{
+			cliplabel *item = selectedClip.at(0);
+			setClickRange(item->getCutIndex());
+			action = ViewClip;
+			playRange();
+			item->setEditedMode(NotEdited);
+		}
+		else
+		{
+			QString tip = "Please select one and only one clip.";
+			statusBar()->showMessage(tip);
+			for (int i = 0; i < selectedClip.size(); i++)
+			{
+				cliplabel *item = selectedClip.at(i);
+				item->setEditedMode(NotEdited);
+			}
+		}
+		ui->actionView->setChecked(false);
+	}
 	else
 		action = NullOperation;
 }
@@ -348,8 +405,29 @@ void MainWindow::on_actionDelete_triggered()
 		QString tip = "Please enable edit mode first.";
 		statusBar()->showMessage(tip);
 	}
-	else if (ui->actionDelete->isChecked())
-		action = DeleteClip;
+	else if (ui->actionDelete->isChecked() && !selectedClip.empty() && !seletedPos.empty())
+	{
+		ui->actionSelect->setChecked(false);
+		if (selectedClip.size() == 1)
+		{
+			cliplabel *item = selectedClip.at(0);
+			setClickRange(item->getCutIndex());
+			action = DeleteClip;
+			playRange();
+			item->setEditedMode(isDeleted);
+		}
+		else
+		{
+			QString tip = "Please select one and only one clip.";
+			statusBar()->showMessage(tip);
+			for (int i = 0; i < selectedClip.size(); i++)
+			{
+				cliplabel *item = selectedClip.at(i);
+				item->setEditedMode(NotEdited);
+			}
+		}
+		ui->actionDelete->setChecked(false);
+	}
 	else
 		action = NullOperation;
 }
@@ -361,8 +439,28 @@ void MainWindow::on_actionReverse_triggered()
 		QString tip = "Please enable edit mode first.";
 		statusBar()->showMessage(tip);
 	}
-	else if (ui->actionReverse->isChecked())
-		action = ReverseClip;
+	else if (ui->actionReverse->isChecked() && !selectedClip.empty() && !seletedPos.empty())
+	{
+		ui->actionSelect->setChecked(false);
+		if (selectedClip.size() == 1)
+		{
+			cliplabel *item = selectedClip.at(0);
+			setClickRange(item->getCutIndex());
+			action = ReverseClip;
+			playRange();
+		}
+		else
+		{
+			QString tip = "Please select one and only one clip.";
+			statusBar()->showMessage(tip);
+			for (int i = 0; i < selectedClip.size(); i++)
+			{
+				cliplabel *item = selectedClip.at(i);
+				item->setEditedMode(NotEdited);
+			}
+		}
+		ui->actionReverse->setChecked(false);
+	}
 	else
 		action = NullOperation;
 }
@@ -374,10 +472,59 @@ void MainWindow::on_actionCast_triggered()
 		QString tip = "Please enable edit mode first.";
 		statusBar()->showMessage(tip);
 	}
-	else if (ui->actionCast->isChecked())
+	else if (ui->actionCast->isChecked() && !selectedClip.empty() && !seletedPos.empty())
+	{
+		ui->actionSelect->setChecked(false);
+		for (int i = 0; i < selectedClip.size(); i++)
+		{
+			cliplabel *item = selectedClip.at(i);
+			QPoint pos = seletedPos.at(i);
+			cliplabel *cast2item;
+			if (item->getCutType() == 1)
+				cast2item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(pos));
+			else
+				cast2item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(pos));
+			cast2item->cast(item);
+			item->setEditedMode(isCasted);
+		}
 		action = CastClip;
+		ui->actionCast->setChecked(false);
+	}
 	else
 		action = NullOperation;
+}
+
+void MainWindow::on_actionGroup_triggered()
+{
+	/*if (!ui->actionGroup->isCheckable())
+	{
+		QString tip = "Please enable edit mode first.";
+		statusBar()->showMessage(tip);
+	}
+	else if (ui->actionGroup->isChecked() && !selectedClip.empty() && !seletedPos.empty())
+	{
+		ui->actionSelect->setChecked(false); 
+		ui->gridLayout_2->addWidget(selectedClip.at(1), 0, selectedClip.at(0)->getCutIndex()+1, 0, 2);
+		action = GroupClip;
+		ui->actionCast->setChecked(false);
+	}
+	else
+		action = NullOperation;*/
+}
+
+void MainWindow::on_actionUngroup_triggered()
+{
+
+}
+
+void MainWindow::on_actionZoomIn_triggered()
+{
+
+}
+
+void MainWindow::on_actionZoomOut_triggered()
+{
+
 }
 
 bool MainWindow::eventFilter(QObject *widget, QEvent *event)
@@ -431,47 +578,11 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 				else
 					item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(m->pos()));
 
-				if (action == ResumeClip || action == ViewClip || action == DeleteClip || action == ReverseClip ||action == CastClip)
+				if (action == SelectClip)
 				{
-					setClickRange(item->getCutIndex());
-					
-					if (action == ResumeClip)
-					{
-						if (item->getEditedMode() == isCasted)
-						{
-							cliplabel *cast2item;
-							if (widget == ui->scrollAreaWidgetContents_1)
-								cast2item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(m->pos()));
-							else
-								cast2item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(m->pos()));
-							cast2item->uncast();
-						}
-						item->setEditedMode(isResumed);
-					}
-					else if (action == ViewClip) playRange();
-					
-					else if (action == DeleteClip)
-					{
-						item->setEditedMode(isDeleted);
-						playRange();
-					}
-
-					else if (action == ReverseClip)
-					{
-						item->setEditedMode(isReversed);
-						playRange();
-					}
-					
-					else if (action == CastClip)
-					{
-						item->setEditedMode(isCasted);
-						cliplabel *cast2item;
-						if (widget == ui->scrollAreaWidgetContents_1)
-							cast2item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(m->pos()));
-						else
-							cast2item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(m->pos()));
-						cast2item->cast(item);
-					}
+					item->setEditedMode(isSelected);
+					selectedClip.push_back(item);
+					seletedPos.push_back(m->pos());
 				}
 
 				else if (action == MoveClip)
@@ -602,12 +713,14 @@ void MainWindow::on_editCheckBox_clicked()
 			ui->scrollAreaWidgetContents_1->installEventFilter(this);
 			ui->scrollAreaWidgetContents_2->installEventFilter(this);
 
+			ui->actionSelect->setCheckable(true);
 			ui->actionResume->setCheckable(true);
 			ui->actionView->setCheckable(true);
 			ui->actionSwap->setCheckable(true);
 			ui->actionDelete->setCheckable(true);
 			ui->actionReverse->setCheckable(true);
 			ui->actionCast->setCheckable(true);
+			ui->actionGroup->setCheckable(true);
         }
         else
         {
@@ -620,12 +733,14 @@ void MainWindow::on_editCheckBox_clicked()
 			ui->scrollAreaWidgetContents_1->removeEventFilter(this);
 			ui->scrollAreaWidgetContents_2->removeEventFilter(this);
 
+			ui->actionSelect->setCheckable(false);
 			ui->actionResume->setCheckable(false);
 			ui->actionView->setCheckable(false);
 			ui->actionSwap->setCheckable(false);
 			ui->actionDelete->setCheckable(false);
 			ui->actionReverse->setCheckable(false);
 			ui->actionCast->setCheckable(false);
+			ui->actionGroup->setCheckable(false);
         }
     }
     else

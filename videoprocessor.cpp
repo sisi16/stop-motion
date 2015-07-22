@@ -27,8 +27,9 @@ void videoprocessor::readVideo(const string& file)
 	frame_width = capture.get(CV_CAP_PROP_FRAME_WIDTH);
 	frame_height = capture.get(CV_CAP_PROP_FRAME_HEIGHT);
 	frame_rate = capture.get(CV_CAP_PROP_FPS);
+	cout << frame_rate << endl;
 
-	for (int i = 0; i < num_of_frames; i++)//for (int i = 0; i < 150; i++)//for (int i = 0; i < num_of_frames; i++)
+	for (int i = 0; i < 930; i++)//for (int i = 0; i < 155; i++)//for (int i = 0; i < num_of_frames; i++)
     {
         Mat frame;
         capture >> frame;
@@ -99,7 +100,7 @@ void videoprocessor::cut2Scenes()
 		//cout << current_avg_flow << endl;
         //bool hand = hd.isHand(frames.at(i));
 
-        if (current_avg_flow < 5.1e-3)
+        if (current_avg_flow < 5.74e-3)
         {
             /*if (hand)
                 frame_types.push_back(1);
@@ -272,7 +273,7 @@ void videoprocessor::test()
 
 void videoprocessor::writeBuffers()
 {
-	ofstream cutfile("cuts2.txt");
+	ofstream cutfile("cuts4.txt");
 	if (cutfile.is_open())
 	{
 		for (int i = 0; i < scene_cuts.size(); i++)
@@ -281,7 +282,7 @@ void videoprocessor::writeBuffers()
 	}
 	else cout << "Unable to open file" << endl;
 
-	ofstream typefile("types2.txt");
+	ofstream typefile("types4.txt");
 	if (typefile.is_open())
 	{
 		for (int j = 0; j < cut_types.size(); j++)
@@ -295,7 +296,7 @@ void videoprocessor::readBuffers()
 { 
 	if (scene_cuts.empty())
 	{
-		ifstream cutfile("cuts.txt");
+		ifstream cutfile("cuts3.txt");
 		int num;
 		if (cutfile.is_open())
 		{
@@ -308,7 +309,7 @@ void videoprocessor::readBuffers()
 
 	if (cut_types.empty())
 	{
-		ifstream typefile("types.txt");
+		ifstream typefile("types3.txt");
 		int num;
 		if (typefile.is_open())
 		{
