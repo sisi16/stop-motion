@@ -20,7 +20,8 @@ enum isEdited
 	isDeleted,
 	isResumed,
 	isReversed,
-	isCasted
+	isCasted,
+	isGrouped
 };
 
 class cliplabel : public QLabel

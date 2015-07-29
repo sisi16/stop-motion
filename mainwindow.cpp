@@ -15,10 +15,12 @@ MainWindow::MainWindow(QWidget *parent) :
     resize_count = -1;
     window_current_width = this->width();
     window_current_height = this->height() - ui->menuBar->height() - ui->mainToolBar->height();
+	ui->scrollArea->setBackgroundRole(QPalette::Midlight);
 	ui->scrollArea_1->setBackgroundRole(QPalette::Midlight);
-	ui->scrollArea_2->setBackgroundRole(QPalette::Mid);
+	ui->scrollArea_2->setBackgroundRole(QPalette::Midlight);
 	videoWidget_1 = new QVideoWidget;
 	videoWidget_2 = new QVideoWidget;
+	addedTrackCount = 0;
 }
 
 MainWindow::~MainWindow()
@@ -124,10 +126,10 @@ void MainWindow::on_cutButton_clicked()
     ui->gridLayout_1->addWidget(progressBar);
     progressBar->show();
 
-	//vproc.readBuffers();
-	if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
-		vproc.cut2Scenes();
-	vproc.writeBuffers();
+	vproc.readBuffers();
+	//if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
+		//vproc.cut2Scenes();
+	//vproc.writeBuffers();
 	frame_slider->updateParams(vproc.getSceneCuts(), vproc.getCutTypes());
     isCut = true;
     statusBar()->clearMessage();
@@ -275,7 +277,7 @@ void MainWindow::on_actionTest_triggered()
 			base = 0;
 		else
 			base = scene_cuts.at(i-1) + 1;
-		length = (scene_cuts.at(i) - base + 1) / frameRate + 1;
+		length = (scene_cuts.at(i)-base+1) / frameRate + 1;
 		width = base_width * length;
 		for (int j = 0; j < length; j++)
 			srcImages.push_back(frames.at(base+j*frameRate));
@@ -496,20 +498,45 @@ void MainWindow::on_actionCast_triggered()
 
 void MainWindow::on_actionGroup_triggered()
 {
-	/*if (!ui->actionGroup->isCheckable())
+	if (!ui->actionGroup->isCheckable())
 	{
 		QString tip = "Please enable edit mode first.";
 		statusBar()->showMessage(tip);
 	}
 	else if (ui->actionGroup->isChecked() && !selectedClip.empty() && !seletedPos.empty())
 	{
-		ui->actionSelect->setChecked(false); 
-		ui->gridLayout_2->addWidget(selectedClip.at(1), 0, selectedClip.at(0)->getCutIndex()+1, 0, 2);
-		action = GroupClip;
-		ui->actionCast->setChecked(false);
+		ui->actionSelect->setChecked(false);
+		int index;
+		int size = selectedClip.size();
+		if (selectedClip.at(0)->getCutType() == 1)
+		{
+			for (int i = 0; i < size; i++)
+			{
+				selectedClip.at(i)->setEditedMode(isGrouped);
+				if (i < size - 1)
+				{
+					index = selectedClip.at(i)->getCutIndex();
+					ui->gridLayout_2->itemAt(index + 1)->widget()->setStyleSheet("image: url(:/Images/icons/connect.png);");
+				}
+			}
+		} 
+		else
+		{
+			for (int i = 0; i < size; i++)
+			{
+				selectedClip.at(i)->setEditedMode(isGrouped);
+				if (i < size - 1)
+				{
+					index = selectedClip.at(i)->getCutIndex();
+					ui->gridLayout_3->itemAt(index + 1)->widget()->setStyleSheet("image: url(:/Images/icons/connect.png);");
+				}
+			}
+		}
+		//action = GroupClip;
+		ui->actionGroup->setChecked(false);
 	}
 	else
-		action = NullOperation;*/
+		action = NullOperation;
 }
 
 void MainWindow::on_actionUngroup_triggered()
@@ -527,17 +554,75 @@ void MainWindow::on_actionZoomOut_triggered()
 
 }
 
+void MainWindow::on_actionSelectTrack_triggered()
+{
+	if (!ui->actionSelectTrack->isCheckable())
+	{
+		QString tip = "Please enable edit mode first.";
+		statusBar()->showMessage(tip);
+	}
+	else if (ui->actionSelectTrack->isChecked())
+	{
+		selectedTrack.clear();
+		action = SelectTrack;
+	}
+	else
+		action = NullOperation;
+}
+
+void MainWindow::on_actionAddTrack_triggered()
+{
+	if (!ui->actionAddTrack->isCheckable())
+	{
+		QString tip = "Please enable edit mode first.";
+		statusBar()->showMessage(tip);
+	}
+	else if (ui->actionAddTrack->isChecked())
+	{
+		QScrollArea *scroll = new QScrollArea();
+		ui->verticalLayout->addWidget(scroll);
+		scroll->installEventFilter(this);
+		addedTrackCount++;
+		addedTrack.push_back(scroll);
+		ui->actionAddTrack->setChecked(false);
+	}
+	else
+		action = NullOperation;
+}
+
+void MainWindow::on_actionDeleteTrack_triggered()
+{
+	if (!ui->actionDeleteTrack->isCheckable())
+	{
+		QString tip = "Please enable edit mode first.";
+		statusBar()->showMessage(tip);
+	}
+	else if (ui->actionDeleteTrack->isChecked() && !selectedTrack.empty())
+	{
+		ui->actionSelectTrack->setChecked(false);
+		for (int i = 0; i < selectedTrack.size(); i++)
+		{
+			QScrollArea *item = selectedTrack.at(i);
+			item->setStyleSheet("border: none");
+			item->removeEventFilter(this);
+			item->hide();
+		}
+		ui->actionDeleteTrack->setChecked(false);
+	}
+	else
+		action = NullOperation;
+}
+
 bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 {
-    if (widget != frame_slider && widget != ui->scrollAreaWidgetContents_1 && widget != ui->scrollAreaWidgetContents_2) return false;
-
-	else if (widget == frame_slider)
+    if (widget == frame_slider)
 	{
 		if (event->type() == QEvent::MouseMove)
 		{
 			QMouseEvent *m = (QMouseEvent*)event;
 			QString tip = "position: (" + QString::number(m->x()) + ", " + QString::number(m->y()) + ")";
 			statusBar()->showMessage(tip);
+			return true;
 		}
 		else if (event->type() == QEvent::MouseButtonPress)
 		{
@@ -562,6 +647,8 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 			statusBar()->clearMessage();
 			return true;
 		}
+
+		return true;
 	}
 
 	else if (widget == ui->scrollAreaWidgetContents_1 || widget == ui->scrollAreaWidgetContents_2)
@@ -646,9 +733,27 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 			}
 			return true;
 		}
+
+		return true;
+	}
+	
+	else if (addedTrackCount != 0 && event->type() == QEvent::MouseButtonPress)
+	{
+		for (int i = 0; i < addedTrackCount; i++)
+		{
+			QScrollArea *item = addedTrack.at(i);
+			if (widget == item)
+			{
+				item->setStyleSheet("border: 5px inset orange");
+				selectedTrack.push_back(item);
+				return true;
+			}
+		}
+		return true;
 	}
 
-    return false;
+    else 
+		return false;
 }
 
 void MainWindow::playRange()
@@ -721,6 +826,9 @@ void MainWindow::on_editCheckBox_clicked()
 			ui->actionReverse->setCheckable(true);
 			ui->actionCast->setCheckable(true);
 			ui->actionGroup->setCheckable(true);
+			ui->actionSelectTrack->setCheckable(true);
+			ui->actionAddTrack->setCheckable(true);
+			ui->actionDeleteTrack->setCheckable(true);
         }
         else
         {
@@ -741,6 +849,9 @@ void MainWindow::on_editCheckBox_clicked()
 			ui->actionReverse->setCheckable(false);
 			ui->actionCast->setCheckable(false);
 			ui->actionGroup->setCheckable(false);
+			ui->actionSelectTrack->setCheckable(false);
+			ui->actionAddTrack->setCheckable(false);
+			ui->actionDeleteTrack->setCheckable(false);
         }
     }
     else

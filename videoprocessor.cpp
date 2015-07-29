@@ -296,7 +296,7 @@ void videoprocessor::readBuffers()
 { 
 	if (scene_cuts.empty())
 	{
-		ifstream cutfile("cuts3.txt");
+		ifstream cutfile("cuts4.txt");
 		int num;
 		if (cutfile.is_open())
 		{
@@ -309,7 +309,7 @@ void videoprocessor::readBuffers()
 
 	if (cut_types.empty())
 	{
-		ifstream typefile("types3.txt");
+		ifstream typefile("types4.txt");
 		int num;
 		if (typefile.is_open())
 		{

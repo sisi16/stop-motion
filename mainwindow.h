@@ -12,6 +12,7 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QPen>
+#include <QScrollArea>
 #include <QScrollBar>
 #include <QMimeData>
 #include <QDrag>
@@ -79,6 +80,12 @@ private slots:
 
 	void on_actionZoomOut_triggered();
 
+	void on_actionSelectTrack_triggered();
+
+	void on_actionAddTrack_triggered();
+
+	void on_actionDeleteTrack_triggered();
+
     bool eventFilter(QObject *widget, QEvent *event);
 
     void playRange();
@@ -112,6 +119,9 @@ private:
 	clipOperation action;
     QMenu *sliderMenu;
 	std::vector<cliplabel *> selectedClip;
+	int addedTrackCount;
+	std::vector<QScrollArea *> addedTrack;
+	std::vector<QScrollArea *> selectedTrack;
 	std::vector<QPoint> seletedPos;
 };
 

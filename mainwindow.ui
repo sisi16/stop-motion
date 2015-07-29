@@ -21,17 +21,6 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="11" column="1" colspan="5">
-     <layout class="QGridLayout" name="gridLayout_1">
-      <item row="1" column="0">
-       <widget class="QSlider" name="timeLineSlider">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
     <item row="12" column="1" colspan="5">
      <widget class="QScrollArea" name="scrollArea_1">
       <property name="sizePolicy">
@@ -52,7 +41,7 @@
          <x>0</x>
          <y>0</y>
          <width>1262</width>
-         <height>104</height>
+         <height>86</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_2"/>
@@ -79,12 +68,55 @@
          <x>0</x>
          <y>0</y>
          <width>1262</width>
-         <height>103</height>
+         <height>85</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_3"/>
       </widget>
      </widget>
+    </item>
+    <item row="0" column="1" rowspan="2" colspan="2">
+     <layout class="QHBoxLayout" name="horizontalLayout_1">
+      <item>
+       <widget class="QLabel" name="bgLabel_1">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(130, 130, 130);
+
+</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="10" column="1">
+     <widget class="QCheckBox" name="editCheckBox">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 75 12pt &quot;Times New Roman&quot;;</string>
+      </property>
+      <property name="text">
+       <string>Edit Mode</string>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="1" colspan="5">
+     <layout class="QGridLayout" name="gridLayout_1">
+      <item row="1" column="0">
+       <widget class="QSlider" name="timeLineSlider">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item row="8" column="1" colspan="5">
      <widget class="Line" name="line_1">
@@ -238,22 +270,6 @@
       </item>
      </layout>
     </item>
-    <item row="10" column="1">
-     <widget class="QCheckBox" name="editCheckBox">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">font: 75 12pt &quot;Times New Roman&quot;;</string>
-      </property>
-      <property name="text">
-       <string>Edit Mode</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="3" rowspan="2" colspan="3">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
@@ -269,21 +285,32 @@
       </item>
      </layout>
     </item>
-    <item row="0" column="1" rowspan="2" colspan="2">
-     <layout class="QHBoxLayout" name="horizontalLayout_1">
-      <item>
-       <widget class="QLabel" name="bgLabel_1">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(130, 130, 130);
-
-</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-     </layout>
+    <item row="14" column="1" colspan="5">
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents_0">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>1262</width>
+         <height>85</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout"/>
+      </widget>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -360,6 +387,12 @@
    <addaction name="actionZoomIn"/>
    <addaction name="separator"/>
    <addaction name="actionZoomOut"/>
+   <addaction name="separator"/>
+   <addaction name="actionSelectTrack"/>
+   <addaction name="separator"/>
+   <addaction name="actionAddTrack"/>
+   <addaction name="separator"/>
+   <addaction name="actionDeleteTrack"/>
    <addaction name="separator"/>
    <addaction name="separator"/>
    <addaction name="actionItpl"/>
@@ -555,13 +588,49 @@
   <action name="actionSelect">
    <property name="icon">
     <iconset resource="myres.qrc">
-     <normaloff>:/Images/icons/select.png</normaloff>:/Images/icons/select.png</iconset>
+     <normaloff>:/Images/icons/select-clip.png</normaloff>:/Images/icons/select-clip.png</iconset>
    </property>
    <property name="text">
     <string>Select</string>
    </property>
    <property name="toolTip">
     <string>Select</string>
+   </property>
+  </action>
+  <action name="actionAddTrack">
+   <property name="icon">
+    <iconset resource="myres.qrc">
+     <normaloff>:/Images/icons/add-track.png</normaloff>:/Images/icons/add-track.png</iconset>
+   </property>
+   <property name="text">
+    <string>AddTrack</string>
+   </property>
+   <property name="toolTip">
+    <string>Add track</string>
+   </property>
+  </action>
+  <action name="actionDeleteTrack">
+   <property name="icon">
+    <iconset resource="myres.qrc">
+     <normaloff>:/Images/icons/delete-track.png</normaloff>:/Images/icons/delete-track.png</iconset>
+   </property>
+   <property name="text">
+    <string>DeleteTrack</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete track</string>
+   </property>
+  </action>
+  <action name="actionSelectTrack">
+   <property name="icon">
+    <iconset resource="myres.qrc">
+     <normaloff>:/Images/icons/select-track.png</normaloff>:/Images/icons/select-track.png</iconset>
+   </property>
+   <property name="text">
+    <string>SelectTrack</string>
+   </property>
+   <property name="toolTip">
+    <string>Select track</string>
    </property>
   </action>
  </widget>

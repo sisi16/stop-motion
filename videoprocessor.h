@@ -13,6 +13,7 @@ enum clipOperation
 {
 	NullOperation,
 	SelectClip,
+	SelectTrack,
 	ResumeClip,
 	ViewClip,
 	MoveClip,
