@@ -69,12 +69,24 @@ void MainWindow::resizeEvent(QResizeEvent* ev)
     window_current_height = this->height() - ui->menuBar->height() - ui->mainToolBar->height();
 }
 
-void MainWindow::setClickRange(int index)
+void MainWindow::setClickRange(int index, int groupFrom, int groupTo)
 {
-	if (index == 0) clickRange.x = 0;
-	else clickRange.x = vproc.getSceneCuts().at(index-1) + 1;
-	clickRange.y = vproc.getSceneCuts().at(index);
-	clickRange.z = index;
+	if (groupFrom != -1 && groupTo != -1)
+	{
+		clickRange.push_back(index);
+		for (int i = groupFrom; i <= groupTo; i+=2)
+		{
+			if (i == 0) clickRange.push_back(0);
+			else clickRange.push_back(vproc.getSceneCuts().at(i-1) + 1);
+			clickRange.push_back(vproc.getSceneCuts().at(i));
+		}
+	}
+	else {
+		clickRange.push_back(index);
+		if (index == 0) clickRange.push_back(0);
+		else clickRange.push_back(vproc.getSceneCuts().at(index-1) + 1);
+		clickRange.push_back(vproc.getSceneCuts().at(index));
+	}
 }
 
 void MainWindow::on_playButton1_clicked()
@@ -366,7 +378,7 @@ void MainWindow::on_actionView_triggered()
 		if (selectedClip.size() == 1)
 		{
 			cliplabel *item = selectedClip.at(0);
-			setClickRange(item->getCutIndex());
+			setClickRange(item->getCutIndex(), item->getGroupFrom(), item->getGroupTo());
 			action = ViewClip;
 			playRange();
 			item->setEditedMode(NotEdited);
@@ -413,7 +425,7 @@ void MainWindow::on_actionDelete_triggered()
 		if (selectedClip.size() == 1)
 		{
 			cliplabel *item = selectedClip.at(0);
-			setClickRange(item->getCutIndex());
+			setClickRange(item->getCutIndex(), item->getGroupFrom(), item->getGroupTo());
 			action = DeleteClip;
 			playRange();
 			item->setEditedMode(isDeleted);
@@ -447,7 +459,7 @@ void MainWindow::on_actionReverse_triggered()
 		if (selectedClip.size() == 1)
 		{
 			cliplabel *item = selectedClip.at(0);
-			setClickRange(item->getCutIndex());
+			setClickRange(item->getCutIndex(), item->getGroupFrom(), item->getGroupTo());
 			action = ReverseClip;
 			playRange();
 		}
@@ -508,11 +520,14 @@ void MainWindow::on_actionGroup_triggered()
 		ui->actionSelect->setChecked(false);
 		int index;
 		int size = selectedClip.size();
+		int start = selectedClip.at(0)->getCutIndex();
+		int end = selectedClip.at(size - 1)->getCutIndex();
 		if (selectedClip.at(0)->getCutType() == 1)
 		{
 			for (int i = 0; i < size; i++)
 			{
 				selectedClip.at(i)->setEditedMode(isGrouped);
+				selectedClip.at(i)->setGroupIndex(start, end);
 				if (i < size - 1)
 				{
 					index = selectedClip.at(i)->getCutIndex();
@@ -525,6 +540,7 @@ void MainWindow::on_actionGroup_triggered()
 			for (int i = 0; i < size; i++)
 			{
 				selectedClip.at(i)->setEditedMode(isGrouped);
+				selectedClip.at(i)->setGroupIndex(start, end);
 				if (i < size - 1)
 				{
 					index = selectedClip.at(i)->getCutIndex();
@@ -541,7 +557,43 @@ void MainWindow::on_actionGroup_triggered()
 
 void MainWindow::on_actionUngroup_triggered()
 {
+	if (!ui->actionUngroup->isCheckable())
+	{
+		QString tip = "Please enable edit mode first.";
+		statusBar()->showMessage(tip);
+	}
+	else if (ui->actionUngroup->isChecked() && !selectedClip.empty() && !seletedPos.empty())
+	{
+		ui->actionSelect->setChecked(false);
+		selectedClip.at(0)->setEditedMode(NotEdited);
 
+		int index;
+		int start = selectedClip.at(0)->getGroupFrom();
+		int end = selectedClip.at(0)->getGroupTo();
+
+		if (selectedClip.at(0)->getCutType() == 1)
+		{
+			for (int i = start; i < end; i+=2)
+			{
+				cliplabel* item = static_cast<cliplabel*>(ui->gridLayout_2->itemAt(i)->widget());
+				item->setGroupIndex(-1, -1);
+				ui->gridLayout_2->itemAt(i + 1)->widget()->setStyleSheet("image: none");
+			}
+		}
+		else
+		{
+			for (int i = start; i < end; i+=2)
+			{
+				cliplabel* item = static_cast<cliplabel*>(ui->gridLayout_3->itemAt(i)->widget());
+				item->setGroupIndex(-1, -1);
+				ui->gridLayout_3->itemAt(i + 1)->widget()->setStyleSheet("image: none");
+			}
+		}
+		//action = GroupClip;
+		ui->actionGroup->setChecked(false);
+	}
+	else
+		action = NullOperation;
 }
 
 void MainWindow::on_actionZoomIn_triggered()
@@ -866,7 +918,8 @@ void MainWindow::delete_action()
 	action = DeleteClip;
 	playRange();
 
-    QString tip = "Delete from " + QString::number(clickRange.x) + " to " + QString::number(clickRange.y);
+	int end = clickRange.size() - 1;
+    QString tip = "Delete from " + QString::number(clickRange.at(1)) + " to " + QString::number(clickRange.at(end));
     statusBar()->showMessage(tip);
 }
 
@@ -876,7 +929,8 @@ void MainWindow::reverse_action()
 	action = ReverseClip;
 	playRange();
 
-    QString tip = "Reverse from " + QString::number(clickRange.x) + " to " + QString::number(clickRange.y);
+	int end = clickRange.size() - 1;
+    QString tip = "Reverse from " + QString::number(clickRange.at(1)) + " to " + QString::number(clickRange.at(end));
     statusBar()->showMessage(tip);
 }
 

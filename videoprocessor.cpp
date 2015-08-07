@@ -158,20 +158,36 @@ QProgressBar *videoprocessor::getProgressBar()
     return progressBar;
 }
 
-Point3i videoprocessor::getRange(int current, int width)
+vector<int> videoprocessor::getRange(int current, int width)
 {
+	vector<int> range;
     int current_frame = floor(double(current) / width * num_of_frames);
 
     for (int i = 0; i < scene_cuts.size(); i++)
     {
         if (current_frame <= scene_cuts.at(i))
         {
-            if (i == 0) return Point3i(0, scene_cuts.at(i), i);
-            else return Point3i(scene_cuts.at(i-1)+1, scene_cuts.at(i), i);
+			if (i == 0) 
+			{
+				range.push_back(i);
+				range.push_back(0);
+				range.push_back(scene_cuts.at(i));
+				return range;
+			}
+			else
+			{
+				range.push_back(i);
+				range.push_back(scene_cuts.at(i - 1) + 1);
+				range.push_back(scene_cuts.at(i));
+				return range;
+			}
         }
     }
 
-    return Point3i(-1, -1, -1);
+	range.push_back(-1);
+	range.push_back(-1);
+	range.push_back(-1);
+    return range;
 }
 
 int videoprocessor::getNumOfFrames()
@@ -184,7 +200,7 @@ int videoprocessor::getFrameRate()
 	return frame_rate;
 }
 
-void videoprocessor::writeVideo(Point3i range, clipOperation operation)
+void videoprocessor::writeVideo(vector<int> range, clipOperation operation)
 {
     if (out.isOpened())
     {
@@ -200,29 +216,33 @@ void videoprocessor::writeVideo(Point3i range, clipOperation operation)
 
 	int start = -1;
 	int end = -1;
+	int size = range.size();
 
 	switch (operation)
 	{
 
 	case ViewClip :
 		{
-			start = range.x;
-			end = range.y;
-			for (int i = start; i <= end; i++)
+			for (int i = 1; i < size; i+=2)
 			{
-				frame = frames.at(i);
-				out << frame;
+				start = range.at(i);
+				end = range.at(i + 1);
+				for (int j = start; j <= end; j++)
+				{
+					frame = frames.at(j);
+					out << frame;
+				}
 			}
 		}
 		break;
 			
 	case DeleteClip :
 		{
-			start = scene_cuts.at(range.z - 2) + 1;
-			end = scene_cuts.at(range.z + 1);
+			start = scene_cuts.at(range.at(0) - 2) + 1;
+			end = scene_cuts.at(range.at(0) + 1);
 			for (int i = start; i <= end; i++)
 			{
-				if (i < range.x || i > range.y)
+				if (i < range.at(1) || i > range.at(2))
 				{
 					frame = frames.at(i);
 					out << frame;
@@ -233,12 +253,15 @@ void videoprocessor::writeVideo(Point3i range, clipOperation operation)
 
 	case ReverseClip :
 		{
-			start = range.y;
-			end = range.x;
-			for (int i = start; i >= end; i--)
+			for (int i = size-1; i >= 1; i-=2)
 			{
-				frame = frames.at(i);
-				out << frame;
+				start = range.at(i);
+				end = range.at(i - 1);
+				for (int j = start; j >= end; j--)
+				{
+					frame = frames.at(j);
+					out << frame;
+				}
 			}
 		}
 		break;

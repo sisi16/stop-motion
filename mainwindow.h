@@ -31,7 +31,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-	void setClickRange(int index);
+	void setClickRange(int index, int groupFrom, int groupTo);
 
 protected:
 	void resizeEvent(QResizeEvent* ev);
@@ -115,7 +115,7 @@ private:
     QLabel *preview_1;
     QLabel *preview_2;
     bool isCut;
-    cv::Point3i clickRange;
+    std::vector<int> clickRange;
 	clipOperation action;
     QMenu *sliderMenu;
 	std::vector<cliplabel *> selectedClip;

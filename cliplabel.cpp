@@ -9,6 +9,8 @@ cliplabel::cliplabel(QWidget* parent, Qt::WindowFlags f)
 {
 	cut_index = -1;
 	cut_type = -1;
+	group_from = -1;
+	group_to = -1;
 	edited_mode = NotEdited;
 }
 
@@ -19,6 +21,8 @@ cliplabel::cliplabel(vector<Mat> src, int w, int h, int index, int type, QWidget
 	cut_index = index;
 	cut_type = type;
 
+	group_from = -1;
+	group_to = -1;
 	edited_mode = NotEdited;
 
 	this->setScaledContents(true);
@@ -62,6 +66,16 @@ int cliplabel::getCutIndex()
 int cliplabel::getCutType()
 {
 	return cut_type;
+}
+
+int cliplabel::getGroupFrom()
+{
+	return group_from;
+}
+
+int cliplabel::getGroupTo()
+{
+	return group_to;
 }
 
 vector<Mat> cliplabel::getSrcImages()
@@ -170,4 +184,10 @@ void cliplabel::uncast()
 	cut_type = -1;
 	this->setMouseTracking(false);
 	this->setCursor(Qt::ArrowCursor);
+}
+
+void cliplabel::setGroupIndex(int from, int to)
+{
+	group_from = from;
+	group_to = to;
 }

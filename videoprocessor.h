@@ -40,10 +40,10 @@ public:
 	int getFrameWidth();
 	int getFrameHeight();
     QProgressBar *getProgressBar();
-    cv::Point3i getRange(int current, int width);
+    std::vector<int> getRange(int current, int width);
     int getNumOfFrames();
 	int getFrameRate();
-    void writeVideo(cv::Point3i range, clipOperation operation);
+    void writeVideo(std::vector<int> range, clipOperation operation);
     void test();
 	void writeBuffers();
 	void readBuffers();

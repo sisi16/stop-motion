@@ -35,6 +35,8 @@ public:
     ~cliplabel();
 	int getCutIndex();
 	int getCutType();
+	int getGroupFrom();
+	int getGroupTo();
 	std::vector<cv::Mat> getSrcImages();
 	isEdited getEditedMode();
 	void setEditedMode(isEdited mode);
@@ -43,6 +45,7 @@ public:
 	void setSrcImages(std::vector<cv::Mat> src);
 	void cast(cliplabel *castedClip);
 	void uncast();
+	void setGroupIndex(int from, int to);
 
 signals:
 	void enter(int value);
@@ -54,6 +57,8 @@ protected:
 private:
 	int cut_index;
 	int cut_type;
+	int group_from;
+	int group_to;
 	isEdited edited_mode;
 	std::vector<cv::Mat> srcImages;
 };
