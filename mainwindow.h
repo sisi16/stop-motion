@@ -86,6 +86,8 @@ private slots:
 
 	void on_actionDeleteTrack_triggered();
 
+	void on_actionItpl_triggered();
+
     bool eventFilter(QObject *widget, QEvent *event);
 
     void playRange();

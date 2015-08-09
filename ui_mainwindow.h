@@ -67,8 +67,6 @@ public:
     QHBoxLayout *horizontalLayout_1;
     QLabel *bgLabel_1;
     QCheckBox *editCheckBox;
-    QGridLayout *gridLayout_1;
-    QSlider *timeLineSlider;
     QFrame *line_1;
     QPushButton *cancelButton;
     QPushButton *okButton;
@@ -82,6 +80,10 @@ public:
     QScrollArea *scrollArea;
     QWidget *scrollAreaWidgetContents_0;
     QVBoxLayout *verticalLayout;
+    QScrollArea *scrollArea_3;
+    QWidget *scrollAreaWidgetContents_3;
+    QVBoxLayout *verticalLayout_2;
+    QSlider *timeLineSlider;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuEdit;
@@ -266,18 +268,6 @@ public:
 
         gridLayout->addWidget(editCheckBox, 10, 1, 1, 1);
 
-        gridLayout_1 = new QGridLayout();
-        gridLayout_1->setSpacing(6);
-        gridLayout_1->setObjectName(QStringLiteral("gridLayout_1"));
-        timeLineSlider = new QSlider(centralWidget);
-        timeLineSlider->setObjectName(QStringLiteral("timeLineSlider"));
-        timeLineSlider->setOrientation(Qt::Horizontal);
-
-        gridLayout_1->addWidget(timeLineSlider, 1, 0, 1, 1);
-
-
-        gridLayout->addLayout(gridLayout_1, 11, 1, 1, 5);
-
         line_1 = new QFrame(centralWidget);
         line_1->setObjectName(QStringLiteral("line_1"));
         line_1->setFrameShape(QFrame::HLine);
@@ -387,6 +377,28 @@ public:
         scrollArea->setWidget(scrollAreaWidgetContents_0);
 
         gridLayout->addWidget(scrollArea, 14, 1, 1, 5);
+
+        scrollArea_3 = new QScrollArea(centralWidget);
+        scrollArea_3->setObjectName(QStringLiteral("scrollArea_3"));
+        sizePolicy1.setHeightForWidth(scrollArea_3->sizePolicy().hasHeightForWidth());
+        scrollArea_3->setSizePolicy(sizePolicy1);
+        scrollArea_3->setWidgetResizable(true);
+        scrollAreaWidgetContents_3 = new QWidget();
+        scrollAreaWidgetContents_3->setObjectName(QStringLiteral("scrollAreaWidgetContents_3"));
+        scrollAreaWidgetContents_3->setGeometry(QRect(0, 0, 1260, 83));
+        verticalLayout_2 = new QVBoxLayout(scrollAreaWidgetContents_3);
+        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        timeLineSlider = new QSlider(scrollAreaWidgetContents_3);
+        timeLineSlider->setObjectName(QStringLiteral("timeLineSlider"));
+        timeLineSlider->setOrientation(Qt::Horizontal);
+
+        verticalLayout_2->addWidget(timeLineSlider);
+
+        scrollArea_3->setWidget(scrollAreaWidgetContents_3);
+
+        gridLayout->addWidget(scrollArea_3, 11, 1, 1, 5);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);

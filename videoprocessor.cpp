@@ -227,6 +227,7 @@ void videoprocessor::writeVideo(vector<int> range, clipOperation operation)
 			{
 				start = range.at(i);
 				end = range.at(i + 1);
+				cout << start << " " << end << endl;
 				for (int j = start; j <= end; j++)
 				{
 					frame = frames.at(j);

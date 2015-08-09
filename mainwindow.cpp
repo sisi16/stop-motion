@@ -71,6 +71,7 @@ void MainWindow::resizeEvent(QResizeEvent* ev)
 
 void MainWindow::setClickRange(int index, int groupFrom, int groupTo)
 {
+	if (!clickRange.empty()) clickRange.clear();
 	if (groupFrom != -1 && groupTo != -1)
 	{
 		clickRange.push_back(index);
@@ -106,9 +107,9 @@ void MainWindow::on_playButton1_clicked()
 
 	if (frame_slider->parent() == 0)
     {
-		child = ui->gridLayout_1->takeAt(0);
+		child = ui->verticalLayout_2->takeAt(0);
 		child->widget()->setVisible(0);
-		ui->gridLayout_1->removeWidget(child->widget());
+		ui->verticalLayout_2->removeWidget(child->widget());
 		delete child;
 
 		frame_slider->setRange(0, 30000);//frame_slider->setRange(0, mediaplayer_1->duration() / 1000);
@@ -116,7 +117,7 @@ void MainWindow::on_playButton1_clicked()
 		frame_slider->setTickPosition(QSlider::TicksAbove);
 		frame_slider->setTickInterval(500);
 		connect(frame_slider, SIGNAL(sliderMoved(int)), this, SLOT(seek(int)));
-		ui->gridLayout_1->addWidget(frame_slider);
+		ui->verticalLayout_2->addWidget(frame_slider);
     }
 
 	mediaplayer_1->play();
@@ -135,7 +136,7 @@ void MainWindow::on_pauseButton1_clicked()
 void MainWindow::on_cutButton_clicked()
 {
     progressBar = vproc.getProgressBar();
-    ui->gridLayout_1->addWidget(progressBar);
+	ui->verticalLayout_2->addWidget(progressBar);
     progressBar->show();
 
 	vproc.readBuffers();
@@ -147,7 +148,7 @@ void MainWindow::on_cutButton_clicked()
     statusBar()->clearMessage();
 
     progressBar->hide();
-    ui->gridLayout_1->removeWidget(progressBar);
+	ui->verticalLayout_2->removeWidget(progressBar);
     delete progressBar;
 }
 
@@ -172,13 +173,13 @@ void MainWindow::refresh(int value)
     current_frame->setFixedSize(640, 480);
 
     QLayoutItem *child;
-    if ((child = ui->gridLayout_1->takeAt(1)) != 0)
+	if ((child = ui->verticalLayout_2->takeAt(1)) != 0)
     {
         child->widget()->setVisible(0);
-        ui->gridLayout_1->removeWidget(child->widget());
+		ui->verticalLayout_2->removeWidget(child->widget());
         delete child;
     }
-    ui->gridLayout_1->addWidget(current_frame);
+	ui->verticalLayout_2->addWidget(current_frame);
 }
 
 void MainWindow::seek(int seconds)
@@ -238,9 +239,9 @@ void MainWindow::on_actionCandidates_triggered()
     if (!vproc.getStableFrames().empty())
     {
         QLayoutItem *child;
-        while ((child = ui->gridLayout_1->takeAt(0)) != 0)  {
+		while ((child = ui->verticalLayout_2->takeAt(0)) != 0)  {
             child->widget()->setVisible(0);
-            ui->gridLayout_1->removeWidget(child->widget());
+			ui->verticalLayout_2->removeWidget(child->widget());
             delete child;
         }
 
@@ -267,7 +268,7 @@ void MainWindow::on_actionCandidates_triggered()
             label->setPixmap(QPixmap::fromImage(image));
             label->pixmap()->size().scale(size(), Qt::IgnoreAspectRatio);
             label->setFixedSize(170, label_height);
-            ui->gridLayout_1->addWidget(label, i/10, i%10, 0);
+			//ui->verticalLayout_2->addWidget(label, i / 10, i % 10, 0);
         }
     }
 }
@@ -573,24 +574,26 @@ void MainWindow::on_actionUngroup_triggered()
 
 		if (selectedClip.at(0)->getCutType() == 1)
 		{
-			for (int i = start; i < end; i+=2)
+			for (int i = start; i <= end; i+=2)
 			{
 				cliplabel* item = static_cast<cliplabel*>(ui->gridLayout_2->itemAt(i)->widget());
 				item->setGroupIndex(-1, -1);
-				ui->gridLayout_2->itemAt(i + 1)->widget()->setStyleSheet("image: none");
+				if (i < end)
+					ui->gridLayout_2->itemAt(i + 1)->widget()->setStyleSheet("image: none");
 			}
 		}
 		else
 		{
-			for (int i = start; i < end; i+=2)
+			for (int i = start; i <= end; i+=2)
 			{
 				cliplabel* item = static_cast<cliplabel*>(ui->gridLayout_3->itemAt(i)->widget());
 				item->setGroupIndex(-1, -1);
-				ui->gridLayout_3->itemAt(i + 1)->widget()->setStyleSheet("image: none");
+				if (i < end)
+					ui->gridLayout_3->itemAt(i + 1)->widget()->setStyleSheet("image: none");
 			}
 		}
 		//action = GroupClip;
-		ui->actionGroup->setChecked(false);
+		ui->actionUngroup->setChecked(false);
 	}
 	else
 		action = NullOperation;
@@ -663,6 +666,11 @@ void MainWindow::on_actionDeleteTrack_triggered()
 	}
 	else
 		action = NullOperation;
+}
+
+void MainWindow::on_actionItpl_triggered()
+{
+	ui->timeLineSlider->setFixedWidth(1500);
 }
 
 bool MainWindow::eventFilter(QObject *widget, QEvent *event)
@@ -878,6 +886,7 @@ void MainWindow::on_editCheckBox_clicked()
 			ui->actionReverse->setCheckable(true);
 			ui->actionCast->setCheckable(true);
 			ui->actionGroup->setCheckable(true);
+			ui->actionUngroup->setCheckable(true);
 			ui->actionSelectTrack->setCheckable(true);
 			ui->actionAddTrack->setCheckable(true);
 			ui->actionDeleteTrack->setCheckable(true);
@@ -901,6 +910,7 @@ void MainWindow::on_editCheckBox_clicked()
 			ui->actionReverse->setCheckable(false);
 			ui->actionCast->setCheckable(false);
 			ui->actionGroup->setCheckable(false);
+			ui->actionUngroup->setCheckable(false);
 			ui->actionSelectTrack->setCheckable(false);
 			ui->actionAddTrack->setCheckable(false);
 			ui->actionDeleteTrack->setCheckable(false);
