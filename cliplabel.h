@@ -44,6 +44,7 @@ public:
 	void setCutIndex(int index);
 	void setSrcImages(std::vector<cv::Mat> src);
 	void setGroupIndex(int from, int to);
+	void setSizeThreshold(int w, int h);
 	void cast(cliplabel *castedClip);
 	void uncast();
 	void zoomIn();
@@ -57,6 +58,8 @@ protected:
 	void leaveEvent(QEvent *);
 
 private:
+	int w_threshold;
+	int h_threshold;
 	int cut_index;
 	int cut_type;
 	int group_from;

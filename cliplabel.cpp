@@ -17,6 +17,8 @@ cliplabel::cliplabel(QWidget* parent, Qt::WindowFlags f)
 cliplabel::cliplabel(vector<Mat> src, int w, int h, int index, int type, QWidget* parent, Qt::WindowFlags f)
 		 : QLabel(parent, f)
 {
+	w_threshold = w;
+	h_threshold = h;
 	srcImages = src;
 	cut_index = index;
 	cut_type = type;
@@ -192,6 +194,12 @@ void cliplabel::setGroupIndex(int from, int to)
 	group_to = to;
 }
 
+void cliplabel::setSizeThreshold(int w, int h)
+{
+	w_threshold = w;
+	h_threshold = h;
+}
+
 void cliplabel::zoomIn()
 {
 	int w = this->width();
@@ -200,8 +208,13 @@ void cliplabel::zoomIn()
 	{
 		QPixmap *pixmap = new QPixmap(2 * w, h);
 		QPainter *painter = new QPainter(pixmap);
-		painter->drawPixmap(0, 0, w, h, *this->pixmap());
-		painter->fillRect(w, 0, w, h, Qt::black);
+		if (2 * w > w_threshold)
+		{
+			painter->drawPixmap(0, 0, w, h, *this->pixmap());
+			painter->fillRect(w, 0, w, h, Qt::black);
+		}
+		else
+			painter->drawPixmap(0, 0, 2*w, h, *this->pixmap());
 		painter->end();
 		this->setPixmap(*pixmap);
 		this->setFixedSize(2 * w, h);
@@ -218,7 +231,10 @@ void cliplabel::zoomOut()
 	{
 		QPixmap *pixmap = new QPixmap(w, h);
 		QPainter *painter = new QPainter(pixmap);
-		painter->drawPixmap(0, 0, w, h, *this->pixmap());
+		if (this->width() > w_threshold && w <= w_threshold)
+			painter->drawPixmap(0, 0, w, h, *this->pixmap(), 0, 0, w, h);
+		else
+			painter->drawPixmap(0, 0, w, h, *this->pixmap());
 		painter->end();
 		this->setPixmap(*pixmap);
 		this->setFixedSize(w, h);

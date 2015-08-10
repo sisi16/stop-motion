@@ -298,6 +298,7 @@ void MainWindow::on_actionTest_triggered()
 		cliplabel *clip = new cliplabel(srcImages, width, height, i, cut_types.at(i));
 		cliplabel *empty_clip = new cliplabel();
 		empty_clip->setFixedSize(width, height);
+		empty_clip->setSizeThreshold(width, height);
 
 		if (cut_types.at(i) == 1)
 		{
