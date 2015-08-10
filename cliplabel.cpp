@@ -191,3 +191,38 @@ void cliplabel::setGroupIndex(int from, int to)
 	group_from = from;
 	group_to = to;
 }
+
+void cliplabel::zoomIn()
+{
+	int w = this->width();
+	int h = this->height();
+	if (this->cut_index != -1)
+	{
+		QPixmap *pixmap = new QPixmap(2 * w, h);
+		QPainter *painter = new QPainter(pixmap);
+		painter->drawPixmap(0, 0, w, h, *this->pixmap());
+		painter->fillRect(w, 0, w, h, Qt::black);
+		painter->end();
+		this->setPixmap(*pixmap);
+		this->setFixedSize(2 * w, h);
+	}
+	else
+		this->setFixedWidth(2 * w);
+}
+
+void cliplabel::zoomOut()
+{
+	int w = floor(0.5*this->width());
+	int h = this->height();
+	if (this->cut_index != -1)
+	{
+		QPixmap *pixmap = new QPixmap(w, h);
+		QPainter *painter = new QPainter(pixmap);
+		painter->drawPixmap(0, 0, w, h, *this->pixmap());
+		painter->end();
+		this->setPixmap(*pixmap);
+		this->setFixedSize(w, h);
+	}
+	else
+		this->setFixedWidth(w);
+}

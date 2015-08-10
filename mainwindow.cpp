@@ -601,12 +601,38 @@ void MainWindow::on_actionUngroup_triggered()
 
 void MainWindow::on_actionZoomIn_triggered()
 {
+	int currentSliderWidth = frame_slider->width();
+	frame_slider->setFixedWidth(2*currentSliderWidth);
 
+	QLayoutItem *child_1;
+	QLayoutItem *child_2;
+	int count = 0;
+	while ((child_1 = ui->gridLayout_2->itemAt(count)) != 0 && (child_2 = ui->gridLayout_3->itemAt(count)) != 0)
+	{
+		cliplabel* item_1 = static_cast<cliplabel*>(child_1->widget());
+		cliplabel* item_2 = static_cast<cliplabel*>(child_2->widget());
+		item_1->zoomIn();
+		item_2->zoomIn();
+		count++;
+	}
 }
 
 void MainWindow::on_actionZoomOut_triggered()
 {
+	int current_width = frame_slider->width();
+	frame_slider->setFixedWidth(floor(0.5 * current_width));
 
+	QLayoutItem *child_1;
+	QLayoutItem *child_2;
+	int count = 0;
+	while ((child_1 = ui->gridLayout_2->itemAt(count)) != 0 && (child_2 = ui->gridLayout_3->itemAt(count)) != 0)
+	{
+		cliplabel* item_1 = static_cast<cliplabel*>(child_1->widget());
+		cliplabel* item_2 = static_cast<cliplabel*>(child_2->widget());
+		item_1->zoomOut();
+		item_2->zoomOut();
+		count++;
+	}
 }
 
 void MainWindow::on_actionSelectTrack_triggered()
@@ -670,7 +696,8 @@ void MainWindow::on_actionDeleteTrack_triggered()
 
 void MainWindow::on_actionItpl_triggered()
 {
-	ui->timeLineSlider->setFixedWidth(1500);
+	cliplabel* item = static_cast<cliplabel*>(ui->gridLayout_2->itemAt(1)->widget());
+	item->setFixedWidth(500);
 }
 
 bool MainWindow::eventFilter(QObject *widget, QEvent *event)

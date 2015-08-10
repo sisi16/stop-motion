@@ -43,9 +43,11 @@ public:
 	void setCutType(int type);
 	void setCutIndex(int index);
 	void setSrcImages(std::vector<cv::Mat> src);
+	void setGroupIndex(int from, int to);
 	void cast(cliplabel *castedClip);
 	void uncast();
-	void setGroupIndex(int from, int to);
+	void zoomIn();
+	void zoomOut();
 
 signals:
 	void enter(int value);
