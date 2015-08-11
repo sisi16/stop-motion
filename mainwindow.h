@@ -14,6 +14,7 @@
 #include <QPen>
 #include <QScrollArea>
 #include <QScrollBar>
+#include <QGridLayout>
 #include <QMimeData>
 #include <QDrag>
 #include "videoprocessor.h"
@@ -123,7 +124,11 @@ private:
 	std::vector<cliplabel *> selectedClip;
 	int addedTrackCount;
 	std::vector<QScrollArea *> addedTrack;
+	std::vector<QWidget *> addedTrackContents;
+	std::vector<int> addedTrackChildrenCount;
+	std::vector<QGridLayout *> addedTrackLayout;
 	std::vector<QScrollArea *> selectedTrack;
+	std::vector<QWidget *> selectedTrackContents;
 	std::vector<QPoint> seletedPos;
 };
 
