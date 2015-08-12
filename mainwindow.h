@@ -32,7 +32,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-	void setClickRange(int index, int groupFrom, int groupTo);
+	void setClickRange(std::vector<int> indices);
 
 protected:
 	void resizeEvent(QResizeEvent* ev);
@@ -86,6 +86,8 @@ private slots:
 	void on_actionAddTrack_triggered();
 
 	void on_actionDeleteTrack_triggered();
+
+	void on_actionViewTrack_triggered();
 
 	void on_actionItpl_triggered();
 

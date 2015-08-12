@@ -297,6 +297,9 @@
          <height>85</height>
         </rect>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <layout class="QVBoxLayout" name="verticalLayout"/>
       </widget>
      </widget>
@@ -414,6 +417,8 @@
    <addaction name="actionAddTrack"/>
    <addaction name="separator"/>
    <addaction name="actionDeleteTrack"/>
+   <addaction name="separator"/>
+   <addaction name="actionViewTrack"/>
    <addaction name="separator"/>
    <addaction name="separator"/>
    <addaction name="actionItpl"/>
@@ -652,6 +657,18 @@
    </property>
    <property name="toolTip">
     <string>Select track</string>
+   </property>
+  </action>
+  <action name="actionViewTrack">
+   <property name="icon">
+    <iconset resource="myres.qrc">
+     <normaloff>:/Images/icons/view-track.png</normaloff>:/Images/icons/view-track.png</iconset>
+   </property>
+   <property name="text">
+    <string>viewTrack</string>
+   </property>
+   <property name="toolTip">
+    <string>View track</string>
    </property>
   </action>
  </widget>

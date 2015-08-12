@@ -16,6 +16,7 @@ enum clipOperation
 	SelectTrack,
 	ResumeClip,
 	ViewClip,
+	ViewTrack,
 	MoveClip,
 	DeleteClip,
 	ReverseClip,

@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/Images">
+    <file>icons/view-track.png</file>
     <file>icons/connect.png</file>
     <file>icons/delete-track.png</file>
     <file>icons/select-clip.png</file>

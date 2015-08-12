@@ -222,8 +222,9 @@ void videoprocessor::writeVideo(vector<int> range, clipOperation operation)
 	{
 
 	case ViewClip :
+	case ViewTrack :
 		{
-			for (int i = 1; i < size; i+=2)
+			for (int i = 0; i < size; i+=2)
 			{
 				start = range.at(i);
 				end = range.at(i + 1);

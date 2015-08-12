@@ -9,6 +9,7 @@ cliplabel::cliplabel(QWidget* parent, Qt::WindowFlags f)
 {
 	cut_index = -1;
 	cut_type = -1;
+	track_index = -1;
 	group_from = -1;
 	group_to = -1;
 	edited_mode = NotEdited;
@@ -22,9 +23,11 @@ cliplabel::cliplabel(vector<Mat> src, int w, int h, int index, int type, QWidget
 	srcImages = src;
 	cut_index = index;
 	cut_type = type;
+	track_index = index;
 
 	group_from = -1;
 	group_to = -1;
+	groupIndices.push_back(cut_index);
 	edited_mode = NotEdited;
 
 	this->setScaledContents(true);
@@ -70,6 +73,11 @@ int cliplabel::getCutType()
 	return cut_type;
 }
 
+int cliplabel::getTrackIndex()
+{
+	return track_index;
+}
+
 int cliplabel::getGroupFrom()
 {
 	return group_from;
@@ -90,6 +98,11 @@ isEdited cliplabel::getEditedMode()
 	return edited_mode;
 }
 
+vector<int> cliplabel::getGroupIndices()
+{
+	return groupIndices;
+}
+
 void cliplabel::enterEvent(QEvent *)
 {
 	if (edited_mode != isSelected && edited_mode != isMoved && edited_mode != isDeleted && edited_mode != isCasted)
@@ -98,6 +111,8 @@ void cliplabel::enterEvent(QEvent *)
 			this->setStyleSheet("border: 5px outset rgb(85, 170, 255)");
 		else if (cut_type == 2)
 			this->setStyleSheet("border: 5px outset rgb(170, 255, 127)");
+		else if (cut_type > 2)
+			this->setStyleSheet("border: 5px outset rgb(255, 255, 127)");
 		//emit enter(cut_index);
 	}
 }
@@ -123,6 +138,8 @@ void cliplabel::setEditedMode(isEdited mode)
 			this->setStyleSheet("border: 5px inset blue");
 		else if (cut_type == 2)
 			this->setStyleSheet("border: 5px inset green");
+		else if (cut_type > 2)
+			this->setStyleSheet("border: 5px inset yellow");
 		break;
 
 	case isResumed:
@@ -153,6 +170,11 @@ void cliplabel::setEditedMode(isEdited mode)
 void cliplabel::setCutIndex(int index)
 {
 	cut_index = index;
+}
+
+void cliplabel::setTrackIndex(int index)
+{
+	track_index = index;
 }
 
 void cliplabel::setCutType(int type)
@@ -198,6 +220,22 @@ void cliplabel::setSizeThreshold(int w, int h)
 {
 	w_threshold = w;
 	h_threshold = h;
+}
+
+void cliplabel::setGroupIndices(vector<int> indices)
+{
+	groupIndices = indices;
+}
+
+void cliplabel::setUnGroupIndices()
+{
+	groupIndices.clear();
+	groupIndices.push_back(cut_index);
+}
+
+void cliplabel::clearGroupIndices()
+{
+	groupIndices.clear();
 }
 
 void cliplabel::zoomIn()

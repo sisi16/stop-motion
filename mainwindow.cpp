@@ -69,24 +69,18 @@ void MainWindow::resizeEvent(QResizeEvent* ev)
     window_current_height = this->height() - ui->menuBar->height() - ui->mainToolBar->height();
 }
 
-void MainWindow::setClickRange(int index, int groupFrom, int groupTo)
+void MainWindow::setClickRange(vector<int> indices)
 {
 	if (!clickRange.empty()) clickRange.clear();
-	if (groupFrom != -1 && groupTo != -1)
+		
+	int index;
+	vector<int> scene_cuts = vproc.getSceneCuts();
+	for (int i = 0; i < indices.size(); i++)
 	{
-		clickRange.push_back(index);
-		for (int i = groupFrom; i <= groupTo; i+=2)
-		{
-			if (i == 0) clickRange.push_back(0);
-			else clickRange.push_back(vproc.getSceneCuts().at(i-1) + 1);
-			clickRange.push_back(vproc.getSceneCuts().at(i));
-		}
-	}
-	else {
-		clickRange.push_back(index);
+		index = indices.at(i);
 		if (index == 0) clickRange.push_back(0);
-		else clickRange.push_back(vproc.getSceneCuts().at(index-1) + 1);
-		clickRange.push_back(vproc.getSceneCuts().at(index));
+		else clickRange.push_back(scene_cuts.at(index-1) + 1);
+		clickRange.push_back(scene_cuts.at(index));
 	}
 }
 
@@ -380,7 +374,7 @@ void MainWindow::on_actionView_triggered()
 		if (selectedClip.size() == 1)
 		{
 			cliplabel *item = selectedClip.at(0);
-			setClickRange(item->getCutIndex(), item->getGroupFrom(), item->getGroupTo());
+			setClickRange(item->getGroupIndices());
 			action = ViewClip;
 			playRange();
 			item->setEditedMode(NotEdited);
@@ -427,7 +421,7 @@ void MainWindow::on_actionDelete_triggered()
 		if (selectedClip.size() == 1)
 		{
 			cliplabel *item = selectedClip.at(0);
-			setClickRange(item->getCutIndex(), item->getGroupFrom(), item->getGroupTo());
+			setClickRange(item->getGroupIndices());
 			action = DeleteClip;
 			playRange();
 			item->setEditedMode(isDeleted);
@@ -461,7 +455,7 @@ void MainWindow::on_actionReverse_triggered()
 		if (selectedClip.size() == 1)
 		{
 			cliplabel *item = selectedClip.at(0);
-			setClickRange(item->getCutIndex(), item->getGroupFrom(), item->getGroupTo());
+			setClickRange(item->getGroupIndices());
 			action = ReverseClip;
 			playRange();
 		}
@@ -520,36 +514,60 @@ void MainWindow::on_actionGroup_triggered()
 	else if (ui->actionGroup->isChecked() && !selectedClip.empty() && !seletedPos.empty())
 	{
 		ui->actionSelect->setChecked(false);
-		int index;
+		int cut_index, track_index;
+		int cut_type = selectedClip.at(0)->getCutType();
 		int size = selectedClip.size();
 		int start = selectedClip.at(0)->getCutIndex();
 		int end = selectedClip.at(size - 1)->getCutIndex();
-		if (selectedClip.at(0)->getCutType() == 1)
+		vector<int> group_indices;
+		if (cut_type)
 		{
 			for (int i = 0; i < size; i++)
 			{
+				cut_index = selectedClip.at(i)->getCutIndex();
+				group_indices.push_back(cut_index);
 				selectedClip.at(i)->setEditedMode(isGrouped);
 				selectedClip.at(i)->setGroupIndex(start, end);
 				if (i < size - 1)
 				{
-					index = selectedClip.at(i)->getCutIndex();
-					ui->gridLayout_2->itemAt(index + 1)->widget()->setStyleSheet("image: url(:/Images/icons/connect.png);");
+					ui->gridLayout_2->itemAt(cut_index + 1)->widget()->setStyleSheet("image: url(:/Images/icons/connect.png);");
 				}
 			}
 		} 
-		else
+		else if (cut_type == 2)
 		{
 			for (int i = 0; i < size; i++)
 			{
+				cut_index = selectedClip.at(i)->getCutIndex();
+				group_indices.push_back(cut_index);
 				selectedClip.at(i)->setEditedMode(isGrouped);
 				selectedClip.at(i)->setGroupIndex(start, end);
 				if (i < size - 1)
 				{
-					index = selectedClip.at(i)->getCutIndex();
-					ui->gridLayout_3->itemAt(index + 1)->widget()->setStyleSheet("image: url(:/Images/icons/connect.png);");
+					ui->gridLayout_3->itemAt(cut_index + 1)->widget()->setStyleSheet("image: url(:/Images/icons/connect.png);");
 				}
 			}
 		}
+		else if (cut_type > 2)
+		{
+			QGridLayout *layout = addedTrackLayout.at(cut_type - 3);
+			for (int i = 0; i < size; i++)
+			{	
+				cut_index = selectedClip.at(i)->getCutIndex();
+				track_index = selectedClip.at(i)->getTrackIndex();
+				group_indices.push_back(cut_index);
+				selectedClip.at(i)->setEditedMode(isGrouped);
+				selectedClip.at(i)->setGroupIndex(start, end);
+				if (i < size - 1)
+				{
+					layout->itemAt(track_index + 1)->widget()->setStyleSheet("image: url(:/Images/icons/connect.png);");
+				}
+			}
+		}
+
+		for (int i = 0; i < size; i++)
+			selectedClip.at(i)->setGroupIndices(group_indices);
+
 		//action = GroupClip;
 		ui->actionGroup->setChecked(false);
 	}
@@ -569,30 +587,49 @@ void MainWindow::on_actionUngroup_triggered()
 		ui->actionSelect->setChecked(false);
 		selectedClip.at(0)->setEditedMode(NotEdited);
 
-		int index;
-		int start = selectedClip.at(0)->getGroupFrom();
-		int end = selectedClip.at(0)->getGroupTo();
+		int cut_index, track_index;
+		int cut_type = selectedClip.at(0)->getCutType();
+		vector<int> group_indices = selectedClip.at(0)->getGroupIndices();
+		int size = group_indices.size();
 
-		if (selectedClip.at(0)->getCutType() == 1)
+		if (cut_type == 1)
 		{
-			for (int i = start; i <= end; i+=2)
+			for (int i = 0; i < size; i++)
 			{
-				cliplabel* item = static_cast<cliplabel*>(ui->gridLayout_2->itemAt(i)->widget());
+				cut_index = group_indices.at(i);
+				cliplabel* item = static_cast<cliplabel*>(ui->gridLayout_2->itemAt(cut_index)->widget());
 				item->setGroupIndex(-1, -1);
-				if (i < end)
-					ui->gridLayout_2->itemAt(i + 1)->widget()->setStyleSheet("image: none");
+				item->setUnGroupIndices();
+				if (i < size - 1)
+					ui->gridLayout_2->itemAt(cut_index + 1)->widget()->setStyleSheet("image: none");
 			}
 		}
-		else
+		else if (cut_type == 2)
 		{
-			for (int i = start; i <= end; i+=2)
+			for (int i = 0; i < size; i++)
 			{
-				cliplabel* item = static_cast<cliplabel*>(ui->gridLayout_3->itemAt(i)->widget());
+				cut_index = group_indices.at(i);
+				cliplabel* item = static_cast<cliplabel*>(ui->gridLayout_3->itemAt(cut_index)->widget());
 				item->setGroupIndex(-1, -1);
-				if (i < end)
-					ui->gridLayout_3->itemAt(i + 1)->widget()->setStyleSheet("image: none");
+				item->setUnGroupIndices();
+				if (i < size - 1)
+					ui->gridLayout_3->itemAt(cut_index + 1)->widget()->setStyleSheet("image: none");
 			}
 		}
+		/*else if (cut_type > 2)
+		{
+			QGridLayout *layout = addedTrackLayout.at(cut_type - 3);
+			for (int i = 0; i < size; i++)
+			{
+				cliplabel* item = static_cast<cliplabel*>(layout->itemAt(cut_index)->widget());
+				track_index = item->getTrackIndex();
+				item->setGroupIndex(-1, -1);
+				item->setUnGroupIndices();
+				if (i < size - 1)
+					layout->itemAt(track_index + 1)->widget()->setStyleSheet("image: none");
+			}
+		}*/
+
 		//action = GroupClip;
 		ui->actionUngroup->setChecked(false);
 	}
@@ -645,6 +682,7 @@ void MainWindow::on_actionSelectTrack_triggered()
 	}
 	else if (ui->actionSelectTrack->isChecked())
 	{
+		selectedTrack.clear();
 		selectedTrackContents.clear();
 		action = SelectTrack;
 	}
@@ -708,6 +746,63 @@ void MainWindow::on_actionDeleteTrack_triggered()
 		action = NullOperation;
 }
 
+void MainWindow::on_actionViewTrack_triggered()
+{
+	if (!ui->actionViewTrack->isCheckable())
+	{
+		QString tip = "Please enable edit mode first.";
+		statusBar()->showMessage(tip);
+	}
+	else if (ui->actionViewTrack->isChecked() && !selectedTrack.empty())
+	{
+		ui->actionSelectTrack->setChecked(false);
+		if (selectedTrack.size() == 1)
+		{
+			int count = 0;
+			vector<int> track_indices;
+			QScrollArea *scroll = selectedTrack.at(0);
+			QLayoutItem *child;
+			QGridLayout *layout;
+			if (scroll == ui->scrollArea_1) layout = ui->gridLayout_2;
+			else if (scroll == ui->scrollArea_2) layout = ui->gridLayout_3;
+			else
+			{
+				for (int i = 0; i < addedTrackCount; i++)
+				{
+					if (scroll = addedTrack.at(i))
+					{
+						layout = addedTrackLayout.at(i);
+						break;
+					}
+				}
+			}
+			while ((child = layout->itemAt(count)) != 0)
+			{
+				cliplabel* item = static_cast<cliplabel*>(child->widget());
+				if (item->getEditedMode() != isMoved && item->getEditedMode() != isDeleted && item->getEditedMode() != isCasted)
+					track_indices.push_back(item->getCutIndex());
+				count++;
+			}
+			setClickRange(track_indices);
+			action = ViewTrack;
+			playRange();
+		}
+		else
+		{
+			QString tip = "Please select one and only one clip.";
+			statusBar()->showMessage(tip);
+			for (int i = 0; i < selectedClip.size(); i++)
+			{
+				cliplabel *item = selectedClip.at(i);
+				item->setEditedMode(NotEdited);
+			}
+		}
+		ui->actionViewTrack->setChecked(false);
+	}
+	else
+		action = NullOperation;
+}
+
 void MainWindow::on_actionItpl_triggered()
 {
 	cliplabel* item = static_cast<cliplabel*>(ui->gridLayout_2->itemAt(1)->widget());
@@ -759,17 +854,33 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 			QMouseEvent *m = (QMouseEvent*)event;
 			if (m->button() == Qt::LeftButton)
 			{
-				if (action == SelectTrack && addedTrackCount != 0)
+				if (action == SelectTrack)
 				{
-					for (int i = 0; i < addedTrackCount; i++)
+					if (widget == ui->scrollAreaWidgetContents_1)
 					{
-						if (widget == addedTrackContents.at(i))
+						ui->scrollArea_1->setFrameStyle(QFrame::Box);
+						selectedTrack.push_back(ui->scrollArea_1);
+						selectedTrackContents.push_back(ui->scrollAreaWidgetContents_1);
+					}
+
+					else if (widget == ui->scrollAreaWidgetContents_2)
+					{
+						ui->scrollArea_2->setFrameStyle(QFrame::Box);
+						selectedTrack.push_back(ui->scrollArea_2);
+						selectedTrackContents.push_back(ui->scrollAreaWidgetContents_2);
+					}
+
+					else if (addedTrackCount != 0)
+					{
+						for (int i = 0; i < addedTrackCount; i++)
 						{
-							QWidget *item = addedTrackContents.at(i);
-							item->setStyleSheet("border: 5px inset orange");
-							selectedTrack.push_back(addedTrack.at(i));
-							selectedTrackContents.push_back(item);
-							return true;
+							if (widget == addedTrackContents.at(i))
+							{
+								addedTrack.at(i)->setFrameStyle(QFrame::Box);
+								selectedTrack.push_back(addedTrack.at(i));
+								selectedTrackContents.push_back(addedTrackContents.at(i));
+								return true;
+							}
 						}
 					}
 				}
@@ -786,7 +897,10 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 						for (int i = 0; i < addedTrackCount; i++)
 						{
 							if (widget == addedTrackContents.at(i) && addedTrackContents.at(i)->childAt(m->pos()) != 0)
+							{
 								item = static_cast<cliplabel*>(addedTrackContents.at(i)->childAt(m->pos()));
+								break;
+							}
 						}
 					}
 
@@ -811,6 +925,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 							{
 								item = static_cast<cliplabel*>(addedTrackContents.at(i)->childAt(m->pos()));
 								track_index = i;
+								break;
 							}
 						}
 					}
@@ -873,7 +988,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 					origin = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(origin_pos));
 				else if (cut_type == 2)
 					origin = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(origin_pos));
-				else 
+				else if (cut_type > 2)
 					origin = static_cast<cliplabel*>(addedTrackContents.at(cut_type-3)->childAt(origin_pos));
 				origin->setEditedMode(isMoved);
 
@@ -883,7 +998,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 					{
 						if (widget == addedTrackContents.at(i))
 						{
-							cliplabel *move2item = new cliplabel(origin->getSrcImages(), origin->width(), origin->height(), origin->getCutIndex(), origin->getCutType());
+							cliplabel *move2item = new cliplabel(origin->getSrcImages(), origin->width(), origin->height(), origin->getCutIndex(), i+3);
 							addedTrackLayout.at(i)->addWidget(move2item, 0, addedTrackChildrenCount.at(i), Qt::AlignLeft);
 							addedTrackChildrenCount.at(i)++;
 							return true;
@@ -975,6 +1090,7 @@ void MainWindow::on_editCheckBox_clicked()
 			ui->actionSelectTrack->setCheckable(true);
 			ui->actionAddTrack->setCheckable(true);
 			ui->actionDeleteTrack->setCheckable(true);
+			ui->actionViewTrack->setCheckable(true);
         }
         else
         {
@@ -999,6 +1115,7 @@ void MainWindow::on_editCheckBox_clicked()
 			ui->actionSelectTrack->setCheckable(false);
 			ui->actionAddTrack->setCheckable(false);
 			ui->actionDeleteTrack->setCheckable(false);
+			ui->actionViewTrack->setCheckable(false);
         }
     }
     else

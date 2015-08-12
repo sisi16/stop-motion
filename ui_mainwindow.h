@@ -56,6 +56,7 @@ public:
     QAction *actionAddTrack;
     QAction *actionDeleteTrack;
     QAction *actionSelectTrack;
+    QAction *actionViewTrack;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QScrollArea *scrollArea_1;
@@ -200,6 +201,11 @@ public:
         QIcon icon18;
         icon18.addFile(QStringLiteral(":/Images/icons/select-track.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionSelectTrack->setIcon(icon18);
+        actionViewTrack = new QAction(MainWindow);
+        actionViewTrack->setObjectName(QStringLiteral("actionViewTrack"));
+        QIcon icon19;
+        icon19.addFile(QStringLiteral(":/Images/icons/view-track.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionViewTrack->setIcon(icon19);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -279,9 +285,9 @@ public:
         cancelButton->setObjectName(QStringLiteral("cancelButton"));
         sizePolicy2.setHeightForWidth(cancelButton->sizePolicy().hasHeightForWidth());
         cancelButton->setSizePolicy(sizePolicy2);
-        QIcon icon19;
-        icon19.addFile(QStringLiteral(":/Images/icons/cancel.png"), QSize(), QIcon::Normal, QIcon::Off);
-        cancelButton->setIcon(icon19);
+        QIcon icon20;
+        icon20.addFile(QStringLiteral(":/Images/icons/cancel.png"), QSize(), QIcon::Normal, QIcon::Off);
+        cancelButton->setIcon(icon20);
         cancelButton->setIconSize(QSize(20, 20));
 
         gridLayout->addWidget(cancelButton, 5, 4, 1, 1);
@@ -291,9 +297,9 @@ public:
         sizePolicy2.setHeightForWidth(okButton->sizePolicy().hasHeightForWidth());
         okButton->setSizePolicy(sizePolicy2);
         okButton->setStyleSheet(QStringLiteral(""));
-        QIcon icon20;
-        icon20.addFile(QStringLiteral(":/Images/icons/tick.png"), QSize(), QIcon::Normal, QIcon::Off);
-        okButton->setIcon(icon20);
+        QIcon icon21;
+        icon21.addFile(QStringLiteral(":/Images/icons/tick.png"), QSize(), QIcon::Normal, QIcon::Off);
+        okButton->setIcon(icon21);
         okButton->setIconSize(QSize(20, 20));
 
         gridLayout->addWidget(okButton, 5, 3, 1, 1);
@@ -305,9 +311,9 @@ public:
         cutButton->setObjectName(QStringLiteral("cutButton"));
         sizePolicy2.setHeightForWidth(cutButton->sizePolicy().hasHeightForWidth());
         cutButton->setSizePolicy(sizePolicy2);
-        QIcon icon21;
-        icon21.addFile(QStringLiteral(":/Images/icons/cut_32.png"), QSize(), QIcon::Normal, QIcon::Off);
-        cutButton->setIcon(icon21);
+        QIcon icon22;
+        icon22.addFile(QStringLiteral(":/Images/icons/cut_32.png"), QSize(), QIcon::Normal, QIcon::Off);
+        cutButton->setIcon(icon22);
         cutButton->setIconSize(QSize(20, 20));
 
         horizontalLayout_3->addWidget(cutButton);
@@ -316,9 +322,9 @@ public:
         playButton1->setObjectName(QStringLiteral("playButton1"));
         sizePolicy2.setHeightForWidth(playButton1->sizePolicy().hasHeightForWidth());
         playButton1->setSizePolicy(sizePolicy2);
-        QIcon icon22;
-        icon22.addFile(QStringLiteral(":/Images/icons/play_24.png"), QSize(), QIcon::Normal, QIcon::Off);
-        playButton1->setIcon(icon22);
+        QIcon icon23;
+        icon23.addFile(QStringLiteral(":/Images/icons/play_24.png"), QSize(), QIcon::Normal, QIcon::Off);
+        playButton1->setIcon(icon23);
         playButton1->setIconSize(QSize(20, 20));
 
         horizontalLayout_3->addWidget(playButton1);
@@ -327,9 +333,9 @@ public:
         pauseButton1->setObjectName(QStringLiteral("pauseButton1"));
         sizePolicy2.setHeightForWidth(pauseButton1->sizePolicy().hasHeightForWidth());
         pauseButton1->setSizePolicy(sizePolicy2);
-        QIcon icon23;
-        icon23.addFile(QStringLiteral(":/Images/icons/pause_24.png"), QSize(), QIcon::Normal, QIcon::Off);
-        pauseButton1->setIcon(icon23);
+        QIcon icon24;
+        icon24.addFile(QStringLiteral(":/Images/icons/pause_24.png"), QSize(), QIcon::Normal, QIcon::Off);
+        pauseButton1->setIcon(icon24);
         pauseButton1->setIconSize(QSize(20, 20));
 
         horizontalLayout_3->addWidget(pauseButton1);
@@ -338,9 +344,9 @@ public:
         stopButton1->setObjectName(QStringLiteral("stopButton1"));
         sizePolicy2.setHeightForWidth(stopButton1->sizePolicy().hasHeightForWidth());
         stopButton1->setSizePolicy(sizePolicy2);
-        QIcon icon24;
-        icon24.addFile(QStringLiteral(":/Images/icons/stop_24.png"), QSize(), QIcon::Normal, QIcon::Off);
-        stopButton1->setIcon(icon24);
+        QIcon icon25;
+        icon25.addFile(QStringLiteral(":/Images/icons/stop_24.png"), QSize(), QIcon::Normal, QIcon::Off);
+        stopButton1->setIcon(icon25);
         stopButton1->setIconSize(QSize(20, 20));
 
         horizontalLayout_3->addWidget(stopButton1);
@@ -370,6 +376,7 @@ public:
         scrollAreaWidgetContents_0 = new QWidget();
         scrollAreaWidgetContents_0->setObjectName(QStringLiteral("scrollAreaWidgetContents_0"));
         scrollAreaWidgetContents_0->setGeometry(QRect(0, 0, 1262, 85));
+        scrollAreaWidgetContents_0->setFocusPolicy(Qt::NoFocus);
         verticalLayout = new QVBoxLayout(scrollAreaWidgetContents_0);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
@@ -459,6 +466,8 @@ public:
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionDeleteTrack);
         mainToolBar->addSeparator();
+        mainToolBar->addAction(actionViewTrack);
+        mainToolBar->addSeparator();
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionItpl);
 
@@ -544,6 +553,10 @@ public:
         actionSelectTrack->setText(QApplication::translate("MainWindow", "SelectTrack", 0));
 #ifndef QT_NO_TOOLTIP
         actionSelectTrack->setToolTip(QApplication::translate("MainWindow", "Select track", 0));
+#endif // QT_NO_TOOLTIP
+        actionViewTrack->setText(QApplication::translate("MainWindow", "viewTrack", 0));
+#ifndef QT_NO_TOOLTIP
+        actionViewTrack->setToolTip(QApplication::translate("MainWindow", "View track", 0));
 #endif // QT_NO_TOOLTIP
         bgLabel_1->setText(QString());
         editCheckBox->setText(QApplication::translate("MainWindow", "Edit Mode", 0));
