@@ -126,6 +126,7 @@ private:
 	std::vector<cliplabel *> selectedClip;
 	int addedTrackCount;
 	std::vector<QScrollArea *> addedTrack;
+	std::vector<int> deletedTrack;
 	std::vector<QWidget *> addedTrackContents;
 	std::vector<int> addedTrackChildrenCount;
 	std::vector<QGridLayout *> addedTrackLayout;

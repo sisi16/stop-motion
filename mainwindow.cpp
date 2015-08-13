@@ -277,7 +277,7 @@ void MainWindow::on_actionTest_triggered()
 	int base_width = ceil(height * vproc.getFrameWidth() / double(vproc.getFrameHeight()));
 	int base, width, length;
 	
-	for (int i = 0; i < vproc.getSceneCuts().size(); i++)
+	for (int i = 0; i < scene_cuts.size(); i++)
 	{
 		vector<Mat> srcImages;
 		if (i == 0)
@@ -290,6 +290,11 @@ void MainWindow::on_actionTest_triggered()
 			srcImages.push_back(frames.at(base+j*frameRate));
 		
 		cliplabel *clip = new cliplabel(srcImages, width, height, i, cut_types.at(i));
+		vector<int> range;
+		range.push_back(base);
+		range.push_back(scene_cuts.at(i));
+		clip->setOriginRange(range);
+		clip->setGroupRange(range);
 		cliplabel *empty_clip = new cliplabel();
 		empty_clip->setFixedSize(width, height);
 		empty_clip->setSizeThreshold(width, height);
@@ -374,7 +379,9 @@ void MainWindow::on_actionView_triggered()
 		if (selectedClip.size() == 1)
 		{
 			cliplabel *item = selectedClip.at(0);
-			setClickRange(item->getGroupIndices());
+			//setClickRange(item->getGroupIndices());
+			if (!clickRange.empty()) clickRange.clear();
+			clickRange = item->getGroupRange();
 			action = ViewClip;
 			playRange();
 			item->setEditedMode(NotEdited);
@@ -418,10 +425,13 @@ void MainWindow::on_actionDelete_triggered()
 	else if (ui->actionDelete->isChecked() && !selectedClip.empty() && !seletedPos.empty())
 	{
 		ui->actionSelect->setChecked(false);
-		if (selectedClip.size() == 1)
+		if (selectedClip.size() == 1 && selectedClip.at(0)->getIsGrouped() == false)
 		{
 			cliplabel *item = selectedClip.at(0);
-			setClickRange(item->getGroupIndices());
+			//setClickRange(item->getGroupIndices());
+			if (!clickRange.empty()) clickRange.clear();
+			clickRange = item->getOriginRange();
+			clickRange.push_back(item->getCutIndex());
 			action = DeleteClip;
 			playRange();
 			item->setEditedMode(isDeleted);
@@ -455,7 +465,9 @@ void MainWindow::on_actionReverse_triggered()
 		if (selectedClip.size() == 1)
 		{
 			cliplabel *item = selectedClip.at(0);
-			setClickRange(item->getGroupIndices());
+			//setClickRange(item->getGroupIndices());
+			if (!clickRange.empty()) clickRange.clear();
+			clickRange = item->getGroupRange();
 			action = ReverseClip;
 			playRange();
 		}
@@ -514,41 +526,56 @@ void MainWindow::on_actionGroup_triggered()
 	else if (ui->actionGroup->isChecked() && !selectedClip.empty() && !seletedPos.empty())
 	{
 		ui->actionSelect->setChecked(false);
-		int cut_index, track_index;
+		int cut_index; //track_index;
 		int cut_type = selectedClip.at(0)->getCutType();
 		int size = selectedClip.size();
-		int start = selectedClip.at(0)->getCutIndex();
-		int end = selectedClip.at(size - 1)->getCutIndex();
 		vector<int> group_indices;
-		if (cut_type)
+		vector<int> group_range;
+		vector<int> current_range;
+		cliplabel *item;
+		if (cut_type == 1)
 		{
 			for (int i = 0; i < size; i++)
 			{
-				cut_index = selectedClip.at(i)->getCutIndex();
+				item = selectedClip.at(i);
+				current_range = item->getOriginRange();
+				cut_index = item->getCutIndex();
 				group_indices.push_back(cut_index);
-				selectedClip.at(i)->setEditedMode(isGrouped);
-				selectedClip.at(i)->setGroupIndex(start, end);
+				for (int j = 0; j < current_range.size(); j++)
+					group_range.push_back(current_range.at(j));
+				item->setEditedMode(isGrouped);
+				item->setIsGrouped(true);
 				if (i < size - 1)
-				{
 					ui->gridLayout_2->itemAt(cut_index + 1)->widget()->setStyleSheet("image: url(:/Images/icons/connect.png);");
-				}
+			}
+			for (int i = 0; i < size; i++)
+			{
+				selectedClip.at(i)->setGroupIndices(group_indices);
+				selectedClip.at(i)->setGroupRange(group_range);
 			}
 		} 
 		else if (cut_type == 2)
 		{
 			for (int i = 0; i < size; i++)
 			{
+				item = selectedClip.at(i);
+				current_range = item->getOriginRange();
 				cut_index = selectedClip.at(i)->getCutIndex();
 				group_indices.push_back(cut_index);
+				for (int j = 0; j < current_range.size(); j++)
+					group_range.push_back(current_range.at(j));
 				selectedClip.at(i)->setEditedMode(isGrouped);
-				selectedClip.at(i)->setGroupIndex(start, end);
+				item->setIsGrouped(true);
 				if (i < size - 1)
-				{
 					ui->gridLayout_3->itemAt(cut_index + 1)->widget()->setStyleSheet("image: url(:/Images/icons/connect.png);");
-				}
+			}
+			for (int i = 0; i < size; i++)
+			{
+				selectedClip.at(i)->setGroupIndices(group_indices);
+				selectedClip.at(i)->setGroupRange(group_range);
 			}
 		}
-		else if (cut_type > 2)
+		/*else if (cut_type > 2)
 		{
 			QGridLayout *layout = addedTrackLayout.at(cut_type - 3);
 			for (int i = 0; i < size; i++)
@@ -557,17 +584,18 @@ void MainWindow::on_actionGroup_triggered()
 				track_index = selectedClip.at(i)->getTrackIndex();
 				group_indices.push_back(cut_index);
 				selectedClip.at(i)->setEditedMode(isGrouped);
-				selectedClip.at(i)->setGroupIndex(start, end);
 				if (i < size - 1)
 				{
 					layout->itemAt(track_index + 1)->widget()->setStyleSheet("image: url(:/Images/icons/connect.png);");
 				}
 			}
-		}
+		}*/
 
-		for (int i = 0; i < size; i++)
+		/*for (int i = 0; i < size; i++)
+		{
 			selectedClip.at(i)->setGroupIndices(group_indices);
-
+			selectedClip.at(i)->setGroupRange(group_range);
+		}*/
 		//action = GroupClip;
 		ui->actionGroup->setChecked(false);
 	}
@@ -587,7 +615,7 @@ void MainWindow::on_actionUngroup_triggered()
 		ui->actionSelect->setChecked(false);
 		selectedClip.at(0)->setEditedMode(NotEdited);
 
-		int cut_index, track_index;
+		int cut_index; //track_index;
 		int cut_type = selectedClip.at(0)->getCutType();
 		vector<int> group_indices = selectedClip.at(0)->getGroupIndices();
 		int size = group_indices.size();
@@ -598,8 +626,10 @@ void MainWindow::on_actionUngroup_triggered()
 			{
 				cut_index = group_indices.at(i);
 				cliplabel* item = static_cast<cliplabel*>(ui->gridLayout_2->itemAt(cut_index)->widget());
-				item->setGroupIndex(-1, -1);
 				item->setUnGroupIndices();
+				item->setUnGroupRange();
+				item->setEditedMode(NotEdited);
+				item->setIsGrouped(false);
 				if (i < size - 1)
 					ui->gridLayout_2->itemAt(cut_index + 1)->widget()->setStyleSheet("image: none");
 			}
@@ -610,8 +640,10 @@ void MainWindow::on_actionUngroup_triggered()
 			{
 				cut_index = group_indices.at(i);
 				cliplabel* item = static_cast<cliplabel*>(ui->gridLayout_3->itemAt(cut_index)->widget());
-				item->setGroupIndex(-1, -1);
 				item->setUnGroupIndices();
+				item->setUnGroupRange();
+				item->setEditedMode(NotEdited);
+				item->setIsGrouped(false);
 				if (i < size - 1)
 					ui->gridLayout_3->itemAt(cut_index + 1)->widget()->setStyleSheet("image: none");
 			}
@@ -623,7 +655,6 @@ void MainWindow::on_actionUngroup_triggered()
 			{
 				cliplabel* item = static_cast<cliplabel*>(layout->itemAt(cut_index)->widget());
 				track_index = item->getTrackIndex();
-				item->setGroupIndex(-1, -1);
 				item->setUnGroupIndices();
 				if (i < size - 1)
 					layout->itemAt(track_index + 1)->widget()->setStyleSheet("image: none");
@@ -653,6 +684,17 @@ void MainWindow::on_actionZoomIn_triggered()
 		item_2->zoomIn();
 		count++;
 	}
+	for(int i = 0; i < addedTrackCount && deletedTrack.at(i) == 0; i++)
+	{
+		count = 0;
+		QGridLayout *layout = addedTrackLayout.at(i);
+		while ((child_1 = layout->itemAt(count)) != 0)
+		{
+			cliplabel* item = static_cast<cliplabel*>(child_1->widget());
+			item->zoomIn();
+			count++;
+		}
+	}
 }
 
 void MainWindow::on_actionZoomOut_triggered()
@@ -670,6 +712,17 @@ void MainWindow::on_actionZoomOut_triggered()
 		item_1->zoomOut();
 		item_2->zoomOut();
 		count++;
+	}
+	for (int i = 0; i < addedTrackCount && deletedTrack.at(i) == 0; i++)
+	{
+		count = 0;
+		QGridLayout *layout = addedTrackLayout.at(i);
+		while ((child_1 = layout->itemAt(count)) != 0)
+		{
+			cliplabel* item = static_cast<cliplabel*>(child_1->widget());
+			item->zoomOut();
+			count++;
+		}
 	}
 }
 
@@ -717,6 +770,7 @@ void MainWindow::on_actionAddTrack_triggered()
 		addedTrackContents.push_back(central_widget);
 		addedTrackChildrenCount.push_back(0);
 		addedTrackLayout.push_back(layout);
+		deletedTrack.push_back(0);
 		ui->actionAddTrack->setChecked(false);
 	}
 	else
@@ -738,6 +792,7 @@ void MainWindow::on_actionDeleteTrack_triggered()
 			QWidget *item = selectedTrackContents.at(i);
 			item->setStyleSheet("border: none");
 			item->removeEventFilter(this);
+			//deletedTrack.at(i) = 1;
 			selectedTrack.at(i)->hide();
 		}
 		ui->actionDeleteTrack->setChecked(false);
@@ -759,10 +814,11 @@ void MainWindow::on_actionViewTrack_triggered()
 		if (selectedTrack.size() == 1)
 		{
 			int count = 0;
-			vector<int> track_indices;
 			QScrollArea *scroll = selectedTrack.at(0);
 			QLayoutItem *child;
 			QGridLayout *layout;
+			if (!clickRange.empty()) clickRange.clear();
+
 			if (scroll == ui->scrollArea_1) layout = ui->gridLayout_2;
 			else if (scroll == ui->scrollArea_2) layout = ui->gridLayout_3;
 			else
@@ -780,10 +836,14 @@ void MainWindow::on_actionViewTrack_triggered()
 			{
 				cliplabel* item = static_cast<cliplabel*>(child->widget());
 				if (item->getEditedMode() != isMoved && item->getEditedMode() != isDeleted && item->getEditedMode() != isCasted)
-					track_indices.push_back(item->getCutIndex());
+				{
+					for (int i = 0; i < item->getOriginRange().size(); i++)
+						clickRange.push_back(item->getOriginRange().at(i));
+				}
 				count++;
 			}
-			setClickRange(track_indices);
+
+			//setClickRange(track_indices);
 			action = ViewTrack;
 			playRange();
 		}
@@ -999,6 +1059,8 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 						if (widget == addedTrackContents.at(i))
 						{
 							cliplabel *move2item = new cliplabel(origin->getSrcImages(), origin->width(), origin->height(), origin->getCutIndex(), i+3);
+							move2item->setOriginRange(origin->getOriginRange());
+							move2item->setGroupRange(origin->getGroupRange());
 							addedTrackLayout.at(i)->addWidget(move2item, 0, addedTrackChildrenCount.at(i), Qt::AlignLeft);
 							addedTrackChildrenCount.at(i)++;
 							return true;
@@ -1069,9 +1131,9 @@ void MainWindow::on_editCheckBox_clicked()
     {
         if (ui->editCheckBox->isChecked())
         {
-            frame_slider->setMouseTracking(true);
-            frame_slider->setCursor(Qt::PointingHandCursor);
-            frame_slider->installEventFilter(this);
+            //frame_slider->setMouseTracking(true);
+            //frame_slider->setCursor(Qt::PointingHandCursor);
+            //frame_slider->installEventFilter(this);
 
 			ui->scrollAreaWidgetContents_1->setAcceptDrops(true);
 			ui->scrollAreaWidgetContents_2->setAcceptDrops(true);
@@ -1094,9 +1156,9 @@ void MainWindow::on_editCheckBox_clicked()
         }
         else
         {
-            frame_slider->setMouseTracking(false);
-            frame_slider->setCursor(Qt::ArrowCursor);
-            frame_slider->removeEventFilter(this);
+            //frame_slider->setMouseTracking(false);
+            //frame_slider->setCursor(Qt::ArrowCursor);
+            //frame_slider->removeEventFilter(this);
 
 			ui->scrollAreaWidgetContents_1->setAcceptDrops(false);
 			ui->scrollAreaWidgetContents_2->setAcceptDrops(false);

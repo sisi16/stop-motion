@@ -389,6 +389,7 @@ public:
         scrollArea_3->setObjectName(QStringLiteral("scrollArea_3"));
         sizePolicy1.setHeightForWidth(scrollArea_3->sizePolicy().hasHeightForWidth());
         scrollArea_3->setSizePolicy(sizePolicy1);
+        scrollArea_3->setFrameShape(QFrame::Box);
         scrollArea_3->setWidgetResizable(true);
         scrollAreaWidgetContents_3 = new QWidget();
         scrollAreaWidgetContents_3->setObjectName(QStringLiteral("scrollAreaWidgetContents_3"));

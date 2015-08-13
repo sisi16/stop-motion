@@ -240,11 +240,14 @@ void videoprocessor::writeVideo(vector<int> range, clipOperation operation)
 			
 	case DeleteClip :
 		{
-			start = scene_cuts.at(range.at(0) - 2) + 1;
-			end = scene_cuts.at(range.at(0) + 1);
+			int size = range.size();
+			if (range.at(size - 1) == 0) start = scene_cuts.at(0) + 1;
+			else if (range.at(size - 1) == 1) start = 0;
+			else start = scene_cuts.at(range.at(size-1) - 2) + 1;
+			end = scene_cuts.at(range.at(size-1) + 1);
 			for (int i = start; i <= end; i++)
 			{
-				if (i < range.at(1) || i > range.at(2))
+				if (i < range.at(0) || i > range.at(size-2))
 				{
 					frame = frames.at(i);
 					out << frame;

@@ -10,8 +10,7 @@ cliplabel::cliplabel(QWidget* parent, Qt::WindowFlags f)
 	cut_index = -1;
 	cut_type = -1;
 	track_index = -1;
-	group_from = -1;
-	group_to = -1;
+	grouped = false;
 	edited_mode = NotEdited;
 }
 
@@ -24,17 +23,16 @@ cliplabel::cliplabel(vector<Mat> src, int w, int h, int index, int type, QWidget
 	cut_index = index;
 	cut_type = type;
 	track_index = index;
+	grouped = false;
 
-	group_from = -1;
-	group_to = -1;
 	groupIndices.push_back(cut_index);
 	edited_mode = NotEdited;
 
 	this->setScaledContents(true);
 	cv::Mat temp;
-	QPixmap *pixmap = new QPixmap(w, h);
+	pm = new QPixmap(w, h);
 	//pixmap->fill(Qt::transparent);
-	QPainter *painter = new QPainter(pixmap);
+	QPainter *painter = new QPainter(pm);
 
 	int length = src.size();
 	int base_width = w / length;
@@ -46,7 +44,7 @@ cliplabel::cliplabel(vector<Mat> src, int w, int h, int index, int type, QWidget
 		painter->drawPixmap(i*base_width, 0, base_width, h, QPixmap::fromImage(image));
 	}
 	painter->end();
-	this->setPixmap(*pixmap);
+	this->setPixmap(*pm);
 	this->setFixedSize(w, h);
 
 	this->setMouseTracking(true);
@@ -61,6 +59,11 @@ cliplabel::cliplabel(const QString &text, QWidget *parent, Qt::WindowFlags f)
 cliplabel::~cliplabel()
 {
 
+}
+
+bool cliplabel::getIsGrouped()
+{
+	return grouped;
 }
 
 int cliplabel::getCutIndex()
@@ -78,16 +81,6 @@ int cliplabel::getTrackIndex()
 	return track_index;
 }
 
-int cliplabel::getGroupFrom()
-{
-	return group_from;
-}
-
-int cliplabel::getGroupTo()
-{
-	return group_to;
-}
-
 vector<Mat> cliplabel::getSrcImages()
 {
 	return srcImages;
@@ -98,9 +91,19 @@ isEdited cliplabel::getEditedMode()
 	return edited_mode;
 }
 
+vector<int> cliplabel::getOriginRange()
+{
+	return originRange;
+}
+
 vector<int> cliplabel::getGroupIndices()
 {
 	return groupIndices;
+}
+
+vector<int> cliplabel::getGroupRange()
+{
+	return groupRange;
 }
 
 void cliplabel::enterEvent(QEvent *)
@@ -177,6 +180,11 @@ void cliplabel::setTrackIndex(int index)
 	track_index = index;
 }
 
+void cliplabel::setIsGrouped(bool isGrouped)
+{
+	grouped = isGrouped;
+}
+
 void cliplabel::setCutType(int type)
 {
 	cut_type = type;
@@ -210,16 +218,15 @@ void cliplabel::uncast()
 	this->setCursor(Qt::ArrowCursor);
 }
 
-void cliplabel::setGroupIndex(int from, int to)
-{
-	group_from = from;
-	group_to = to;
-}
-
 void cliplabel::setSizeThreshold(int w, int h)
 {
 	w_threshold = w;
 	h_threshold = h;
+}
+
+void cliplabel::setOriginRange(vector<int> range)
+{
+	originRange = range;
 }
 
 void cliplabel::setGroupIndices(vector<int> indices)
@@ -227,10 +234,21 @@ void cliplabel::setGroupIndices(vector<int> indices)
 	groupIndices = indices;
 }
 
+void cliplabel::setGroupRange(vector<int> range)
+{
+	groupRange = range;
+}
+
 void cliplabel::setUnGroupIndices()
 {
 	groupIndices.clear();
 	groupIndices.push_back(cut_index);
+}
+
+void cliplabel::setUnGroupRange()
+{
+	groupRange.clear();
+	groupRange = originRange;
 }
 
 void cliplabel::clearGroupIndices()
@@ -267,14 +285,16 @@ void cliplabel::zoomOut()
 	int h = this->height();
 	if (this->cut_index != -1)
 	{
-		QPixmap *pixmap = new QPixmap(w, h);
-		QPainter *painter = new QPainter(pixmap);
 		if (this->width() > w_threshold && w <= w_threshold)
-			painter->drawPixmap(0, 0, w, h, *this->pixmap(), 0, 0, w, h);
+			this->setPixmap(*pm); //painter->drawPixmap(0, 0, w, h, *this->pixmap(), 0, 0, w, h);
 		else
-			painter->drawPixmap(0, 0, w, h, *this->pixmap());
-		painter->end();
-		this->setPixmap(*pixmap);
+		{
+			QPixmap *pixmap = new QPixmap(w, h);
+			QPainter *painter = new QPainter(pixmap);
+			painter->drawPixmap(0, 0, w, h, *this->pixmap(), 0, 0, w, h);
+			painter->end();
+			this->setPixmap(*pixmap);
+		}
 		this->setFixedSize(w, h);
 	}
 	else
