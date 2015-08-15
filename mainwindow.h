@@ -6,12 +6,8 @@
 #include <QVideoWidget>
 #include <QLabel>
 #include <QMouseEvent>
-#include <QTimer>
 #include <QMenu>
 #include <QPalette>
-#include <QPainter>
-#include <QPainterPath>
-#include <QPen>
 #include <QScrollArea>
 #include <QScrollBar>
 #include <QGridLayout>
@@ -20,6 +16,7 @@
 #include "videoprocessor.h"
 #include "myslider.h"
 #include "cliplabel.h"
+#include "myscrollarea.h"
 
 namespace Ui {
 class MainWindow;
@@ -125,13 +122,8 @@ private:
     QMenu *sliderMenu;
 	std::vector<cliplabel *> selectedClip;
 	int addedTrackCount;
-	std::vector<QScrollArea *> addedTrack;
-	std::vector<int> deletedTrack;
-	std::vector<QWidget *> addedTrackContents;
-	std::vector<int> addedTrackChildrenCount;
-	std::vector<QGridLayout *> addedTrackLayout;
+	std::vector<myscrollarea *> addedTrack;
 	std::vector<QScrollArea *> selectedTrack;
-	std::vector<QWidget *> selectedTrackContents;
 	std::vector<QPoint> seletedPos;
 };
 

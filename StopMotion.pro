@@ -21,14 +21,16 @@ SOURCES += main.cpp\
            opflow.cpp \
            handdetection.cpp \
            myslider.cpp \
-           cliplabel.cpp
+           cliplabel.cpp \
+           myscrollarea.cpp
 
 HEADERS  += mainwindow.h \
             videoprocessor.h \
             opflow.h \
             handdetection.h \
             myslider.h \
-            cliplabel.h
+            cliplabel.h \
+            myscrollarea.h
 
 FORMS    += mainwindow.ui
 

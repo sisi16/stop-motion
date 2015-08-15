@@ -59,6 +59,9 @@
     <ClCompile Include="mainwindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="myscrollarea.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="myslider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -77,6 +80,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <CustomBuild Include="mainwindow.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="myscrollarea.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="myslider.h">
@@ -102,6 +108,12 @@
     <ClCompile Include="release\moc_mainwindow.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="debug\moc_myscrollarea.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="release\moc_myscrollarea.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
     <ClCompile Include="debug\moc_myslider.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
@@ -124,13 +136,22 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <None Include="icons\add-track.png">
+      <Filter>Resource Files</Filter>
+    </None>
     <None Include="icons\cancel.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="icons\cast.png">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="icons\connect.png">
+      <Filter>Resource Files</Filter>
+    </None>
     <None Include="icons\cut_32.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\delete-track.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="icons\delete_32.png">
@@ -166,6 +187,15 @@
     <None Include="icons\save.png">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="icons\select-clip.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\select-track.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\select.png">
+      <Filter>Resource Files</Filter>
+    </None>
     <None Include="icons\settings.png">
       <Filter>Resource Files</Filter>
     </None>
@@ -182,6 +212,9 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="icons\ungroup_48.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="icons\view-track.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="icons\zoom-in.png">

@@ -684,10 +684,10 @@ void MainWindow::on_actionZoomIn_triggered()
 		item_2->zoomIn();
 		count++;
 	}
-	for(int i = 0; i < addedTrackCount && deletedTrack.at(i) == 0; i++)
+	for(int i = 0; i < addedTrackCount && !addedTrack.at(i)->getIsDeleted(); i++)
 	{
 		count = 0;
-		QGridLayout *layout = addedTrackLayout.at(i);
+		QGridLayout *layout = addedTrack.at(i)->getLayout();
 		while ((child_1 = layout->itemAt(count)) != 0)
 		{
 			cliplabel* item = static_cast<cliplabel*>(child_1->widget());
@@ -713,10 +713,10 @@ void MainWindow::on_actionZoomOut_triggered()
 		item_2->zoomOut();
 		count++;
 	}
-	for (int i = 0; i < addedTrackCount && deletedTrack.at(i) == 0; i++)
+	for (int i = 0; i < addedTrackCount && !addedTrack.at(i)->getIsDeleted(); i++)
 	{
 		count = 0;
-		QGridLayout *layout = addedTrackLayout.at(i);
+		QGridLayout *layout = addedTrack.at(i)->getLayout();
 		while ((child_1 = layout->itemAt(count)) != 0)
 		{
 			cliplabel* item = static_cast<cliplabel*>(child_1->widget());
@@ -736,7 +736,6 @@ void MainWindow::on_actionSelectTrack_triggered()
 	else if (ui->actionSelectTrack->isChecked())
 	{
 		selectedTrack.clear();
-		selectedTrackContents.clear();
 		action = SelectTrack;
 	}
 	else
@@ -752,25 +751,11 @@ void MainWindow::on_actionAddTrack_triggered()
 	}
 	else if (ui->actionAddTrack->isChecked())
 	{
-		QScrollArea *scroll = new QScrollArea();
-		scroll->setWidgetResizable(true);
-
-		QWidget *central_widget = new QWidget();
-		central_widget->setGeometry(0, 0, 1200, 80);
-
-		QGridLayout *layout = new QGridLayout(central_widget);
-		
-		scroll->setWidget(central_widget);
+		myscrollarea *scroll = new myscrollarea();
 		ui->verticalLayout->addWidget(scroll);
-		
-		central_widget->installEventFilter(this);
-		central_widget->setAcceptDrops(true);
+		scroll->getCentralWidget()->installEventFilter(this);
 		addedTrackCount++;
 		addedTrack.push_back(scroll);
-		addedTrackContents.push_back(central_widget);
-		addedTrackChildrenCount.push_back(0);
-		addedTrackLayout.push_back(layout);
-		deletedTrack.push_back(0);
 		ui->actionAddTrack->setChecked(false);
 	}
 	else
@@ -784,16 +769,21 @@ void MainWindow::on_actionDeleteTrack_triggered()
 		QString tip = "Please enable edit mode first.";
 		statusBar()->showMessage(tip);
 	}
-	else if (ui->actionDeleteTrack->isChecked() && !selectedTrackContents.empty())
+	else if (ui->actionDeleteTrack->isChecked() && !selectedTrack.empty())
 	{
 		ui->actionSelectTrack->setChecked(false);
-		for (int i = 0; i < selectedTrackContents.size(); i++)
+		for (int i = 0; i < selectedTrack.size(); i++)
 		{
-			QWidget *item = selectedTrackContents.at(i);
-			item->setStyleSheet("border: none");
-			item->removeEventFilter(this);
-			//deletedTrack.at(i) = 1;
-			selectedTrack.at(i)->hide();
+			selectedTrack.at(i)->setFrameStyle(QFrame::NoFrame);
+			if (selectedTrack.at(i) == ui->scrollArea_1 || selectedTrack.at(i) == ui->scrollArea_2)
+			{
+				statusBar()->showMessage("This track is not deletable.");
+				continue;
+			}
+			myscrollarea *scroll = static_cast<myscrollarea*>(selectedTrack.at(i));
+			scroll->getCentralWidget()->removeEventFilter(this);
+			scroll->setIsDeleted(true);
+			scroll->hide();
 		}
 		ui->actionDeleteTrack->setChecked(false);
 	}
@@ -815,6 +805,7 @@ void MainWindow::on_actionViewTrack_triggered()
 		{
 			int count = 0;
 			QScrollArea *scroll = selectedTrack.at(0);
+			myscrollarea *my_scroll;
 			QLayoutItem *child;
 			QGridLayout *layout;
 			if (!clickRange.empty()) clickRange.clear();
@@ -825,9 +816,10 @@ void MainWindow::on_actionViewTrack_triggered()
 			{
 				for (int i = 0; i < addedTrackCount; i++)
 				{
-					if (scroll = addedTrack.at(i))
+					if (scroll == addedTrack.at(i))
 					{
-						layout = addedTrackLayout.at(i);
+						my_scroll = static_cast<myscrollarea*>(scroll);
+						layout = my_scroll->getLayout();
 						break;
 					}
 				}
@@ -844,18 +836,16 @@ void MainWindow::on_actionViewTrack_triggered()
 			}
 
 			//setClickRange(track_indices);
+			scroll->setFrameStyle(QFrame::NoFrame);
 			action = ViewTrack;
 			playRange();
 		}
 		else
 		{
-			QString tip = "Please select one and only one clip.";
+			QString tip = "Please select one and only one track.";
 			statusBar()->showMessage(tip);
-			for (int i = 0; i < selectedClip.size(); i++)
-			{
-				cliplabel *item = selectedClip.at(i);
-				item->setEditedMode(NotEdited);
-			}
+			for (int i = 0; i < selectedTrack.size(); i++)
+				selectedTrack.at(i)->setFrameStyle(QFrame::NoFrame);
 		}
 		ui->actionViewTrack->setChecked(false);
 	}
@@ -920,25 +910,22 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 					{
 						ui->scrollArea_1->setFrameStyle(QFrame::Box);
 						selectedTrack.push_back(ui->scrollArea_1);
-						selectedTrackContents.push_back(ui->scrollAreaWidgetContents_1);
 					}
 
 					else if (widget == ui->scrollAreaWidgetContents_2)
 					{
 						ui->scrollArea_2->setFrameStyle(QFrame::Box);
 						selectedTrack.push_back(ui->scrollArea_2);
-						selectedTrackContents.push_back(ui->scrollAreaWidgetContents_2);
 					}
 
 					else if (addedTrackCount != 0)
 					{
 						for (int i = 0; i < addedTrackCount; i++)
 						{
-							if (widget == addedTrackContents.at(i))
+							if (widget == addedTrack.at(i)->getCentralWidget())
 							{
 								addedTrack.at(i)->setFrameStyle(QFrame::Box);
 								selectedTrack.push_back(addedTrack.at(i));
-								selectedTrackContents.push_back(addedTrackContents.at(i));
 								return true;
 							}
 						}
@@ -954,11 +941,13 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 						item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(m->pos()));
 					else
 					{
+						QWidget *contents;
 						for (int i = 0; i < addedTrackCount; i++)
 						{
-							if (widget == addedTrackContents.at(i) && addedTrackContents.at(i)->childAt(m->pos()) != 0)
+							contents = addedTrack.at(i)->getCentralWidget();
+							if (widget == contents && contents->childAt(m->pos()) != 0)
 							{
-								item = static_cast<cliplabel*>(addedTrackContents.at(i)->childAt(m->pos()));
+								item = static_cast<cliplabel*>(contents->childAt(m->pos()));
 								break;
 							}
 						}
@@ -979,11 +968,13 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 						item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(m->pos()));
 					else
 					{
+						QWidget *contents;
 						for (int i = 0; i < addedTrackCount; i++)
 						{
-							if (widget == addedTrackContents.at(i) && addedTrackContents.at(i)->childAt(m->pos()) != 0)
+							contents = addedTrack.at(i)->getCentralWidget();
+							if (widget == contents && contents->childAt(m->pos()) != 0)
 							{
-								item = static_cast<cliplabel*>(addedTrackContents.at(i)->childAt(m->pos()));
+								item = static_cast<cliplabel*>(contents->childAt(m->pos()));
 								track_index = i;
 								break;
 							}
@@ -1003,7 +994,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 					else if (widget == ui->scrollAreaWidgetContents_2)
 						drag = new QDrag(ui->scrollAreaWidgetContents_2);
 					else
-						drag = new QDrag(addedTrackContents.at(track_index));
+						drag = new QDrag(addedTrack.at(track_index)->getCentralWidget());
 					drag->setMimeData(mimeData);
 					drag->setPixmap(pixmap.scaledToHeight(50));
 					drag->setHotSpot(m->pos() - item->pos());
@@ -1049,20 +1040,20 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 				else if (cut_type == 2)
 					origin = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(origin_pos));
 				else if (cut_type > 2)
-					origin = static_cast<cliplabel*>(addedTrackContents.at(cut_type-3)->childAt(origin_pos));
+					origin = static_cast<cliplabel*>(addedTrack.at(cut_type-3)->getCentralWidget()->childAt(origin_pos));
 				origin->setEditedMode(isMoved);
 
 				if (addedTrackCount != 0)
 				{
 					for (int i = 0; i < addedTrackCount; i++)
 					{
-						if (widget == addedTrackContents.at(i))
+						if (widget == addedTrack.at(i)->getCentralWidget())
 						{
 							cliplabel *move2item = new cliplabel(origin->getSrcImages(), origin->width(), origin->height(), origin->getCutIndex(), i+3);
 							move2item->setOriginRange(origin->getOriginRange());
 							move2item->setGroupRange(origin->getGroupRange());
-							addedTrackLayout.at(i)->addWidget(move2item, 0, addedTrackChildrenCount.at(i), Qt::AlignLeft);
-							addedTrackChildrenCount.at(i)++;
+							addedTrack.at(i)->getLayout()->addWidget(move2item, 0, addedTrack.at(i)->getChildrenCount(), Qt::AlignLeft);
+							addedTrack.at(i)->addChildrenCount();
 							return true;
 						}
 					}
