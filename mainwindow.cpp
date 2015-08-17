@@ -133,10 +133,10 @@ void MainWindow::on_cutButton_clicked()
 	ui->verticalLayout_2->addWidget(progressBar);
     progressBar->show();
 
-	vproc.readBuffers();
-	//if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
-		//vproc.cut2Scenes();
-	//vproc.writeBuffers();
+	//vproc.readBuffers();
+	if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
+		vproc.cut2Scenes();
+	vproc.writeBuffers();
 	frame_slider->updateParams(vproc.getSceneCuts(), vproc.getCutTypes());
     isCut = true;
     statusBar()->clearMessage();
