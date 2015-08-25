@@ -96,25 +96,24 @@ void videoprocessor::cut2Scenes()
     {
         progressBar->setValue(i+1);
 
-        Mat current_flow = of.calOpFlow(frames.at(i), frames.at(i+1));
+		Mat current_flow = of.calOpFlow(frames.at(i), frames.at(i + 1));
         float current_avg_flow = of.calAvgOpFlow(current_flow);
-		//cout << current_avg_flow << endl;
         //bool hand = hd.isHand(frames.at(i));
-
-        if (current_avg_flow < 5.74e-3)
+		
+		if (current_avg_flow < 0.2)//if (current_avg_flow < 5.74e-3)
         {
-            /*if (hand)
-                frame_types.push_back(1);
-            else
-                frame_types.push_back(3);*/
+            //if (hand)
+                //frame_types.push_back(1);
+            //else
+                //frame_types.push_back(3);
 			frame_types.push_back(1);
         }
         else
         {
-            /*if (hand)
-                frame_types.push_back(2);
-            else
-                frame_types.push_back(4);*/
+            //if (hand)
+                //frame_types.push_back(2);
+            //else
+                //frame_types.push_back(4);
 			frame_types.push_back(2);
         }
 
@@ -123,12 +122,12 @@ void videoprocessor::cut2Scenes()
 			temp.push_back(0);
 			//cut_types.push_back(frame_types.at(0));
 		}
-        else if (i != 0 && frame_types.at(i-1) == frame_types.at(i))
-            temp.at(scene_count)++;
+		else if (i != 0 && frame_types.at(i - 1) == frame_types.at(i))
+			temp.at(scene_count)++;
         else if (i != 0 && frame_types.at(i-1) != frame_types.at(i))
         {
             scene_count++;
-            temp.push_back(i);
+			temp.push_back(i);
 			//cut_types.push_back(frame_types.at(i));
         }
     }
@@ -391,7 +390,7 @@ void videoprocessor::test()
 
 void videoprocessor::writeBuffers()
 {
-	ofstream cutfile("cuts5.txt");
+	ofstream cutfile("cuts7.txt");
 	if (cutfile.is_open())
 	{
 		for (int i = 0; i < scene_cuts.size(); i++)
@@ -400,7 +399,7 @@ void videoprocessor::writeBuffers()
 	}
 	else cout << "Unable to open file" << endl;
 
-	ofstream typefile("types5.txt");
+	ofstream typefile("types7.txt");
 	if (typefile.is_open())
 	{
 		for (int j = 0; j < cut_types.size(); j++)
@@ -414,7 +413,7 @@ void videoprocessor::readBuffers()
 { 
 	if (scene_cuts.empty())
 	{
-		ifstream cutfile("cuts4.txt");
+		ifstream cutfile("cuts7.txt");
 		int num;
 		if (cutfile.is_open())
 		{
@@ -427,7 +426,7 @@ void videoprocessor::readBuffers()
 
 	if (cut_types.empty())
 	{
-		ifstream typefile("types4.txt");
+		ifstream typefile("types7.txt");
 		int num;
 		if (typefile.is_open())
 		{
