@@ -157,7 +157,7 @@ float opflow::calAvgOpFlow(Mat flow)
 
 	float accrad = 0;
 	int overflow_count = 0;
-
+	int movingpixel_count = 0;
 	for (int i = 0; i < flow.rows; ++i)
 	{
 		for (int j = 0; j < flow.cols; ++j)
@@ -171,9 +171,16 @@ float opflow::calAvgOpFlow(Mat flow)
 				overflow_count++;
 				continue;
 			}
-			accrad += sqrt(fx * fx + fy * fy);
+
+			float rad = sqrt(fx * fx + fy * fy);
+			accrad += rad;
+			if (rad > 1) {
+				//cout << "[" << i << "," << j << "]: " << rad << endl;
+				movingpixel_count++;
+			}
 		}
 	}
-	float avgflow = accrad / (flow.rows * flow.cols - overflow_count);
+	//float avgflow = accrad / (flow.rows * flow.cols - overflow_count);
+	float avgflow = movingpixel_count / float(flow.rows * flow.cols - overflow_count);
 	return avgflow;
 }

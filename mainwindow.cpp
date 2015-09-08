@@ -106,7 +106,7 @@ void MainWindow::on_playButton1_clicked()
 		ui->verticalLayout_2->removeWidget(child->widget());
 		delete child;
 
-		frame_slider->setRange(0, 30000);//frame_slider->setRange(0, mediaplayer_1->duration() / 1000);
+		frame_slider->setRange(0, mediaplayer_1->duration()); //frame_slider->setRange(0, 30000);
 		frame_slider->setValue(0);
 		frame_slider->setTickPosition(QSlider::TicksAbove);
 		frame_slider->setTickInterval(500);
@@ -144,6 +144,8 @@ void MainWindow::on_cutButton_clicked()
     progressBar->hide();
 	ui->verticalLayout_2->removeWidget(progressBar);
     delete progressBar;
+
+	//vproc.test();
 }
 
 void MainWindow::on_okButton_clicked()
@@ -194,6 +196,7 @@ void MainWindow::on_actionLoad_triggered()
         return;
 
     vproc.readVideo(fileName.toStdString());
+	//cout << vproc.getNumOfFrames() << endl;
     mediaplayer_1->setMedia(QUrl::fromLocalFile(fileName));
 	ui->bgLabel_1->setStyleSheet("background-color: rgb(0, 0, 0); image: url(D:/CCCC/Stop Motion/2015_05/preview.png);");
 	initFrameSlider();

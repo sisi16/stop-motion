@@ -6,6 +6,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <QProgressBar>
 #include <string>
+#include <sstream>
 #include "opflow.h"
 #include "handdetection.h"
 
