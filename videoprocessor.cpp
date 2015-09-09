@@ -45,12 +45,12 @@ void videoprocessor::readVideo(const string& file)
         Mat dst_1, dst_2;
 		ss << i << type;
         capture >> frame;
-		cv::imwrite("D:/CCCC/Stop Motion/1080/" + ss.str(), frame);
+		cv::imwrite("D:/CCCC/Stop Motion/Test2/480/" + ss.str(), frame);
 		pyrDown(frame, dst_1, Size(frame.cols / 2, frame.rows / 2));
-		cv::imwrite("D:/CCCC/Stop Motion/540/" + ss.str(), dst_1);
-		pyrDown(dst_1, dst_2, Size(dst_1.cols / 2, dst_1.rows / 2));
-		cv::imwrite("D:/CCCC/Stop Motion/270/" + ss.str(), dst_2);
-		if (i == 0) frames.push_back(frame);
+		cv::imwrite("D:/CCCC/Stop Motion/Test2/240/" + ss.str(), dst_1);
+		//pyrDown(dst_1, dst_2, Size(dst_1.cols / 2, dst_1.rows / 2));
+		//cv::imwrite("D:/CCCC/Stop Motion/270/" + ss.str(), dst_2);
+		//if (i == 0) frames.push_back(frame);
 		ss.str("");
     }*/
 
@@ -119,6 +119,7 @@ void videoprocessor::cut2Scenes()
 
 	stringstream ss;
 	string type = ".jpg";
+	ofstream flowfile("D:/CCCC/Stop Motion/Test3/flows.txt");
 
 	Mat frame_1, frame_2;
 	for (int i = 0; i < num_of_frames - 1; i++)//for (int i = 0; i < frames.size()-1; i++)
@@ -127,17 +128,18 @@ void videoprocessor::cut2Scenes()
 		
 		if (i == 0)
 		{
-			frame_1 = imread("D:/CCCC/Stop Motion/270/0.jpg");
-			frame_2 = imread("D:/CCCC/Stop Motion/270/1.jpg");
+			frame_1 = imread("D:/CCCC/Stop Motion/Test3/270/0.jpg");
+			frame_2 = imread("D:/CCCC/Stop Motion/Test3/270/1.jpg");
 		}
 		else
 		{
 			ss << i+1 << type;
 			frame_1 = frame_2;
-			frame_2 = imread("D:/CCCC/Stop Motion/270/" + ss.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/Test3/270/" + ss.str());
 		}
 		Mat current_flow = of.calOpFlow(frame_1, frame_2);//Mat current_flow = of.calOpFlow(frames.at(i), frames.at(i + 1));
         float current_avg_flow = of.calAvgOpFlow(current_flow);
+		flowfile << current_avg_flow << endl;
 		//cout << i << ": " << current_avg_flow << endl;
         //bool hand = hd.isHand(frames.at(i));
 		
@@ -174,7 +176,8 @@ void videoprocessor::cut2Scenes()
 		
 		ss.str("");
 	}
-
+	
+	flowfile.close();
 	//for (int j = 0; j < temp.size(); j++)
 		//cout << temp.at(j) << endl;
 
@@ -406,9 +409,9 @@ int videoprocessor::getFrameRate()
 	return frame_rate;
 }
 
-void videoprocessor::writeVideo(vector<int> range, clipOperation operation)
+void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, clipOperation operation)
 {
-    if (out.isOpened())
+    /*if (out.isOpened())
     {
         cout << "Open" << endl;
     }
@@ -418,11 +421,16 @@ void videoprocessor::writeVideo(vector<int> range, clipOperation operation)
 
     if(!out.isOpened()) {
 		throw "Error! Unable to open video file for output.";
-    }
+    }*/
 
 	int start = -1;
 	int end = -1;
 	int size = range.size();
+	Mat frame;
+
+	stringstream ss;
+	string type = ".jpg";
+	int delay = 250;
 
 	switch (operation)
 	{
@@ -430,15 +438,32 @@ void videoprocessor::writeVideo(vector<int> range, clipOperation operation)
 	case ViewClip :
 	case ViewTrack :
 		{
+			namedWindow("View Clip/Track", CV_WINDOW_AUTOSIZE);
 			for (int i = 0; i < size; i+=2)
 			{
 				start = range.at(i);
 				end = range.at(i + 1);
-				cout << start << " " << end << endl;
-				for (int j = start; j <= end; j++)
+				//cout << start << " " << end << endl;
+
+				if (moving_range.at(i / 2))
+					for (int j = start; j <= end; j++)
+					{
+						ss << j << type;
+						frame = imread("D:/CCCC/Stop Motion/Test3/270/" + ss.str());
+						imshow("View Clip/Track", frame);
+						if (waitKey(delay) == 27) break;
+						if (waitKey(delay) == 32) waitKey(0);
+						ss.str("");
+						//frame = frames.at(j);
+						//out << frame;
+					}
+				else
 				{
-					frame = frames.at(j);
-					out << frame;
+					ss << (start+end)/2 << type;
+					frame = imread("D:/CCCC/Stop Motion/Test3/270/" + ss.str());
+					imshow("View Clip/Track", frame);
+					waitKey(delay);
+					ss.str("");
 				}
 			}
 		}
@@ -446,6 +471,7 @@ void videoprocessor::writeVideo(vector<int> range, clipOperation operation)
 			
 	case DeleteClip :
 		{
+			namedWindow("Delete Clip", CV_WINDOW_AUTOSIZE);
 			int size = range.size();
 			if (range.at(size - 1) == 0) start = scene_cuts.at(0) + 1;
 			else if (range.at(size - 1) == 1) start = 0;
@@ -455,8 +481,14 @@ void videoprocessor::writeVideo(vector<int> range, clipOperation operation)
 			{
 				if (i < range.at(0) || i > range.at(size-2))
 				{
-					frame = frames.at(i);
-					out << frame;
+					ss << i << type;
+					frame = imread("D:/CCCC/Stop Motion/Test3/270/" + ss.str());
+					imshow("Delete Clip", frame);
+					if (waitKey(delay) == 27) break;
+					if (waitKey(delay) == 32) waitKey(0);
+					ss.str("");
+					//frame = frames.at(i);
+					//out << frame;
 				}
 			}
 		}
@@ -464,21 +496,38 @@ void videoprocessor::writeVideo(vector<int> range, clipOperation operation)
 
 	case ReverseClip :
 		{
+			namedWindow("Reverse Clip", CV_WINDOW_AUTOSIZE);
 			for (int i = size-1; i >= 1; i-=2)
 			{
 				start = range.at(i);
 				end = range.at(i - 1);
-				for (int j = start; j >= end; j--)
+
+				if (moving_range.at((i-1) / 2))
+					for (int j = start; j >= end; j--)
+					{
+						ss << j << type;
+						frame = imread("D:/CCCC/Stop Motion/Test3/270/" + ss.str());
+						imshow("Reverse Clip", frame);
+						if (waitKey(delay) == 27) break;
+						if (waitKey(delay) == 32) waitKey(0);
+						ss.str("");
+						//frame = frames.at(j);
+						//out << frame;
+					}
+				else
 				{
-					frame = frames.at(j);
-					out << frame;
+					ss << (start + end) / 2 << type;
+					frame = imread("D:/CCCC/Stop Motion/Test3/270/" + ss.str());
+					imshow("Reverse Clip", frame);
+					waitKey(delay);
+					ss.str("");
 				}
 			}
 		}
 		break;
 	}
 
-    out.release();
+    //out.release();
 }
 
 void videoprocessor::test()
@@ -506,7 +555,7 @@ void videoprocessor::test()
 
 void videoprocessor::writeBuffers()
 {
-	ofstream cutfile("cuts9.txt");
+	ofstream cutfile("cuts10.txt");
 	if (cutfile.is_open())
 	{
 		for (int i = 0; i < scene_cuts.size(); i++)
@@ -515,7 +564,7 @@ void videoprocessor::writeBuffers()
 	}
 	else cout << "Unable to open file" << endl;
 
-	ofstream typefile("types9.txt");
+	ofstream typefile("types10.txt");
 	if (typefile.is_open())
 	{
 		for (int j = 0; j < cut_types.size(); j++)
@@ -529,7 +578,7 @@ void videoprocessor::readBuffers()
 { 
 	if (scene_cuts.empty())
 	{
-		ifstream cutfile("cuts8.txt");
+		ifstream cutfile("cuts9.txt");
 		int num;
 		if (cutfile.is_open())
 		{
@@ -542,7 +591,7 @@ void videoprocessor::readBuffers()
 
 	if (cut_types.empty())
 	{
-		ifstream typefile("types8.txt");
+		ifstream typefile("types9.txt");
 		int num;
 		if (typefile.is_open())
 		{

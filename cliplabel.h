@@ -42,6 +42,8 @@ public:
 	std::vector<int> getOriginRange();
 	std::vector<int> getGroupIndices();
 	std::vector<int> getGroupRange();
+	bool getOriginMoving();
+	std::vector<bool> getGroupMovingRange();
 	void setEditedMode(isEdited mode);
 	void setCutType(int type);
 	void setCutIndex(int index);
@@ -51,9 +53,12 @@ public:
 	void setSizeThreshold(int w, int h);
 	void setUnGroupIndices();
 	void setUnGroupRange();
+	void setUnGroupMovingRange();
 	void setOriginRange(std::vector<int> range);
 	void setGroupIndices(std::vector<int> indices);
 	void setGroupRange(std::vector<int> range);
+	void setOriginMoving(bool isMoving);
+	void setGroupMovingRange(std::vector<bool> range);
 	void clearGroupIndices();
 	void cast(cliplabel *castedClip);
 	void uncast();
@@ -78,6 +83,8 @@ private:
 	std::vector<int> originRange;
 	std::vector<int> groupIndices;
 	std::vector<int> groupRange;
+	bool originMoving;
+	std::vector<bool> groupMovingRange;
 	isEdited edited_mode;
 	std::vector<cv::Mat> srcImages;
 };

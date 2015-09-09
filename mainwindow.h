@@ -118,6 +118,7 @@ private:
     QLabel *preview_2;
     bool isCut;
     std::vector<int> clickRange;
+	std::vector<bool> movingRange;
 	clipOperation action;
     QMenu *sliderMenu;
 	std::vector<cliplabel *> selectedClip;

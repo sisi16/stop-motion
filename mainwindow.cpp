@@ -72,6 +72,7 @@ void MainWindow::resizeEvent(QResizeEvent* ev)
 void MainWindow::setClickRange(vector<int> indices)
 {
 	if (!clickRange.empty()) clickRange.clear();
+	if (!movingRange.empty()) movingRange.clear();
 		
 	int index;
 	vector<int> scene_cuts = vproc.getSceneCuts();
@@ -274,12 +275,14 @@ void MainWindow::on_actionTest_triggered()
 {
 	vector<int> scene_cuts = vproc.getSceneCuts();
 	vector<int> cut_types = vproc.getCutTypes();
-	vector<Mat> frames = vproc.getFrames();
+	//vector<Mat> frames = vproc.getFrames();
 	int frameRate = vproc.getFrameRate();
 	int height = floor(0.8 * ui->scrollArea_1->height());
 	int base_width = ceil(height * vproc.getFrameWidth() / double(vproc.getFrameHeight()));
 	int base, width, length;
 	
+	stringstream ss;
+	string type = ".jpg";
 	for (int i = 0; i < scene_cuts.size(); i++)
 	{
 		vector<Mat> srcImages;
@@ -290,8 +293,12 @@ void MainWindow::on_actionTest_triggered()
 		length = (scene_cuts.at(i)-base+1) / frameRate + 1;
 		width = base_width * length;
 		for (int j = 0; j < length; j++)
-			srcImages.push_back(frames.at(base+j*frameRate));
-		
+		{
+			ss << base + j*frameRate << type;
+			srcImages.push_back(imread("D:/CCCC/Stop Motion/Test3/270/" + ss.str()));
+			ss.str("");
+			//srcImages.push_back(frames.at(base + j*frameRate));
+		}
 		cliplabel *clip = new cliplabel(srcImages, width, height, i, cut_types.at(i));
 		vector<int> range;
 		range.push_back(base);
@@ -384,7 +391,9 @@ void MainWindow::on_actionView_triggered()
 			cliplabel *item = selectedClip.at(0);
 			//setClickRange(item->getGroupIndices());
 			if (!clickRange.empty()) clickRange.clear();
+			if (!movingRange.empty()) movingRange.clear();
 			clickRange = item->getGroupRange();
+			movingRange = item->getGroupMovingRange();
 			action = ViewClip;
 			playRange();
 			item->setEditedMode(NotEdited);
@@ -433,6 +442,7 @@ void MainWindow::on_actionDelete_triggered()
 			cliplabel *item = selectedClip.at(0);
 			//setClickRange(item->getGroupIndices());
 			if (!clickRange.empty()) clickRange.clear();
+			if (!movingRange.empty()) movingRange.clear();
 			clickRange = item->getOriginRange();
 			clickRange.push_back(item->getCutIndex());
 			action = DeleteClip;
@@ -470,7 +480,9 @@ void MainWindow::on_actionReverse_triggered()
 			cliplabel *item = selectedClip.at(0);
 			//setClickRange(item->getGroupIndices());
 			if (!clickRange.empty()) clickRange.clear();
+			if (!movingRange.empty()) movingRange.clear();
 			clickRange = item->getGroupRange();
+			movingRange = item->getGroupMovingRange();
 			action = ReverseClip;
 			playRange();
 		}
@@ -534,6 +546,7 @@ void MainWindow::on_actionGroup_triggered()
 		int size = selectedClip.size();
 		vector<int> group_indices;
 		vector<int> group_range;
+		vector<bool> group_movingrange;
 		vector<int> current_range;
 		cliplabel *item;
 		if (cut_type == 1)
@@ -546,6 +559,7 @@ void MainWindow::on_actionGroup_triggered()
 				group_indices.push_back(cut_index);
 				for (int j = 0; j < current_range.size(); j++)
 					group_range.push_back(current_range.at(j));
+				group_movingrange.push_back(item->getOriginMoving());
 				item->setEditedMode(isGrouped);
 				item->setIsGrouped(true);
 				if (i < size - 1)
@@ -555,6 +569,7 @@ void MainWindow::on_actionGroup_triggered()
 			{
 				selectedClip.at(i)->setGroupIndices(group_indices);
 				selectedClip.at(i)->setGroupRange(group_range);
+				selectedClip.at(i)->setGroupMovingRange(group_movingrange);
 			}
 		} 
 		else if (cut_type == 2)
@@ -567,6 +582,7 @@ void MainWindow::on_actionGroup_triggered()
 				group_indices.push_back(cut_index);
 				for (int j = 0; j < current_range.size(); j++)
 					group_range.push_back(current_range.at(j));
+				group_movingrange.push_back(item->getOriginMoving());
 				selectedClip.at(i)->setEditedMode(isGrouped);
 				item->setIsGrouped(true);
 				if (i < size - 1)
@@ -576,6 +592,7 @@ void MainWindow::on_actionGroup_triggered()
 			{
 				selectedClip.at(i)->setGroupIndices(group_indices);
 				selectedClip.at(i)->setGroupRange(group_range);
+				selectedClip.at(i)->setGroupMovingRange(group_movingrange);
 			}
 		}
 		/*else if (cut_type > 2)
@@ -631,6 +648,7 @@ void MainWindow::on_actionUngroup_triggered()
 				cliplabel* item = static_cast<cliplabel*>(ui->gridLayout_2->itemAt(cut_index)->widget());
 				item->setUnGroupIndices();
 				item->setUnGroupRange();
+				item->setUnGroupMovingRange();
 				item->setEditedMode(NotEdited);
 				item->setIsGrouped(false);
 				if (i < size - 1)
@@ -645,6 +663,7 @@ void MainWindow::on_actionUngroup_triggered()
 				cliplabel* item = static_cast<cliplabel*>(ui->gridLayout_3->itemAt(cut_index)->widget());
 				item->setUnGroupIndices();
 				item->setUnGroupRange();
+				item->setUnGroupMovingRange();
 				item->setEditedMode(NotEdited);
 				item->setIsGrouped(false);
 				if (i < size - 1)
@@ -812,6 +831,7 @@ void MainWindow::on_actionViewTrack_triggered()
 			QLayoutItem *child;
 			QGridLayout *layout;
 			if (!clickRange.empty()) clickRange.clear();
+			if (!movingRange.empty()) movingRange.clear();
 
 			if (scroll == ui->scrollArea_1) layout = ui->gridLayout_2;
 			else if (scroll == ui->scrollArea_2) layout = ui->gridLayout_3;
@@ -833,7 +853,10 @@ void MainWindow::on_actionViewTrack_triggered()
 				if (item->getEditedMode() != isMoved && item->getEditedMode() != isDeleted && item->getEditedMode() != isCasted)
 				{
 					for (int i = 0; i < item->getOriginRange().size(); i++)
+					{
 						clickRange.push_back(item->getOriginRange().at(i));
+						movingRange.push_back(item->getOriginMoving());
+					}
 				}
 				count++;
 			}
@@ -1055,6 +1078,8 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 							cliplabel *move2item = new cliplabel(origin->getSrcImages(), origin->width(), origin->height(), origin->getCutIndex(), i+3);
 							move2item->setOriginRange(origin->getOriginRange());
 							move2item->setGroupRange(origin->getGroupRange());
+							move2item->setOriginMoving(origin->getOriginMoving());
+							move2item->setGroupMovingRange(origin->getGroupMovingRange());
 							addedTrack.at(i)->getLayout()->addWidget(move2item, 0, addedTrack.at(i)->getChildrenCount(), Qt::AlignLeft);
 							addedTrack.at(i)->addChildrenCount();
 							return true;
@@ -1101,9 +1126,9 @@ void MainWindow::playRange()
 		height = ui->bgLabel_2->height();
 	}
 
-	vproc.writeVideo(clickRange, action);
+	vproc.writeVideo(clickRange, movingRange, action);
 
-    mediaplayer_2->setVideoOutput(videoWidget_2);
+    /*mediaplayer_2->setVideoOutput(videoWidget_2);
     videoWidget_2->setFixedSize(width, height);
 
     QLayoutItem *child;
@@ -1116,7 +1141,7 @@ void MainWindow::playRange()
 
     mediaplayer_2->setMedia(QUrl::fromLocalFile("D:/CCCC/Stop Motion/2015_05/range.avi"));
 	ui->horizontalLayout_2->addWidget(videoWidget_2);
-    mediaplayer_2->play();
+    mediaplayer_2->play();*/
 }
 
 void MainWindow::on_editCheckBox_clicked()

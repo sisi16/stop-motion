@@ -24,7 +24,11 @@ cliplabel::cliplabel(vector<Mat> src, int w, int h, int index, int type, QWidget
 	cut_type = type;
 	track_index = index;
 	grouped = false;
-
+	if (type == 1)
+		originMoving = false;
+	else if (type == 2)
+		originMoving = true;
+	groupMovingRange.push_back(originMoving);
 	groupIndices.push_back(cut_index);
 	edited_mode = NotEdited;
 
@@ -104,6 +108,16 @@ vector<int> cliplabel::getGroupIndices()
 vector<int> cliplabel::getGroupRange()
 {
 	return groupRange;
+}
+
+bool cliplabel::getOriginMoving()
+{
+	return originMoving;
+}
+
+vector<bool> cliplabel::getGroupMovingRange()
+{
+	return groupMovingRange;
 }
 
 void cliplabel::enterEvent(QEvent *)
@@ -201,8 +215,16 @@ void cliplabel::cast(cliplabel *castedClip)
 	this->setPixmap(*castedClip->pixmap());
 	edited_mode = NotEdited;
 	cut_index = castedClip->getCutIndex();
-	if (cut_type == 1) cut_type = 2;
-	else cut_type = 1;
+	if (cut_type == 1) 
+	{
+		cut_type = 2;
+		originMoving = true;
+	}
+	else
+	{
+		cut_type = 1;
+		originMoving = false;
+	}
 	this->setMouseTracking(true);
 	this->setCursor(Qt::PointingHandCursor);
 }
@@ -212,6 +234,8 @@ void cliplabel::uncast()
 	this->setPixmap(QPixmap(""));
 	this->setScaledContents(false);
 	edited_mode = NotEdited;
+	if (cut_type == 1) originMoving = true;
+	else originMoving = false;
 	cut_index = -1;
 	cut_type = -1;
 	this->setMouseTracking(false);
@@ -239,6 +263,16 @@ void cliplabel::setGroupRange(vector<int> range)
 	groupRange = range;
 }
 
+void cliplabel::setOriginMoving(bool isMoving)
+{
+	originMoving = isMoving;
+}
+
+void cliplabel::setGroupMovingRange(vector<bool> range)
+{
+	groupMovingRange = range;
+}
+
 void cliplabel::setUnGroupIndices()
 {
 	groupIndices.clear();
@@ -249,6 +283,12 @@ void cliplabel::setUnGroupRange()
 {
 	groupRange.clear();
 	groupRange = originRange;
+}
+
+void cliplabel::setUnGroupMovingRange()
+{
+	groupMovingRange.clear();
+	groupMovingRange.push_back(originMoving);
 }
 
 void cliplabel::clearGroupIndices()
