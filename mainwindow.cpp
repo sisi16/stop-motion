@@ -107,7 +107,7 @@ void MainWindow::on_playButton1_clicked()
 		ui->verticalLayout_2->removeWidget(child->widget());
 		delete child;
 
-		frame_slider->setRange(0, 6283);//frame_slider->setRange(0, mediaplayer_1->duration());
+		frame_slider->setRange(0, 6283);//frame_slider->setRange(0, 4716);//frame_slider->setRange(0, mediaplayer_1->duration());
 		frame_slider->setValue(0);
 		frame_slider->setTickPosition(QSlider::TicksAbove);
 		frame_slider->setTickInterval(30);//frame_slider->setTickInterval(500);
@@ -301,7 +301,7 @@ void MainWindow::on_actionTest_triggered()
 		for (int j = 0; j < length; j++)
 		{
 			ss << base + j*frameRate << type;
-			srcImages.push_back(imread("D:/CCCC/Stop Motion/Test/240/" + ss.str()));//srcImages.push_back(imread("D:/CCCC/Stop Motion/Test3/270/" + ss.str()));
+			srcImages.push_back(imread("D:/CCCC/Stop Motion/Test/240/" + ss.str())); //srcImages.push_back(imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str()));
 			ss.str(""); 
 			//srcImages.push_back(frames.at(base + j*frameRate));
 		}
@@ -1004,7 +1004,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 						stringstream ss;
 						string type = ".jpg";
 						ss << (item->getOriginRange().at(0) + item->getOriginRange().at(1)) / 2 << type;
-						Mat refFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+						Mat refFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());//Mat refFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
 						cout << ss.str() << endl;
 						ss.str("");
 						canFrames.push_back(refFrame);
@@ -1017,7 +1017,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 								continue;
 
 							ss << (canClip->getOriginRange().at(0)+canClip->getOriginRange().at(1))/2 << type;
-							Mat canFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+							Mat canFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());//Mat canFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
 							cout << ss.str() << endl;
 							ss.str("");
 							if (vproc.matchFeatures(refFrame, canFrame) == 0) break;
@@ -1040,7 +1040,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 								continue;
 
 							ss << (canClip->getOriginRange().at(0)+canClip->getOriginRange().at(1))/2 << type;
-							Mat canFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+							Mat canFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());//Mat canFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
 							cout << ss.str() << endl;
 							ss.str("");
 							if (vproc.matchFeatures(refFrame, canFrame) == 0) break;

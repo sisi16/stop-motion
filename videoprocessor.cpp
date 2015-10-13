@@ -539,8 +539,8 @@ void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, cl
 
 void videoprocessor::test()
 {
-	Mat frame_1 = imread("D:/CCCC/Stop Motion/Test/480/5642.jpg");
-	Mat frame_2 = imread("D:/CCCC/Stop Motion/Test/480/5885.jpg");
+	Mat frame_1 = imread("D:/CCCC/Stop Motion/Test4/270/4467.jpg");
+	Mat frame_2 = imread("D:/CCCC/Stop Motion/Test4/270/4595.jpg");
 	/*Mat frame_3 = imread("D:/CCCC/Stop Motion/Test3/270/240.jpg");
 	Mat frame_4 = imread("D:/CCCC/Stop Motion/Test3/270/350.jpg");
 	Mat frame_5 = imread("D:/CCCC/Stop Motion/Test3/270/540.jpg");
@@ -663,15 +663,17 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2)
 	{
 		for (int j = 0; j < allMatches[i].size(); j++)
 		{
-			if (allMatches[i][j].distance < 6 * min)
+			if (allMatches[i][j].distance < 7 * min) // 6
 			{
 				Point2f point1 = keypoints_1[allMatches[i][j].queryIdx].pt;
 				Point2f point2 = keypoints_2[allMatches[i][j].trainIdx].pt;
-				if (abs(point1.x - point2.x) < 30 && abs(point1.y - point2.y) < 30)
+				//cout << point1.x << " " << point1.y << " " << point2.x << " " << point2.y << endl;
+				if (abs(point1.x - point2.x) < 50 && abs(point1.y - point2.y) < 50) // for test4 could be 40 I think.
 				{
 					cout << point1.x << " " << point1.y << " " << point2.x << " " << point2.y << endl;
 					matches.push_back(allMatches[i][j]);
 				}
+				//matches.push_back(allMatches[i][j]);
 				if (abs(point1.x - point2.x) <= 5 && abs(point1.y - point2.y) <= 5) not_moving_count++;
 			}
 		}
@@ -679,10 +681,10 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2)
 	cout << matches.size() << endl;
 	cout << not_moving_count << endl << endl;
 
-	Mat image_matches;
+	/*Mat image_matches;
 	drawMatches(image_1, keypoints_1, image_2, keypoints_2, matches, image_matches, Scalar::all(-1), Scalar::all(-1),
 				vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-	imshow("Matches", image_matches);
+	imshow("Matches", image_matches);*/
 	
 	return (matches.size() - not_moving_count);
 }
