@@ -122,6 +122,7 @@ private:
 	clipOperation action;
     QMenu *sliderMenu;
 	std::vector<cliplabel *> selectedClip;
+	std::vector<cliplabel *> stableClip;
 	int addedTrackCount;
 	std::vector<myscrollarea *> addedTrack;
 	std::vector<QScrollArea *> selectedTrack;

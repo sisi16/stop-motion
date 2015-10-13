@@ -10,11 +10,12 @@ cliplabel::cliplabel(QWidget* parent, Qt::WindowFlags f)
 	cut_index = -1;
 	cut_type = -1;
 	track_index = -1;
+	display_scale = -1;
 	grouped = false;
 	edited_mode = NotEdited;
 }
 
-cliplabel::cliplabel(vector<Mat> src, int w, int h, int index, int type, QWidget* parent, Qt::WindowFlags f)
+cliplabel::cliplabel(vector<Mat> src, int w, int h, int index, int type, int scale, QWidget* parent, Qt::WindowFlags f)
 		 : QLabel(parent, f)
 {
 	w_threshold = w;
@@ -23,6 +24,7 @@ cliplabel::cliplabel(vector<Mat> src, int w, int h, int index, int type, QWidget
 	cut_index = index;
 	cut_type = type;
 	track_index = index;
+	display_scale = scale;
 	grouped = false;
 	if (type == 1)
 		originMoving = false;
@@ -83,6 +85,11 @@ int cliplabel::getCutType()
 int cliplabel::getTrackIndex()
 {
 	return track_index;
+}
+
+int cliplabel::getDisplayScale()
+{
+	return display_scale;
 }
 
 vector<Mat> cliplabel::getSrcImages()
@@ -215,7 +222,7 @@ void cliplabel::cast(cliplabel *castedClip)
 	this->setPixmap(*castedClip->pixmap());
 	edited_mode = NotEdited;
 	cut_index = castedClip->getCutIndex();
-	if (cut_type == 1) 
+	if (castedClip->getCutType() == 1)
 	{
 		cut_type = 2;
 		originMoving = true;
@@ -302,21 +309,52 @@ void cliplabel::zoomIn()
 	int h = this->height();
 	if (this->cut_index != -1)
 	{
-		QPixmap *pixmap = new QPixmap(2 * w, h);
-		QPainter *painter = new QPainter(pixmap);
-		if (2 * w > w_threshold)
-		{
-			painter->drawPixmap(0, 0, w, h, *this->pixmap());
-			painter->fillRect(w, 0, w, h, Qt::black);
-		}
-		else
-			painter->drawPixmap(0, 0, 2*w, h, *this->pixmap());
-		painter->end();
-		this->setPixmap(*pixmap);
-		this->setFixedSize(2 * w, h);
+	QPixmap *pixmap = new QPixmap(2 * w, h);
+	QPainter *painter = new QPainter(pixmap);
+	if (2 * w > w_threshold)
+	{
+	painter->drawPixmap(0, 0, w, h, *this->pixmap());
+	painter->fillRect(w, 0, w, h, Qt::black);
 	}
 	else
-		this->setFixedWidth(2 * w);
+	painter->drawPixmap(0, 0, 2*w, h, *this->pixmap());
+	painter->end();
+	this->setPixmap(*pixmap);
+	this->setFixedSize(2 * w, h);
+	}
+	else
+	this->setFixedWidth(2 * w);
+
+	/*int w = this->width();
+	int h = this->height();
+	
+	int size = 0;
+	for (int i = 0; i < groupRange.size(); i += 2)
+		size += (groupRange.at(i + 1) - groupRange.at(i) + 1);
+
+	if (display_scale * 2 <= size)
+	{
+		if (this->cut_index != -1)
+		{
+			cv::Mat temp;
+			pm = new QPixmap(w, h);
+			QPainter *painter = new QPainter(pm);
+			int base_width = w / size;
+
+			for (int i = 0; i < length; i += scale)
+			{
+				cv::cvtColor(src.at(i), temp, CV_BGR2RGB);
+				QImage image((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+				image.bits();
+				painter->drawPixmap(i*base_width, 0, base_width, h, QPixmap::fromImage(image));
+			}
+			painter->end();
+			this->setPixmap(*pm);
+			this->setFixedSize(w, h);
+		}
+		else
+			this->setFixedWidth(2 * w);
+	}*/
 }
 
 void cliplabel::zoomOut()

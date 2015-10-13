@@ -30,13 +30,14 @@ class cliplabel : public QLabel
 
 public:
     cliplabel(QWidget* parent = 0, Qt::WindowFlags f = 0);
-	cliplabel(std::vector<cv::Mat> src, int w, int h, int index, int type, QWidget* parent = 0, Qt::WindowFlags f = 0);
+	cliplabel(std::vector<cv::Mat> src, int w, int h, int index, int type, int scale, QWidget* parent = 0, Qt::WindowFlags f = 0);
     cliplabel(const QString& text, QWidget* parent = 0, Qt::WindowFlags f = 0);
     ~cliplabel();
 	bool getIsGrouped();
 	int getCutIndex();
 	int getCutType();
 	int getTrackIndex();
+	int getDisplayScale();
 	std::vector<cv::Mat> getSrcImages();
 	isEdited getEditedMode();
 	std::vector<int> getOriginRange();
@@ -78,6 +79,7 @@ private:
 	int cut_index;
 	int cut_type;
 	int track_index;
+	int display_scale;
 	bool grouped;
 	QPixmap *pm;
 	std::vector<int> originRange;

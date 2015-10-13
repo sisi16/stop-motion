@@ -64,7 +64,7 @@ void opflow::motionToColor(Mat flow, Mat &coloredflow)
             Vec2f flow_at_pixel = flow.at<Vec2f>(i, j);
 
             float fx = flow_at_pixel[0] / maxrad;
-            float fy = flow_at_pixel[1] / maxrad;
+			float fy = flow_at_pixel[1] / maxrad;
             if ((fabs(fx) >  UNKNOWN_FLOW_THRESH) || (fabs(fy) >  UNKNOWN_FLOW_THRESH))
             {
                 data[0] = data[1] = data[2] = 0;

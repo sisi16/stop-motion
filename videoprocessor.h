@@ -4,6 +4,9 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/nonfree/nonfree.hpp>
+#include <opencv2/nonfree/features2d.hpp>
+#include <opencv2/features2d/features2d.hpp>
 #include <QProgressBar>
 #include <string>
 #include <sstream>
@@ -49,6 +52,7 @@ public:
     void test();
 	void writeBuffers();
 	void readBuffers();
+	int matchFeatures(cv::Mat image_1, cv::Mat image_2);
 
 private:
     QProgressBar *progressBar;

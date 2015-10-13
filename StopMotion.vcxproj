@@ -73,6 +73,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <WarningLevel>Level3</WarningLevel>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <AdditionalDependencies>D:\Software\OtProject\5.4\msvc2013_64\lib\qtmain.lib;shell32.lib;"D:/CCCC/Stop Motion/StopMotion\lib\*.lib";D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5MultimediaWidgets.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Widgets.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Multimedia.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Gui.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Network.lib;D:\Software\OtProject\5.4\msvc2013_64\lib\Qt5Core.lib;%(AdditionalDependencies)</AdditionalDependencies>

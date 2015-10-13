@@ -107,10 +107,10 @@ void MainWindow::on_playButton1_clicked()
 		ui->verticalLayout_2->removeWidget(child->widget());
 		delete child;
 
-		frame_slider->setRange(0, mediaplayer_1->duration()); //frame_slider->setRange(0, 30000);
+		frame_slider->setRange(0, 6283);//frame_slider->setRange(0, mediaplayer_1->duration());
 		frame_slider->setValue(0);
 		frame_slider->setTickPosition(QSlider::TicksAbove);
-		frame_slider->setTickInterval(500);
+		frame_slider->setTickInterval(30);//frame_slider->setTickInterval(500);
 		connect(frame_slider, SIGNAL(sliderMoved(int)), this, SLOT(seek(int)));
 		ui->verticalLayout_2->addWidget(frame_slider);
     }
@@ -130,9 +130,9 @@ void MainWindow::on_pauseButton1_clicked()
 
 void MainWindow::on_cutButton_clicked()
 {
-    progressBar = vproc.getProgressBar();
+    /*progressBar = vproc.getProgressBar();
 	ui->verticalLayout_2->addWidget(progressBar);
-    progressBar->show();
+    progressBar->show();*/
 
 	vproc.readBuffers();
 	//if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
@@ -142,9 +142,9 @@ void MainWindow::on_cutButton_clicked()
     isCut = true;
     statusBar()->clearMessage();
 
-    progressBar->hide();
+    /*progressBar->hide();
 	ui->verticalLayout_2->removeWidget(progressBar);
-    delete progressBar;
+    delete progressBar;*/
 
 	//vproc.test();
 }
@@ -225,7 +225,7 @@ void MainWindow::on_actionLoad_triggered()
     }
 
 	ui->horizontalLayout_1->addWidget(preview_1, Qt::AlignCenter);*/
-    //preview_1->setPixmap(pm.scaled(width, height, Qt::KeepAspectRatio));
+    //preview_1->setPixmap(pm.scaled(width, height, Qt::KeepAspectRatio))
 }
 
 void MainWindow::on_actionCandidates_triggered()
@@ -279,7 +279,7 @@ void MainWindow::on_actionTest_triggered()
 	int frameRate = vproc.getFrameRate();
 	int height = floor(0.8 * ui->scrollArea_1->height());
 	int base_width = ceil(height * vproc.getFrameWidth() / double(vproc.getFrameHeight()));
-	int base, width, length;
+	int base, width, cut_size, length;
 	
 	stringstream ss;
 	string type = ".jpg";
@@ -290,16 +290,23 @@ void MainWindow::on_actionTest_triggered()
 			base = 0;
 		else
 			base = scene_cuts.at(i-1) + 1;
-		length = (scene_cuts.at(i)-base+1) / frameRate + 1;
+		cut_size = scene_cuts.at(i) - base + 1;
+
+		if (cut_size % frameRate == 0)
+			length = cut_size / frameRate;
+		else
+			length = cut_size / frameRate + 1;
 		width = base_width * length;
+
 		for (int j = 0; j < length; j++)
 		{
 			ss << base + j*frameRate << type;
-			srcImages.push_back(imread("D:/CCCC/Stop Motion/Test3/270/" + ss.str()));
-			ss.str("");
+			srcImages.push_back(imread("D:/CCCC/Stop Motion/Test/240/" + ss.str()));//srcImages.push_back(imread("D:/CCCC/Stop Motion/Test3/270/" + ss.str()));
+			ss.str(""); 
 			//srcImages.push_back(frames.at(base + j*frameRate));
 		}
-		cliplabel *clip = new cliplabel(srcImages, width, height, i, cut_types.at(i));
+
+		cliplabel *clip = new cliplabel(srcImages, width, height, i, cut_types.at(i), frameRate);
 		vector<int> range;
 		range.push_back(base);
 		range.push_back(scene_cuts.at(i));
@@ -313,6 +320,7 @@ void MainWindow::on_actionTest_triggered()
 		{
 			ui->gridLayout_2->addWidget(clip, 0, i, Qt::AlignLeft);
 			ui->gridLayout_3->addWidget(empty_clip, 0, i, Qt::AlignLeft);
+			stableClip.push_back(clip);
 		}
 		else
 		{
@@ -850,13 +858,11 @@ void MainWindow::on_actionViewTrack_triggered()
 			while ((child = layout->itemAt(count)) != 0)
 			{
 				cliplabel* item = static_cast<cliplabel*>(child->widget());
-				if (item->getEditedMode() != isMoved && item->getEditedMode() != isDeleted && item->getEditedMode() != isCasted)
+				if (item->getCutType() != -1 && item->getEditedMode() != isMoved && item->getEditedMode() != isDeleted && item->getEditedMode() != isCasted)
 				{
 					for (int i = 0; i < item->getOriginRange().size(); i++)
-					{
 						clickRange.push_back(item->getOriginRange().at(i));
-						movingRange.push_back(item->getOriginMoving());
-					}
+					movingRange.push_back(item->getOriginMoving());
 				}
 				count++;
 			}
@@ -979,7 +985,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 						}
 					}
 
-					item->setEditedMode(isSelected);
+					if (item->getEditedMode() != isCasted) item->setEditedMode(isSelected);
 					selectedClip.push_back(item);
 					seletedPos.push_back(m->pos());
 				}
@@ -989,7 +995,69 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 					cliplabel *item;
 					int track_index = -1;
 					if (widget == ui->scrollAreaWidgetContents_1)
+					{
 						item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(m->pos()));
+						
+						int counter = item->getCutIndex()/2;
+						vector<Mat> canFrames;
+						vector<Mat>::iterator it;
+						stringstream ss;
+						string type = ".jpg";
+						ss << (item->getOriginRange().at(0) + item->getOriginRange().at(1)) / 2 << type;
+						Mat refFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+						cout << ss.str() << endl;
+						ss.str("");
+						canFrames.push_back(refFrame);
+						
+						while (counter != 0)
+						{
+							counter--;
+							cliplabel *canClip = stableClip.at(counter);
+							if (canClip->getEditedMode() == isDeleted || canClip->getEditedMode() == isCasted || canClip->getEditedMode() == isMoved)
+								continue;
+
+							ss << (canClip->getOriginRange().at(0)+canClip->getOriginRange().at(1))/2 << type;
+							Mat canFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+							cout << ss.str() << endl;
+							ss.str("");
+							if (vproc.matchFeatures(refFrame, canFrame) == 0) break;
+							else 
+							{
+								canClip->setEditedMode(isSelected);
+								it = canFrames.begin();
+								canFrames.insert(it, canFrame);
+								refFrame = canFrame;
+							}
+						}
+
+						counter = item->getCutIndex() / 2;
+						refFrame = canFrames.at(canFrames.size()-1);
+						while (counter != stableClip.size()-1)
+						{
+							counter++;
+							cliplabel *canClip = stableClip.at(counter);
+							if (canClip->getEditedMode() == isDeleted || canClip->getEditedMode() == isCasted || canClip->getEditedMode() == isMoved)
+								continue;
+
+							ss << (canClip->getOriginRange().at(0)+canClip->getOriginRange().at(1))/2 << type;
+							Mat canFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+							cout << ss.str() << endl;
+							ss.str("");
+							if (vproc.matchFeatures(refFrame, canFrame) == 0) break;
+							else
+							{
+								canClip->setEditedMode(isSelected);
+								canFrames.push_back(canFrame);
+								refFrame = canFrame;
+							}
+						}
+
+						for (int i = 0; i < canFrames.size(); i++)
+						{
+							imshow("Candidate Frames", canFrames.at(i));
+							waitKey(250);
+						}
+					}
 					else if (widget == ui->scrollAreaWidgetContents_2)
 						item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(m->pos()));
 					else
@@ -1075,7 +1143,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 					{
 						if (widget == addedTrack.at(i)->getCentralWidget())
 						{
-							cliplabel *move2item = new cliplabel(origin->getSrcImages(), origin->width(), origin->height(), origin->getCutIndex(), i+3);
+							cliplabel *move2item = new cliplabel(origin->getSrcImages(), origin->width(), origin->height(), origin->getCutIndex(), i+3, origin->getDisplayScale());
 							move2item->setOriginRange(origin->getOriginRange());
 							move2item->setGroupRange(origin->getGroupRange());
 							move2item->setOriginMoving(origin->getOriginMoving());

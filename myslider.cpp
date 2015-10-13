@@ -54,7 +54,7 @@ void myslider::paintEvent(QPaintEvent *ev)
         {
             double start, end, size;
 
-			size = 597;//size = 930;//size = 155;//size = 1425;//size = 6472;//size = 150;//size = double(reference.size());
+			size = 6284;//size = 597;//size = 930;//size = 155;//size = 1425;//size = 6472;//size = 150;//size = double(reference.size());
             if (i == 0)
             {
                 start = 0;
