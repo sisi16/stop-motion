@@ -33,7 +33,7 @@ class videoprocessor
 public:
     videoprocessor();
     ~videoprocessor();
-    void readVideo(const std::string& file);
+    void readVideo(const std::string file);
     std::vector<cv::Mat> getFrames();
     std::vector<int> getStableFrames();
     void calAvgOpFlows();
@@ -69,6 +69,7 @@ private:
     cv::VideoWriter out;
     opflow of;
     handdetection hd;
+	std::string fileName;
 };
 
 #endif // VIDEOPROCESSOR_H

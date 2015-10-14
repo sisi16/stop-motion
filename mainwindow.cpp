@@ -107,7 +107,8 @@ void MainWindow::on_playButton1_clicked()
 		ui->verticalLayout_2->removeWidget(child->widget());
 		delete child;
 
-		frame_slider->setRange(0, 6283);//frame_slider->setRange(0, 4716);//frame_slider->setRange(0, mediaplayer_1->duration());
+		if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame_slider->setRange(0, 6283); //frame_slider->setRange(0, mediaplayer_1->duration());
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame_slider->setRange(0, 4716);
 		frame_slider->setValue(0);
 		frame_slider->setTickPosition(QSlider::TicksAbove);
 		frame_slider->setTickInterval(30);//frame_slider->setTickInterval(500);
@@ -192,14 +193,14 @@ void MainWindow::on_actionLoad_triggered()
 	//videoWidget_2 = new QVideoWidget;
     mediaplayer_1->setVideoOutput(videoWidget_1);
 
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), ".", tr("Video Files(*.mp4 *.avi *.mov);;All files (*.*)" ));
+    fileName = QFileDialog::getOpenFileName(this, tr("Open File"), ".", tr("Video Files(*.mp4 *.avi *.mov);;All files (*.*)" ));
     if (fileName.isEmpty())
         return;
 
     vproc.readVideo(fileName.toStdString());
 	//cout << vproc.getNumOfFrames() << endl;
     mediaplayer_1->setMedia(QUrl::fromLocalFile(fileName));
-	ui->bgLabel_1->setStyleSheet("background-color: rgb(0, 0, 0); image: url(D:/CCCC/Stop Motion/2015_05/preview.png);");
+	ui->bgLabel_1->setStyleSheet("background-color: rgb(0, 0, 0); image: url(D:/CCCC/Stop Motion/Videos/preview.png);");
 	initFrameSlider();
     /*preview_1 = new QLabel;
     preview_1->setScaledContents(true);
@@ -301,7 +302,8 @@ void MainWindow::on_actionTest_triggered()
 		for (int j = 0; j < length; j++)
 		{
 			ss << base + j*frameRate << type;
-			srcImages.push_back(imread("D:/CCCC/Stop Motion/Test/240/" + ss.str())); //srcImages.push_back(imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str()));
+			if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test/480/" + ss.str())); //
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str()));
 			ss.str(""); 
 			//srcImages.push_back(frames.at(base + j*frameRate));
 		}
@@ -1004,7 +1006,9 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 						stringstream ss;
 						string type = ".jpg";
 						ss << (item->getOriginRange().at(0) + item->getOriginRange().at(1)) / 2 << type;
-						Mat refFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());//Mat refFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+						Mat refFrame;
+						if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") refFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") refFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
 						cout << ss.str() << endl;
 						ss.str("");
 						canFrames.push_back(refFrame);
@@ -1017,7 +1021,9 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 								continue;
 
 							ss << (canClip->getOriginRange().at(0)+canClip->getOriginRange().at(1))/2 << type;
-							Mat canFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());//Mat canFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+							Mat canFrame;
+							if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") canFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+							else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") canFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
 							cout << ss.str() << endl;
 							ss.str("");
 							if (vproc.matchFeatures(refFrame, canFrame) == 0) break;
@@ -1040,7 +1046,9 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 								continue;
 
 							ss << (canClip->getOriginRange().at(0)+canClip->getOriginRange().at(1))/2 << type;
-							Mat canFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());//Mat canFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+							Mat canFrame;
+							if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") canFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+							else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") canFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
 							cout << ss.str() << endl;
 							ss.str("");
 							if (vproc.matchFeatures(refFrame, canFrame) == 0) break;

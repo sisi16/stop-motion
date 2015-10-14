@@ -106,6 +106,7 @@ private:
     int resize_count;
     int window_current_width;
     int window_current_height;
+	QString fileName;
     Ui::MainWindow *ui;
     videoprocessor vproc;
     QMediaPlayer *mediaplayer_1;

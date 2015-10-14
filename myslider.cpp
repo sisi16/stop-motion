@@ -50,12 +50,11 @@ void myslider::paintEvent(QPaintEvent *ev)
 
     if (!indices.empty() && !reference.empty())
     {
+		double start, end;
+		double size = double(indices.at(indices.size() - 1) + 1); //size = 4717;//size = 6284;//size = 597;//size = 930;//size = 155;//size = 1425;//size = 6472;//size = 150;//size = double(reference.size());
         for (int i = 0; i < indices.size(); i++)
         {
-            double start, end, size;
-
-			size = 6284;//size = 4717;//size = 597;//size = 930;//size = 155;//size = 1425;//size = 6472;//size = 150;//size = double(reference.size());
-            if (i == 0)
+   			if (i == 0)
             {
                 start = 0;
                 end = (indices.at(i)+1)/size;

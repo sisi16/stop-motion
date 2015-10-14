@@ -14,7 +14,7 @@ videoprocessor::~videoprocessor()
     frames.clear();
 }
 
-void videoprocessor::readVideo(const string& file)
+void videoprocessor::readVideo(const string file)
 {
     if (!frames.empty()) frames.clear();
 
@@ -23,6 +23,7 @@ void videoprocessor::readVideo(const string& file)
 	if (!capture.isOpened())
 		throw "Error when reading the video file";
 
+	fileName = file;
 	num_of_frames = capture.get(CV_CAP_PROP_FRAME_COUNT);
 	frame_width = capture.get(CV_CAP_PROP_FRAME_WIDTH);
 	frame_height = capture.get(CV_CAP_PROP_FRAME_HEIGHT);
@@ -57,7 +58,7 @@ void videoprocessor::readVideo(const string& file)
 	Mat temp;
 	//cvtColor(frames.at(0), temp, CV_BGR2RGB);
 	capture >> temp;
-	cv::imwrite("D:/CCCC/Stop Motion/2015_05/preview.png", temp);
+	cv::imwrite("D:/CCCC/Stop Motion/Videos/preview.png", temp);
 	capture.release();
 
     /*progressBar = new QProgressBar;
@@ -449,7 +450,8 @@ void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, cl
 					for (int j = start; j <= end; j++)
 					{
 						ss << j << type;
-						frame = imread("D:/CCCC/Stop Motion/Test/240/" + ss.str());//frame = imread("D:/CCCC/Stop Motion/Test3/270/" + ss.str());
+						if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str()); 
 						imshow("View Clip/Track", frame);
 						if (waitKey(delay) == 27) break;
 						if (waitKey(delay) == 32) waitKey(0);
@@ -462,7 +464,8 @@ void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, cl
 				{
 					delay = 250;
 					ss << (start+end)/2 << type;
-					frame = imread("D:/CCCC/Stop Motion/Test/240/" + ss.str());//frame = imread("D:/CCCC/Stop Motion/Test3/270/" + ss.str());
+					if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
 					imshow("View Clip/Track", frame);
 					waitKey(delay);
 					ss.str("");
@@ -485,7 +488,8 @@ void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, cl
 				if (i < range.at(0) || i > range.at(size-2))
 				{
 					ss << i << type;
-					frame = imread("D:/CCCC/Stop Motion/Test/240/" + ss.str());//frame = imread("D:/CCCC/Stop Motion/Test3/270/" + ss.str());
+					if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
 					imshow("Delete Clip", frame);
 					if (waitKey(delay) == 27) break;
 					if (waitKey(delay) == 32) waitKey(0);
@@ -511,7 +515,8 @@ void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, cl
 					for (int j = start; j >= end; j--)
 					{
 						ss << j << type;
-						frame = imread("D:/CCCC/Stop Motion/Test/240/" + ss.str());//frame = imread("D:/CCCC/Stop Motion/Test3/270/" + ss.str());
+						if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
 						imshow("Reverse Clip", frame);
 						if (waitKey(delay) == 27) break;
 						if (waitKey(delay) == 32) waitKey(0);
@@ -524,7 +529,8 @@ void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, cl
 				{
 					delay = 250;
 					ss << (start + end) / 2 << type;
-					frame = imread("D:/CCCC/Stop Motion/Test/240/" + ss.str());//frame = imread("D:/CCCC/Stop Motion/Test3/270/" + ss.str());
+					if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
 					imshow("Reverse Clip", frame);
 					waitKey(delay);
 					ss.str("");
@@ -591,7 +597,10 @@ void videoprocessor::readBuffers()
 { 
 	if (scene_cuts.empty())
 	{
-		ifstream cutfile("D:/CCCC/Stop Motion/StopMotion/cuts10.txt");
+		ifstream cutfile;
+		if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") cutfile.open("D:/CCCC/Stop Motion/StopMotion/cuts10.txt");
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") cutfile.open("D:/CCCC/Stop Motion/StopMotion/cuts11.txt");
+		//ifstream cutfile("D:/CCCC/Stop Motion/StopMotion/cuts11.txt");
 		int num;
 		if (cutfile.is_open())
 		{
@@ -604,7 +613,10 @@ void videoprocessor::readBuffers()
 
 	if (cut_types.empty())
 	{
-		ifstream typefile("D:/CCCC/Stop Motion/StopMotion/types10.txt");
+		ifstream typefile;
+		if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") typefile.open("D:/CCCC/Stop Motion/StopMotion/types10.txt");
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") typefile.open("D:/CCCC/Stop Motion/StopMotion/types11.txt");
+		//ifstream typefile("D:/CCCC/Stop Motion/StopMotion/types11.txt");
 		int num;
 		if (typefile.is_open())
 		{
@@ -670,7 +682,7 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2)
 				//cout << point1.x << " " << point1.y << " " << point2.x << " " << point2.y << endl;
 				if (abs(point1.x - point2.x) < 50 && abs(point1.y - point2.y) < 50) // for test4 could be 40 I think.
 				{
-					cout << point1.x << " " << point1.y << " " << point2.x << " " << point2.y << endl;
+					//cout << point1.x << " " << point1.y << " " << point2.x << " " << point2.y << endl;
 					matches.push_back(allMatches[i][j]);
 				}
 				//matches.push_back(allMatches[i][j]);
@@ -678,8 +690,8 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2)
 			}
 		}
 	}
-	cout << matches.size() << endl;
-	cout << not_moving_count << endl << endl;
+	//cout << matches.size() << endl;
+	//cout << not_moving_count << endl << endl;
 
 	/*Mat image_matches;
 	drawMatches(image_1, keypoints_1, image_2, keypoints_2, matches, image_matches, Scalar::all(-1), Scalar::all(-1),
