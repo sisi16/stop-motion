@@ -124,6 +124,7 @@ private:
     QMenu *sliderMenu;
 	std::vector<cliplabel *> selectedClip;
 	std::vector<cliplabel *> stableClip;
+	std::vector<cliplabel *> movingClip;
 	int addedTrackCount;
 	std::vector<myscrollarea *> addedTrack;
 	std::vector<QScrollArea *> selectedTrack;

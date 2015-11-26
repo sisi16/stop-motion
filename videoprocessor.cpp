@@ -47,17 +47,17 @@ void videoprocessor::readVideo(const string file)
 		if (i == 0) frames.push_back(frame);
         Mat dst_1, dst_2;
 		ss << i << type;
-		cv::imwrite("D:/CCCC/Stop Motion/Test4/1080/" + ss.str(), frame);
+		cv::imwrite("D:/CCCC/Stop Motion/Test6/1080/" + ss.str(), frame);
 		pyrDown(frame, dst_1, Size(frame.cols / 2, frame.rows / 2));
-		cv::imwrite("D:/CCCC/Stop Motion/Test4/540/" + ss.str(), dst_1);
+		cv::imwrite("D:/CCCC/Stop Motion/Test6/540/" + ss.str(), dst_1);
 		pyrDown(dst_1, dst_2, Size(dst_1.cols / 2, dst_1.rows / 2));
-		cv::imwrite("D:/CCCC/Stop Motion/Test4/270/" + ss.str(), dst_2);
+		cv::imwrite("D:/CCCC/Stop Motion/Test6/270/" + ss.str(), dst_2);
 		ss.str("");
     }*/
 
-	Mat temp;
+	Mat temp = imread("D:/CCCC/Stop Motion/Test6/270/0.jpg"); //Mat temp;
 	//cvtColor(frames.at(0), temp, CV_BGR2RGB);
-	capture >> temp;
+	//capture >> temp;
 	cv::imwrite("D:/CCCC/Stop Motion/Videos/preview.png", temp);
 	capture.release();
 
@@ -451,7 +451,9 @@ void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, cl
 					{
 						ss << j << type;
 						if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
-						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str()); 
+						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
+						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
 						imshow("View Clip/Track", frame);
 						if (waitKey(delay) == 27) break;
 						if (waitKey(delay) == 32) waitKey(0);
@@ -466,6 +468,8 @@ void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, cl
 					ss << (start+end)/2 << type;
 					if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
 					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
+					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/540/" + ss.str());
 					imshow("View Clip/Track", frame);
 					waitKey(delay);
 					ss.str("");
@@ -490,6 +494,8 @@ void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, cl
 					ss << i << type;
 					if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
 					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
+					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
 					imshow("Delete Clip", frame);
 					if (waitKey(delay) == 27) break;
 					if (waitKey(delay) == 32) waitKey(0);
@@ -517,6 +523,8 @@ void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, cl
 						ss << j << type;
 						if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
 						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
+						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
 						imshow("Reverse Clip", frame);
 						if (waitKey(delay) == 27) break;
 						if (waitKey(delay) == 32) waitKey(0);
@@ -531,6 +539,8 @@ void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, cl
 					ss << (start + end) / 2 << type;
 					if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
 					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
+					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
 					imshow("Reverse Clip", frame);
 					waitKey(delay);
 					ss.str("");
@@ -545,8 +555,8 @@ void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, cl
 
 void videoprocessor::test()
 {
-	Mat frame_1 = imread("D:/CCCC/Stop Motion/Test4/270/4467.jpg");
-	Mat frame_2 = imread("D:/CCCC/Stop Motion/Test4/270/4595.jpg");
+	Mat frame_1 = imread("D:/CCCC/Stop Motion/Test5/270/1771.jpg");
+	Mat frame_2 = imread("D:/CCCC/Stop Motion/Test5/270/1555.jpg");
 	/*Mat frame_3 = imread("D:/CCCC/Stop Motion/Test3/270/240.jpg");
 	Mat frame_4 = imread("D:/CCCC/Stop Motion/Test3/270/350.jpg");
 	Mat frame_5 = imread("D:/CCCC/Stop Motion/Test3/270/540.jpg");
@@ -600,6 +610,8 @@ void videoprocessor::readBuffers()
 		ifstream cutfile;
 		if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") cutfile.open("D:/CCCC/Stop Motion/StopMotion/cuts10.txt");
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") cutfile.open("D:/CCCC/Stop Motion/StopMotion/cuts11.txt");
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") cutfile.open("D:/CCCC/Stop Motion/StopMotion/cuts12.txt");
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") cutfile.open("D:/CCCC/Stop Motion/StopMotion/cuts13.txt");
 		//ifstream cutfile("D:/CCCC/Stop Motion/StopMotion/cuts11.txt");
 		int num;
 		if (cutfile.is_open())
@@ -616,6 +628,8 @@ void videoprocessor::readBuffers()
 		ifstream typefile;
 		if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") typefile.open("D:/CCCC/Stop Motion/StopMotion/types10.txt");
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") typefile.open("D:/CCCC/Stop Motion/StopMotion/types11.txt");
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") typefile.open("D:/CCCC/Stop Motion/StopMotion/types12.txt");
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") typefile.open("D:/CCCC/Stop Motion/StopMotion/types13.txt");
 		//ifstream typefile("D:/CCCC/Stop Motion/StopMotion/types11.txt");
 		int num;
 		if (typefile.is_open())
@@ -637,14 +651,35 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2)
 	Ptr<FeatureDetector> detector = FeatureDetector::create("HARRIS");
 	detector->detect(image_1, keypoints_1);
 	detector->detect(image_2, keypoints_2);
-	Mat display_1, display_2;
+	/*Mat display_1, display_2;
 	drawKeypoints(image_1, keypoints_1, display_1, Scalar::all(-1), 0);
 	drawKeypoints(image_2, keypoints_2, display_2, Scalar::all(-1), 0);
-	//imshow("1", display_1);
-	//imshow("2", display_2);
-	/*cout << keypoints_1.size() << endl;
-	cout << keypoints_2.size() << endl;*/
+	imshow("1", display_1);
+	imshow("2", display_2);*/
+	//cout << keypoints_1.size() << endl;
+	//cout << keypoints_2.size() << endl;
 
+	int x_1 = 0;
+	int y_1 = 0;
+	for (int i = 0; i < keypoints_1.size(); i++)
+	{
+		x_1 += keypoints_1.at(i).pt.x;
+		y_1 += keypoints_1.at(i).pt.y;
+	}
+	int x_2 = 0;
+	int y_2 = 0;
+	for (int j = 0; j < keypoints_2.size(); j++)
+	{
+		x_2 += keypoints_2.at(j).pt.x;
+		y_2 += keypoints_2.at(j).pt.y;
+	}
+
+	cout << keypoints_1.size() << " " << keypoints_2.size() << endl;
+	cout << double(x_1) / keypoints_1.size() << " " << double(y_1) / keypoints_1.size() << " " << double(x_2) / keypoints_2.size() << " " << double(y_2) / keypoints_2.size() << endl;
+	//if (abs(double(x_1) / keypoints_1.size() - double(x_2) / keypoints_2.size()) < 2 && abs(double(y_1) / keypoints_1.size() - double(y_2) / keypoints_2.size()) < 2) // 4 for test
+	if (abs(double(x_1) / keypoints_1.size() - double(x_2) / keypoints_2.size()) < 2 && abs(double(y_1) / keypoints_1.size() - double(y_2) / keypoints_2.size()) < 2)
+		return -1;
+	//cout << "Here" << endl;
 	Ptr<DescriptorExtractor> descriptor_extractor = DescriptorExtractor::create("SIFT");
 	descriptor_extractor->compute(image_1, keypoints_1, descriptor_1);
 	descriptor_extractor->compute(image_2, keypoints_2, descriptor_2);
@@ -675,7 +710,7 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2)
 	{
 		for (int j = 0; j < allMatches[i].size(); j++)
 		{
-			if (allMatches[i][j].distance < 7 * min) // 6
+			if (allMatches[i][j].distance < 15 * min) // 7 for test, 6
 			{
 				Point2f point1 = keypoints_1[allMatches[i][j].queryIdx].pt;
 				Point2f point2 = keypoints_2[allMatches[i][j].trainIdx].pt;

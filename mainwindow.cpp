@@ -109,6 +109,8 @@ void MainWindow::on_playButton1_clicked()
 
 		if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame_slider->setRange(0, 6283); //frame_slider->setRange(0, mediaplayer_1->duration());
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame_slider->setRange(0, 4716);
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame_slider->setRange(0, 2348);
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame_slider->setRange(0, 9321);
 		frame_slider->setValue(0);
 		frame_slider->setTickPosition(QSlider::TicksAbove);
 		frame_slider->setTickInterval(30);//frame_slider->setTickInterval(500);
@@ -282,6 +284,12 @@ void MainWindow::on_actionTest_triggered()
 	int base_width = ceil(height * vproc.getFrameWidth() / double(vproc.getFrameHeight()));
 	int base, width, cut_size, length;
 	
+	myscrollarea *scroll = new myscrollarea();
+	ui->verticalLayout->addWidget(scroll);
+	scroll->getCentralWidget()->installEventFilter(this);
+	addedTrackCount++;
+	addedTrack.push_back(scroll);
+
 	stringstream ss;
 	string type = ".jpg";
 	for (int i = 0; i < scene_cuts.size(); i++)
@@ -302,8 +310,10 @@ void MainWindow::on_actionTest_triggered()
 		for (int j = 0; j < length; j++)
 		{
 			ss << base + j*frameRate << type;
-			if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test/480/" + ss.str())); //
+			if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test/480/" + ss.str()));
 			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str()));
 			ss.str(""); 
 			//srcImages.push_back(frames.at(base + j*frameRate));
 		}
@@ -320,14 +330,50 @@ void MainWindow::on_actionTest_triggered()
 
 		if (cut_types.at(i) == 1)
 		{
+			if (stableClip.size() != 0)
+			{
+				Mat previousFrame, currentFrame;
+				ss << (clip->getOriginRange().at(0) + clip->getOriginRange().at(1)) / 2 << type;
+				if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
+				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
+				ss.str("");
+				ss << (stableClip.at(stableClip.size() - 1)->getOriginRange().at(0) + stableClip.at(stableClip.size() - 1)->getOriginRange().at(1)) / 2 << type;
+				if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
+				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
+				ss.str("");
+				if (vproc.matchFeatures(previousFrame, currentFrame) == -1)
+				{
+					cliplabel *interMovingClip = movingClip.at(movingClip.size() - 1);
+					cliplabel *move2item = new cliplabel(interMovingClip->getSrcImages(), interMovingClip->width(), interMovingClip->height(), interMovingClip->getCutIndex(), addedTrackCount + 2, interMovingClip->getDisplayScale());
+					move2item->setOriginRange(interMovingClip->getOriginRange());
+					move2item->setGroupRange(interMovingClip->getGroupRange());
+					move2item->setOriginMoving(interMovingClip->getOriginMoving());
+					move2item->setGroupMovingRange(interMovingClip->getGroupMovingRange());
+					addedTrack.at(addedTrackCount - 1)->getLayout()->addWidget(move2item, 0, addedTrack.at(addedTrackCount - 1)->getChildrenCount(), Qt::AlignLeft);
+					addedTrack.at(addedTrackCount - 1)->addChildrenCount();
+
+				}
+			}
 			ui->gridLayout_2->addWidget(clip, 0, i, Qt::AlignLeft);
 			ui->gridLayout_3->addWidget(empty_clip, 0, i, Qt::AlignLeft);
+			cliplabel *move2item_1 = new cliplabel(clip->getSrcImages(), clip->width(), clip->height(), clip->getCutIndex(), addedTrackCount + 2, clip->getDisplayScale());
+			move2item_1->setOriginRange(clip->getOriginRange());
+			move2item_1->setGroupRange(clip->getGroupRange());
+			move2item_1->setOriginMoving(clip->getOriginMoving());
+			move2item_1->setGroupMovingRange(clip->getGroupMovingRange());
+			addedTrack.at(addedTrackCount - 1)->getLayout()->addWidget(move2item_1, 0, addedTrack.at(addedTrackCount - 1)->getChildrenCount(), Qt::AlignLeft);
+			addedTrack.at(addedTrackCount - 1)->addChildrenCount();
 			stableClip.push_back(clip);
 		}
 		else
 		{
 			ui->gridLayout_3->addWidget(clip, 0, i, Qt::AlignLeft);
 			ui->gridLayout_2->addWidget(empty_clip, 0, i, Qt::AlignLeft);
+			movingClip.push_back(clip);
 		}
 
 		connect(clip, SIGNAL(enter(int)), frame_slider, SLOT(highLight(int)));
@@ -1001,18 +1047,32 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 						item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(m->pos()));
 						
 						int counter = item->getCutIndex()/2;
-						vector<Mat> canFrames;
-						vector<Mat>::iterator it;
+						if (!clickRange.empty()) clickRange.clear(); //vector<Mat> canFrames;
+						if (!movingRange.empty()) movingRange.clear();
+						vector<int>::iterator it_1;
+						vector<bool>::iterator it_2;
+						for (int i = 0; i < item->getOriginRange().size(); i++)
+							clickRange.push_back(item->getOriginRange().at(i));
+						movingRange.push_back(item->getOriginMoving());
 						stringstream ss;
 						string type = ".jpg";
 						ss << (item->getOriginRange().at(0) + item->getOriginRange().at(1)) / 2 << type;
-						Mat refFrame;
+						Mat selectedFrame, refFrame;
 						if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") refFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
 						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") refFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") refFrame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
+						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") refFrame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
+						selectedFrame = refFrame;
 						cout << ss.str() << endl;
 						ss.str("");
-						canFrames.push_back(refFrame);
+						//canFrames.push_back(refFrame);
 						
+						myscrollarea *scroll = new myscrollarea();
+						ui->verticalLayout->addWidget(scroll);
+						scroll->getCentralWidget()->installEventFilter(this);
+						addedTrackCount++;
+						addedTrack.push_back(scroll);
+
 						while (counter != 0)
 						{
 							counter--;
@@ -1024,20 +1084,60 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 							Mat canFrame;
 							if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") canFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
 							else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") canFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+							else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") canFrame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
+							else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") canFrame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
 							cout << ss.str() << endl;
 							ss.str("");
 							if (vproc.matchFeatures(refFrame, canFrame) == 0) break;
 							else 
 							{
 								canClip->setEditedMode(isSelected);
-								it = canFrames.begin();
-								canFrames.insert(it, canFrame);
+
+								if (vproc.matchFeatures(refFrame, canFrame) == -1)
+								{
+									cliplabel *canClip_1 = movingClip.at(counter);
+									canClip_1->setEditedMode(isSelected);
+									cliplabel *move2item_1 = new cliplabel(canClip_1->getSrcImages(), canClip_1->width(), canClip_1->height(), canClip_1->getCutIndex(), addedTrackCount + 2, canClip_1->getDisplayScale());
+									move2item_1->setOriginRange(canClip_1->getOriginRange());
+									move2item_1->setGroupRange(canClip_1->getGroupRange());
+									move2item_1->setOriginMoving(canClip_1->getOriginMoving());
+									move2item_1->setGroupMovingRange(canClip_1->getGroupMovingRange());
+									addedTrack.at(addedTrackCount - 1)->getLayout()->addWidget(move2item_1, 0, 0, Qt::AlignLeft);
+									addedTrack.at(addedTrackCount - 1)->addChildrenCount();
+
+									for (int i = canClip_1->getOriginRange().size() - 1; i >= 0; i--)
+									{
+										it_1 = clickRange.begin();
+										clickRange.insert(it_1, canClip_1->getOriginRange().at(i));
+									}
+									it_2 = movingRange.begin();
+									movingRange.insert(it_2, canClip_1->getOriginMoving());
+								}
+
+								cliplabel *move2item = new cliplabel(canClip->getSrcImages(), canClip->width(), canClip->height(), canClip->getCutIndex(), addedTrackCount + 2, canClip->getDisplayScale());
+								move2item->setOriginRange(canClip->getOriginRange());
+								move2item->setGroupRange(canClip->getGroupRange());
+								move2item->setOriginMoving(canClip->getOriginMoving());
+								move2item->setGroupMovingRange(canClip->getGroupMovingRange());
+								addedTrack.at(addedTrackCount - 1)->getLayout()->addWidget(move2item, 0, 0, Qt::AlignLeft);
+								addedTrack.at(addedTrackCount - 1)->addChildrenCount();
+
+								for (int i = canClip->getOriginRange().size()-1; i >= 0; i--)
+								{
+									it_1 = clickRange.begin();
+									clickRange.insert(it_1, canClip->getOriginRange().at(i));
+								}
+								it_2 = movingRange.begin();
+								movingRange.insert(it_2, canClip->getOriginMoving());
+								
+								/*it = canFrames.begin();
+								canFrames.insert(it, canFrame);*/
 								refFrame = canFrame;
 							}
 						}
 
 						counter = item->getCutIndex() / 2;
-						refFrame = canFrames.at(canFrames.size()-1);
+						refFrame = selectedFrame; //refFrame = canFrames.at(canFrames.size()-1);
 						while (counter != stableClip.size()-1)
 						{
 							counter++;
@@ -1049,22 +1149,54 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 							Mat canFrame;
 							if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") canFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
 							else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") canFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+							else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") canFrame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
+							else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") canFrame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
 							cout << ss.str() << endl;
 							ss.str("");
 							if (vproc.matchFeatures(refFrame, canFrame) == 0) break;
 							else
 							{
 								canClip->setEditedMode(isSelected);
-								canFrames.push_back(canFrame);
+								
+								if (vproc.matchFeatures(refFrame, canFrame) == -1)
+								{
+									cliplabel *canClip_1 = movingClip.at(counter-1);
+									canClip_1->setEditedMode(isSelected);
+									cliplabel *move2item_1 = new cliplabel(canClip_1->getSrcImages(), canClip_1->width(), canClip_1->height(), canClip_1->getCutIndex(), addedTrackCount + 2, canClip_1->getDisplayScale());
+									move2item_1->setOriginRange(canClip_1->getOriginRange());
+									move2item_1->setGroupRange(canClip_1->getGroupRange());
+									move2item_1->setOriginMoving(canClip_1->getOriginMoving());
+									move2item_1->setGroupMovingRange(canClip_1->getGroupMovingRange());
+									addedTrack.at(addedTrackCount - 1)->getLayout()->addWidget(move2item_1, 0, addedTrack.at(addedTrackCount - 1)->getChildrenCount(), Qt::AlignLeft);
+									addedTrack.at(addedTrackCount - 1)->addChildrenCount();
+
+									for (int i = 0; i < canClip_1->getOriginRange().size(); i++)
+										clickRange.push_back(canClip_1->getOriginRange().at(i));
+									movingRange.push_back(canClip_1->getOriginMoving());
+								}
+
+								cliplabel *move2item = new cliplabel(canClip->getSrcImages(), canClip->width(), canClip->height(), canClip->getCutIndex(), addedTrackCount + 2, canClip->getDisplayScale());
+								move2item->setOriginRange(canClip->getOriginRange());
+								move2item->setGroupRange(canClip->getGroupRange());
+								move2item->setOriginMoving(canClip->getOriginMoving());
+								move2item->setGroupMovingRange(canClip->getGroupMovingRange());
+								addedTrack.at(addedTrackCount-1)->getLayout()->addWidget(move2item, 0, addedTrack.at(addedTrackCount-1)->getChildrenCount(), Qt::AlignLeft);
+								addedTrack.at(addedTrackCount-1)->addChildrenCount();
+
+								for (int i = 0; i < canClip->getOriginRange().size(); i++)
+									clickRange.push_back(canClip->getOriginRange().at(i));
+								movingRange.push_back(canClip->getOriginMoving());
+								//canFrames.push_back(canFrame);
 								refFrame = canFrame;
 							}
 						}
 
-						for (int i = 0; i < canFrames.size(); i++)
+						/*for (int i = 0; i < canFrames.size(); i++)
 						{
 							imshow("Candidate Frames", canFrames.at(i));
 							waitKey(250);
-						}
+						}*/
+						vproc.writeVideo(clickRange, movingRange, ViewTrack);
 					}
 					else if (widget == ui->scrollAreaWidgetContents_2)
 						item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(m->pos()));
