@@ -47,15 +47,18 @@ void videoprocessor::readVideo(const string file)
 		if (i == 0) frames.push_back(frame);
         Mat dst_1, dst_2;
 		ss << i << type;
-		cv::imwrite("D:/CCCC/Stop Motion/Test6/1080/" + ss.str(), frame);
+		cv::imwrite("D:/CCCC/Stop Motion/Test8/1080/" + ss.str(), frame);
 		pyrDown(frame, dst_1, Size(frame.cols / 2, frame.rows / 2));
-		cv::imwrite("D:/CCCC/Stop Motion/Test6/540/" + ss.str(), dst_1);
+		cv::imwrite("D:/CCCC/Stop Motion/Test8/540/" + ss.str(), dst_1);
 		pyrDown(dst_1, dst_2, Size(dst_1.cols / 2, dst_1.rows / 2));
-		cv::imwrite("D:/CCCC/Stop Motion/Test6/270/" + ss.str(), dst_2);
+		cv::imwrite("D:/CCCC/Stop Motion/Test8/270/" + ss.str(), dst_2);
 		ss.str("");
     }*/
-
-	Mat temp = imread("D:/CCCC/Stop Motion/Test6/270/0.jpg"); //Mat temp;
+	
+	Mat temp;
+	if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") temp = imread("D:/CCCC/Stop Motion/Test6/270/0.jpg");
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") temp = imread("D:/CCCC/Stop Motion/Test7/270/0.jpg");
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") temp = imread("D:/CCCC/Stop Motion/Test8/270/0.jpg");
 	//cvtColor(frames.at(0), temp, CV_BGR2RGB);
 	//capture >> temp;
 	cv::imwrite("D:/CCCC/Stop Motion/Videos/preview.png", temp);
@@ -410,17 +413,17 @@ int videoprocessor::getFrameRate()
 
 void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, clipOperation operation)
 {
-    /*if (out.isOpened())
+    if (out.isOpened())
     {
         cout << "Open" << endl;
     }
 
-    Mat frame;
-    out.open("D:/CCCC/Stop Motion/2015_05/range.avi", CV_FOURCC('M', 'J', 'P', 'G'), 5, Size(frame_width, frame_height));
+    //Mat frame;
+	out.open("D:/CCCC/Stop Motion/Videos/range.avi", CV_FOURCC('M', 'J', 'P', 'G'), 5, Size(960, 540));//out.open("D:/CCCC/Stop Motion/Videos/range.avi", CV_FOURCC('M', 'J', 'P', 'G'), 5, Size(frame_width, frame_height));0
 
     if(!out.isOpened()) {
 		throw "Error! Unable to open video file for output.";
-    }*/
+    }
 
 	int start = -1;
 	int end = -1;
@@ -446,20 +449,22 @@ void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, cl
 
 				if (moving_range.at(i / 2))
 				{
-					delay = 1000 / frame_rate;
+					delay = 250 / frame_rate;//delay = 1000 / frame_rate;
 					for (int j = start; j <= end; j++)
 					{
 						ss << j << type;
 						if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
 						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
 						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
-						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
+						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/540/" + ss.str());
+						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/540/" + ss.str());
+						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/540/" + ss.str());
 						imshow("View Clip/Track", frame);
 						if (waitKey(delay) == 27) break;
 						if (waitKey(delay) == 32) waitKey(0);
 						ss.str("");
 						//frame = frames.at(j);
-						//out << frame;
+						out << frame;
 					}
 				}
 				else
@@ -470,9 +475,12 @@ void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, cl
 					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
 					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
 					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/540/" + ss.str());
+					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/540/" + ss.str());
+					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/540/" + ss.str());
 					imshow("View Clip/Track", frame);
 					waitKey(delay);
 					ss.str("");
+					out << frame;
 				}
 			}
 		}
@@ -480,7 +488,7 @@ void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, cl
 			
 	case DeleteClip :
 		{
-			namedWindow("Delete Clip", CV_WINDOW_AUTOSIZE);
+			/*namedWindow("Delete Clip", CV_WINDOW_AUTOSIZE);
 			int size = range.size();
 			if (range.at(size - 1) == 0) start = scene_cuts.at(0) + 1;
 			else if (range.at(size - 1) == 1) start = 0;
@@ -503,7 +511,7 @@ void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, cl
 					//frame = frames.at(i);
 					//out << frame;
 				}
-			}
+			}*/
 		}
 		break;
 
@@ -525,6 +533,8 @@ void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, cl
 						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
 						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
 						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
+						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
+						else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
 						imshow("Reverse Clip", frame);
 						if (waitKey(delay) == 27) break;
 						if (waitKey(delay) == 32) waitKey(0);
@@ -541,6 +551,8 @@ void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, cl
 					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
 					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
 					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
+					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
+					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
 					imshow("Reverse Clip", frame);
 					waitKey(delay);
 					ss.str("");
@@ -550,7 +562,7 @@ void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, cl
 		break;
 	}
 
-    //out.release();
+    out.release();
 }
 
 void videoprocessor::test()
@@ -612,6 +624,8 @@ void videoprocessor::readBuffers()
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") cutfile.open("D:/CCCC/Stop Motion/StopMotion/cuts11.txt");
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") cutfile.open("D:/CCCC/Stop Motion/StopMotion/cuts12.txt");
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") cutfile.open("D:/CCCC/Stop Motion/StopMotion/cuts13.txt");
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") cutfile.open("D:/CCCC/Stop Motion/StopMotion/cuts14.txt");
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") cutfile.open("D:/CCCC/Stop Motion/StopMotion/cuts15.txt");
 		//ifstream cutfile("D:/CCCC/Stop Motion/StopMotion/cuts11.txt");
 		int num;
 		if (cutfile.is_open())
@@ -630,6 +644,8 @@ void videoprocessor::readBuffers()
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") typefile.open("D:/CCCC/Stop Motion/StopMotion/types11.txt");
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") typefile.open("D:/CCCC/Stop Motion/StopMotion/types12.txt");
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") typefile.open("D:/CCCC/Stop Motion/StopMotion/types13.txt");
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") typefile.open("D:/CCCC/Stop Motion/StopMotion/types14.txt");
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") typefile.open("D:/CCCC/Stop Motion/StopMotion/types15.txt");
 		//ifstream typefile("D:/CCCC/Stop Motion/StopMotion/types11.txt");
 		int num;
 		if (typefile.is_open())

@@ -111,6 +111,8 @@ void MainWindow::on_playButton1_clicked()
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame_slider->setRange(0, 4716);
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame_slider->setRange(0, 2348);
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame_slider->setRange(0, 9321);
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame_slider->setRange(0, 8449);
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame_slider->setRange(0, 5457);
 		frame_slider->setValue(0);
 		frame_slider->setTickPosition(QSlider::TicksAbove);
 		frame_slider->setTickInterval(30);//frame_slider->setTickInterval(500);
@@ -314,6 +316,8 @@ void MainWindow::on_actionTest_triggered()
 			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str()));
 			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str()));
 			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str()));
 			ss.str(""); 
 			//srcImages.push_back(frames.at(base + j*frameRate));
 		}
@@ -338,12 +342,16 @@ void MainWindow::on_actionTest_triggered()
 				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
 				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
 				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
+				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
+				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
 				ss.str("");
 				ss << (stableClip.at(stableClip.size() - 1)->getOriginRange().at(0) + stableClip.at(stableClip.size() - 1)->getOriginRange().at(1)) / 2 << type;
 				if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
 				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
 				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
 				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
+				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
+				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
 				ss.str("");
 				if (vproc.matchFeatures(previousFrame, currentFrame) == -1)
 				{
@@ -1046,7 +1054,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 					{
 						item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(m->pos()));
 						
-						int counter = item->getCutIndex()/2;
+						/*int counter = item->getCutIndex()/2;
 						if (!clickRange.empty()) clickRange.clear(); //vector<Mat> canFrames;
 						if (!movingRange.empty()) movingRange.clear();
 						vector<int>::iterator it_1;
@@ -1130,8 +1138,8 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 								it_2 = movingRange.begin();
 								movingRange.insert(it_2, canClip->getOriginMoving());
 								
-								/*it = canFrames.begin();
-								canFrames.insert(it, canFrame);*/
+								//it = canFrames.begin();
+								//canFrames.insert(it, canFrame);
 								refFrame = canFrame;
 							}
 						}
@@ -1191,12 +1199,12 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 							}
 						}
 
-						/*for (int i = 0; i < canFrames.size(); i++)
-						{
-							imshow("Candidate Frames", canFrames.at(i));
-							waitKey(250);
-						}*/
-						vproc.writeVideo(clickRange, movingRange, ViewTrack);
+						//for (int i = 0; i < canFrames.size(); i++)
+						//{
+							//imshow("Candidate Frames", canFrames.at(i));
+							//waitKey(250);
+						//}
+						vproc.writeVideo(clickRange, movingRange, ViewTrack);*/
 					}
 					else if (widget == ui->scrollAreaWidgetContents_2)
 						item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(m->pos()));
