@@ -47,11 +47,11 @@ void videoprocessor::readVideo(const string file)
 		if (i == 0) frames.push_back(frame);
         Mat dst_1, dst_2;
 		ss << i << type;
-		cv::imwrite("D:/CCCC/Stop Motion/Test8/1080/" + ss.str(), frame);
+		cv::imwrite("D:/CCCC/Stop Motion/UserTest/1080/" + ss.str(), frame);
 		pyrDown(frame, dst_1, Size(frame.cols / 2, frame.rows / 2));
-		cv::imwrite("D:/CCCC/Stop Motion/Test8/540/" + ss.str(), dst_1);
+		cv::imwrite("D:/CCCC/Stop Motion/UserTest/540/" + ss.str(), dst_1);
 		pyrDown(dst_1, dst_2, Size(dst_1.cols / 2, dst_1.rows / 2));
-		cv::imwrite("D:/CCCC/Stop Motion/Test8/270/" + ss.str(), dst_2);
+		cv::imwrite("D:/CCCC/Stop Motion/UserTest/270/" + ss.str(), dst_2);
 		ss.str("");
     }*/
 	
@@ -59,6 +59,7 @@ void videoprocessor::readVideo(const string file)
 	if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") temp = imread("D:/CCCC/Stop Motion/Test6/270/0.jpg");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") temp = imread("D:/CCCC/Stop Motion/Test7/270/0.jpg");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") temp = imread("D:/CCCC/Stop Motion/Test8/270/0.jpg");
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/UserTest.avi") temp = imread("D:/CCCC/Stop Motion/UserTest/270/0.jpg");
 	//cvtColor(frames.at(0), temp, CV_BGR2RGB);
 	//capture >> temp;
 	cv::imwrite("D:/CCCC/Stop Motion/Videos/preview.png", temp);
@@ -115,52 +116,41 @@ void videoprocessor::calAvgOpFlows()
 
 void videoprocessor::cut2Scenes()
 {
-	/*for (int i = 469; i < frames.size() - 1; i++)
-	{
-		Mat current_flow = of.calOpFlow(frames.at(i), frames.at(i + 1));
-		float current_avg_flow = of.calAvgOpFlow(current_flow);
-		cout << i << ": " << current_avg_flow << endl;
-	}*/
-
 	vector<int> temp;
     int scene_count = 0;
 
 	stringstream ss;
 	string type = ".jpg";
-	//ofstream flowfile("D:/CCCC/Stop Motion/Test3/flows_1.txt");
-
+	ofstream flowfile("D:/CCCC/Stop Motion/Test6/flows.txt");
 	Mat frame_1, frame_2;
+	
+	//ifstream flowfile("D:/CCCC/Stop Motion/Test7/flows.txt");
+
 	//#pragma omp parallel for
-	for (int i = 0; i < num_of_frames - 1; i++)//for (int i = 0; i < frames.size()-1; i++)
+	for (int i = 0; i < num_of_frames - 1; i++)
     {
         progressBar->setValue(i+1);
 		
 		if (i == 0)
 		{
-			frame_1 = imread("D:/CCCC/Stop Motion/Test3/270/0.jpg");
-			frame_2 = imread("D:/CCCC/Stop Motion/Test3/270/1.jpg");
+			frame_1 = imread("D:/CCCC/Stop Motion/Test6/270/0.jpg");
+			frame_2 = imread("D:/CCCC/Stop Motion/Test6/270/1.jpg");
 		}
 		else
 		{
 			ss << i+1 << type;
 			frame_1 = frame_2;
-			frame_2 = imread("D:/CCCC/Stop Motion/Test3/270/" + ss.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
 		}
-		/*stringstream ss_1, ss_2;
-		ss_1 << i << type;
-		ss_2 << i + 1 << type;
-		Mat frame_1 = imread("D:/CCCC/Stop Motion/Test3/270/" + ss_1.str());
-		Mat frame_2 = imread("D:/CCCC/Stop Motion/Test3/270/" + ss_2.str());*/
 
 		Mat current_flow = of.calOpFlow(frame_1, frame_2);//Mat current_flow = of.calOpFlow(frames.at(i), frames.at(i + 1));
         float current_avg_flow = of.calAvgOpFlow(current_flow);
 		ss.str("");
-		//flowfile << current_avg_flow << endl;
-		//ss_1.str("");
-		//ss_2.str("");
-		//bool hand = hd.isHand(frames.at(i));
+		flowfile << current_avg_flow << endl;
 
-		if (current_avg_flow == 0)//if (current_avg_flow < 0.4)//if (current_avg_flow < 0.2)//if (current_avg_flow < 5.74e-3)
+		//float current_avg_flow;
+		//flowfile >> current_avg_flow;
+		if (current_avg_flow < 0.005) // if (current_avg_flow == 0)
 		{
 			//if (hand)
 			//frame_types.push_back(1);
@@ -192,32 +182,27 @@ void videoprocessor::cut2Scenes()
 		}
 	}
 	
-	//flowfile.close();
-	//for (int j = 0; j < temp.size(); j++)
-		//cout << temp.at(j) << endl;
+	flowfile.close();
+
 
 	int cut_counter = -1;
 	int sum = 0;
 	bool isMessy = false;
 	int movingcount = 0;
     for (int j = 0; j < temp.size(); j++)
-    {
-        //cout << scene_cuts.at(j) << endl;
-		cout << endl;
-		cout << j << ": " << temp.at(j) << " " << sum << " " << movingcount << endl;
-		
+    {	
 		int length;
 		
 		if (j == 0) length = temp.at(j) + 1;
 		else length = temp.at(j) - temp.at(j - 1);
 
-		if (length >= frame_rate)//if (length >= 20)//if (length >= frame_rate)
+		if (length >= frame_rate)
 		{
 			if (isMessy)
 			{
 				if (cut_counter == -1)
 				{
-					cout << 1 << endl;
+					//cout << 1 << endl;
 					scene_cuts.push_back(temp.at(j));
 					cut_types.push_back(frame_types.at(temp.at(j)));
 					cut_counter++;
@@ -230,21 +215,21 @@ void videoprocessor::cut2Scenes()
 					
 					if (cut_types.at(cut_counter) == frame_types.at(temp.at(j)))
 					{
-						cout << 2 << endl;
+						//cout << 2 << endl;
 						scene_cuts.at(cut_counter) = temp.at(j);
 					}
 					else if (cut_types.at(cut_counter) == 1)
 					{
-						cout << 3 << endl;
-						if ((sum-movingcount) * 3 >= sum) scene_cuts.at(cut_counter) += sum;
+						// * 3;
+						if ((sum-movingcount) * 3 >= sum * 2) scene_cuts.at(cut_counter) += sum;
 						scene_cuts.push_back(temp.at(j));
 						cut_types.push_back(2);
 						cut_counter++;
 					}
 					else
 					{
-						cout << 4 << endl;
-						if (movingcount * 3 >= sum) scene_cuts.at(cut_counter) += sum;
+						// * 3
+						if (movingcount * 3 >= sum * 2) scene_cuts.at(cut_counter) += sum;
 						scene_cuts.push_back(temp.at(j));
 						cut_types.push_back(1);
 						cut_counter++;
@@ -256,7 +241,7 @@ void videoprocessor::cut2Scenes()
 			}
 			else
 			{
-				cout << 5 << endl;
+				//cout << 5 << endl;
 				scene_cuts.push_back(temp.at(j));
 				cut_types.push_back(frame_types.at(temp.at(j)));
 				cut_counter++;
@@ -268,9 +253,9 @@ void videoprocessor::cut2Scenes()
 			if (frame_types.at(temp.at(j)) == 2) movingcount += length;
 			if (j == temp.size() - 1)
 			{
-				if (sum >= frame_rate)//if (sum >= 20) //if (sum >= frame_rate)
+				if (sum >= frame_rate)
 				{
-					cout << 6 << endl;
+					//cout << 6 << endl;
 					scene_cuts.push_back(temp.at(j));
 					if (cut_types.at(cut_counter) == 1) cut_types.push_back(2);
 					else cut_types.push_back(1);
@@ -278,20 +263,21 @@ void videoprocessor::cut2Scenes()
 				}
 				else
 				{
-					cout << 7 << endl;
+					//cout << 7 << endl;
 					scene_cuts.at(cut_counter) = temp.at(j);
 				}
 				sum = 0;
 				movingcount = 0;
 				isMessy = false;
 			}
-			else if (sum >= frame_rate && (temp.at(j + 1) - temp.at(j)) >= frame_rate)//else if (sum >= 20 && (temp.at(j + 1) - temp.at(j)) >= 20)//else if (sum >= frame_rate && (temp.at(j+1) - temp.at(j)) >= frame_rate)
+			else if (sum >= frame_rate * 2 && (temp.at(j + 1) - temp.at(j)) >= frame_rate)
 			{
 				if (cut_counter == -1)
 				{
-					if (((sum - movingcount) * 3 >= sum && frame_types.at(temp.at(j + 1)) == 2) || (movingcount * 3 >= sum && frame_types.at(temp.at(j + 1)) == 1))
+					// * 3
+					if (((sum - movingcount) * 2 >= sum && frame_types.at(temp.at(j + 1)) == 2) || (movingcount * 2 >= sum && frame_types.at(temp.at(j + 1)) == 1))
 					{
-						cout << 7.5 << endl;
+						//cout << 7.5 << endl;
 						scene_cuts.push_back(temp.at(j));
 						if (frame_types.at(temp.at(j + 1)) == 1) cut_types.push_back(2);
 						else cut_types.push_back(1);
@@ -300,23 +286,25 @@ void videoprocessor::cut2Scenes()
 				}
 				else if (cut_types.at(cut_counter) == frame_types.at(temp.at(j + 1)))
 				{
-					if (((sum-movingcount) * 3 >= sum && cut_types.at(cut_counter) == 1) || (movingcount * 3 >= sum && cut_types.at(cut_counter) == 2))
+					// * 3
+					if (((sum-movingcount) * 3 >= sum * 2 && cut_types.at(cut_counter) == 1) || (movingcount * 3 >= sum * 2 && cut_types.at(cut_counter) == 2))
 					{
-						cout << 8 << endl;
+						//cout << 8 << endl;
 						scene_cuts.at(cut_counter) = temp.at(j + 1);
 						j++;
 					}
 					else
 					{
-						cout << 9 << endl;
+						//cout << 9 << endl;
 						scene_cuts.push_back(temp.at(j));
 						cut_types.push_back(frame_types.at(temp.at(j)));
 						cut_counter++;
 					}
 				}
-				else if (((sum - movingcount) * 3 >= sum && cut_types.at(cut_counter) == 1) || (movingcount * 3 >= sum && cut_types.at(cut_counter) == 2))
+				// * 3
+				else if (((sum - movingcount) * 3 >= sum * 2 && cut_types.at(cut_counter) == 1) || (movingcount * 3 >= sum * 2 && cut_types.at(cut_counter) == 2))
 				{
-					cout << 10 << endl;
+					//cout << 10 << endl;
 					scene_cuts.at(cut_counter) += sum;
 				}
 				sum = 0;
@@ -328,19 +316,19 @@ void videoprocessor::cut2Scenes()
 		{
 			if (j == temp.size() - 1)
 			{
-				cout << 11 << endl;
+				//cout << 11 << endl;
 				scene_cuts.at(cut_counter) = temp.at(j);
 				sum = 0;
 			}
 			else if (cut_counter != -1 && length < 5 && (temp.at(j + 1) - temp.at(j)) > 5 && cut_types.at(cut_counter) == frame_types.at(temp.at(j+1)))
 			{
-				cout << 12 << endl;
+				//cout << 12 << endl;
 				scene_cuts.at(cut_counter) = temp.at(j + 1);
 				j++;
 			}
 			else
 			{
-				cout << 13 << endl;
+				//cout << 13 << endl;
 				sum += length;
 				isMessy = true;
 				if (frame_types.at(temp.at(j)) == 2) movingcount += length;
@@ -567,36 +555,151 @@ void videoprocessor::writeVideo(vector<int> range, vector<bool> moving_range, cl
 
 void videoprocessor::test()
 {
-	Mat frame_1 = imread("D:/CCCC/Stop Motion/Test5/270/1771.jpg");
-	Mat frame_2 = imread("D:/CCCC/Stop Motion/Test5/270/1555.jpg");
-	/*Mat frame_3 = imread("D:/CCCC/Stop Motion/Test3/270/240.jpg");
-	Mat frame_4 = imread("D:/CCCC/Stop Motion/Test3/270/350.jpg");
-	Mat frame_5 = imread("D:/CCCC/Stop Motion/Test3/270/540.jpg");
-	cout << "Start 1" << endl;
-	Mat flow_1 = of.calOpFlow(frame_3, frame_1);
-	cout << "Start 2" << endl;
-	Mat flow_2 = of.calOpFlow(frame_3, frame_2);
-	cout << "Start 3" << endl;
-	Mat flow_3 = of.calOpFlow(frame_3, frame_4);
-	cout << "Start 4" << endl;
-	Mat flow_4 = of.calOpFlow(frame_3, frame_5);
-	cout << "End" << endl;
-	Mat motion2color_1, motion2color_2, motion2color_3, motion2color_4;
-	of.motionToColor(flow_1, motion2color_1);
-	of.motionToColor(flow_2, motion2color_2);
-	of.motionToColor(flow_3, motion2color_3);
-	of.motionToColor(flow_4, motion2color_4);
-	imshow("Flow 240->18", motion2color_1);
-	imshow("Flow 240->125", motion2color_2);
-	imshow("Flow 240->350", motion2color_3);
-	imshow("Flow 240->540", motion2color_4);*/
+	if (out.isOpened())
+		cout << "Open." << endl;
+
+	Mat frame;
+	out.open("D:/CCCC/Stop Motion/Videos/UserTestOutput.avi", CV_FOURCC('M', 'J', 'P', 'G'), 10, Size(960, 540));
 	
-	matchFeatures(frame_1, frame_2);
+	if (!out.isOpened())
+		throw "Error! Unable to open video file for output.";
+	
+	stringstream ss;
+	string type = ".jpg";
+	
+	frame = imread("D:/CCCC/Stop Motion/UserTest/540/30.jpg");
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	for (int i = 59; i <= 81; i++)
+	{
+		ss << i << type;
+		frame = imread("D:/CCCC/Stop Motion/UserTest/540/" + ss.str());
+		out << frame;
+		ss.str("");
+	}
+	frame = imread("D:/CCCC/Stop Motion/UserTest/540/200.jpg");
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	for (int i = 231; i <= 249; i++)
+	{
+		ss << i << type;
+		frame = imread("D:/CCCC/Stop Motion/UserTest/540/" + ss.str());
+		out << frame;
+		ss.str("");
+	}
+	frame = imread("D:/CCCC/Stop Motion/UserTest/540/350.jpg");
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	for (int i = 404; i <= 423; i++)
+	{
+		ss << i << type;
+		frame = imread("D:/CCCC/Stop Motion/UserTest/540/" + ss.str());
+		out << frame;
+		ss.str("");
+	}
+	frame = imread("D:/CCCC/Stop Motion/UserTest/540/500.jpg");
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	frame = imread("D:/CCCC/Stop Motion/UserTest/540/650.jpg");
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	frame = imread("D:/CCCC/Stop Motion/UserTest/540/800.jpg");
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	frame = imread("D:/CCCC/Stop Motion/UserTest/540/950.jpg");
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	for (int i = 994; i <= 1011; i++)
+	{
+		ss << i << type;
+		frame = imread("D:/CCCC/Stop Motion/UserTest/540/" + ss.str());
+		out << frame;
+		ss.str("");
+	}
+	frame = imread("D:/CCCC/Stop Motion/UserTest/540/1150.jpg");
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	frame = imread("D:/CCCC/Stop Motion/UserTest/540/1350.jpg");
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	frame = imread("D:/CCCC/Stop Motion/UserTest/540/1650.jpg");
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	frame = imread("D:/CCCC/Stop Motion/UserTest/540/1750.jpg");
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	frame = imread("D:/CCCC/Stop Motion/UserTest/540/1950.jpg");
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	for (int i = 2079; i <= 2256; i++)
+	{
+		ss << i << type;
+		frame = imread("D:/CCCC/Stop Motion/UserTest/540/" + ss.str());
+		out << frame;
+		ss.str("");
+	}
+	frame = imread("D:/CCCC/Stop Motion/UserTest/540/2450.jpg");
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	for (int i = 2565; i <= 2683; i++)
+	{
+		ss << i << type;
+		frame = imread("D:/CCCC/Stop Motion/UserTest/540/" + ss.str());
+		out << frame;
+		ss.str("");
+	}
+	frame = imread("D:/CCCC/Stop Motion/UserTest/540/2800.jpg");
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+	out << frame;
+
+	out.release();
 }
 
 void videoprocessor::writeBuffers()
 {
-	ofstream cutfile("cuts10.txt");
+	ofstream cutfile("cuts19.txt");
 	if (cutfile.is_open())
 	{
 		for (int i = 0; i < scene_cuts.size(); i++)
@@ -605,7 +708,7 @@ void videoprocessor::writeBuffers()
 	}
 	else cout << "Unable to open file" << endl;
 
-	ofstream typefile("types10.txt");
+	ofstream typefile("types19.txt");
 	if (typefile.is_open())
 	{
 		for (int j = 0; j < cut_types.size(); j++)
@@ -691,7 +794,7 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2)
 	}
 
 	cout << keypoints_1.size() << " " << keypoints_2.size() << endl;
-	cout << double(x_1) / keypoints_1.size() << " " << double(y_1) / keypoints_1.size() << " " << double(x_2) / keypoints_2.size() << " " << double(y_2) / keypoints_2.size() << endl;
+	//cout << double(x_1) / keypoints_1.size() << " " << double(y_1) / keypoints_1.size() << " " << double(x_2) / keypoints_2.size() << " " << double(y_2) / keypoints_2.size() << endl;
 	//if (abs(double(x_1) / keypoints_1.size() - double(x_2) / keypoints_2.size()) < 2 && abs(double(y_1) / keypoints_1.size() - double(y_2) / keypoints_2.size()) < 2) // 4 for test
 	if (abs(double(x_1) / keypoints_1.size() - double(x_2) / keypoints_2.size()) < 2 && abs(double(y_1) / keypoints_1.size() - double(y_2) / keypoints_2.size()) < 2)
 		return -1;
@@ -741,7 +844,7 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2)
 			}
 		}
 	}
-	//cout << matches.size() << endl;
+	cout << matches.size() << endl;
 	//cout << not_moving_count << endl << endl;
 
 	/*Mat image_matches;

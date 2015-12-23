@@ -140,9 +140,9 @@ void MainWindow::on_cutButton_clicked()
     progressBar->show();*/
 
 	vproc.readBuffers();
-	//if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
-		//vproc.cut2Scenes();
-	//vproc.writeBuffers();
+	/*if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
+		vproc.cut2Scenes();
+	vproc.writeBuffers();*/
 	frame_slider->updateParams(vproc.getSceneCuts(), vproc.getCutTypes());
     isCut = true;
     statusBar()->clearMessage();
