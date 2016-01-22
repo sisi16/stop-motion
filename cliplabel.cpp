@@ -9,13 +9,11 @@ cliplabel::cliplabel(QWidget* parent, Qt::WindowFlags f)
 {
 	cut_index = -1;
 	cut_type = -1;
-	track_index = -1;
-	display_scale = -1;
-	grouped = false;
+	//track_index = -1;
 	edited_mode = NotEdited;
 }
 
-cliplabel::cliplabel(vector<Mat> src, int w, int h, int index, int type, int scale, QWidget* parent, Qt::WindowFlags f)
+cliplabel::cliplabel(vector<Mat> src, int bw, int w, int h, int index, int type, int l, QWidget* parent, Qt::WindowFlags f)
 		 : QLabel(parent, f)
 {
 	w_threshold = w;
@@ -23,15 +21,8 @@ cliplabel::cliplabel(vector<Mat> src, int w, int h, int index, int type, int sca
 	srcImages = src;
 	cut_index = index;
 	cut_type = type;
-	track_index = index;
-	display_scale = scale;
-	grouped = false;
-	if (type == 1)
-		originMoving = false;
-	else if (type == 2)
-		originMoving = true;
-	groupMovingRange.push_back(originMoving);
-	groupIndices.push_back(cut_index);
+	//track_index = type;
+	length = l;
 	edited_mode = NotEdited;
 
 	this->setScaledContents(true);
@@ -40,14 +31,26 @@ cliplabel::cliplabel(vector<Mat> src, int w, int h, int index, int type, int sca
 	//pixmap->fill(Qt::transparent);
 	QPainter *painter = new QPainter(pm);
 
-	int length = src.size();
-	int base_width = w / length;
 	for (int i = 0; i < length; i++)
 	{
-		cv::cvtColor(src.at(i), temp, CV_BGR2RGB);
+		if (cut_type == 1)
+			cv::cvtColor(src.at(0), temp, CV_BGR2RGB);
+		else
+			cv::cvtColor(src.at(i), temp, CV_BGR2RGB);
 		QImage image((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
 		image.bits();
-		painter->drawPixmap(i*base_width, 0, base_width, h, QPixmap::fromImage(image));
+		if (cut_type == 1)
+		{
+			if (i == 0)
+				painter->drawPixmap(0, 0, bw, h, QPixmap::fromImage(image));
+			else
+			{
+				QPixmap pm = QPixmap::fromImage(image);
+				painter->drawPixmap(bw+bw/10*(i-1), 0, bw / 10, h, pm, pm.width() / 10 * 9, 0, 0, 0);
+			}
+		}
+		else
+			painter->drawPixmap(i*bw, 0, bw, h, QPixmap::fromImage(image));
 	}
 	painter->end();
 	this->setPixmap(*pm);
@@ -67,11 +70,6 @@ cliplabel::~cliplabel()
 
 }
 
-bool cliplabel::getIsGrouped()
-{
-	return grouped;
-}
-
 int cliplabel::getCutIndex()
 {
 	return cut_index;
@@ -82,15 +80,21 @@ int cliplabel::getCutType()
 	return cut_type;
 }
 
-int cliplabel::getTrackIndex()
+/*int cliplabel::getTrackIndex()
 {
 	return track_index;
+}*/
+
+int cliplabel::getWidth()
+{
+	return w_threshold;
 }
 
-int cliplabel::getDisplayScale()
+int cliplabel::getHeight()
 {
-	return display_scale;
+	return h_threshold;
 }
+
 
 vector<Mat> cliplabel::getSrcImages()
 {
@@ -102,29 +106,9 @@ isEdited cliplabel::getEditedMode()
 	return edited_mode;
 }
 
-vector<int> cliplabel::getOriginRange()
+vector<int> cliplabel::getRange()
 {
-	return originRange;
-}
-
-vector<int> cliplabel::getGroupIndices()
-{
-	return groupIndices;
-}
-
-vector<int> cliplabel::getGroupRange()
-{
-	return groupRange;
-}
-
-bool cliplabel::getOriginMoving()
-{
-	return originMoving;
-}
-
-vector<bool> cliplabel::getGroupMovingRange()
-{
-	return groupMovingRange;
+	return range;
 }
 
 void cliplabel::enterEvent(QEvent *)
@@ -182,10 +166,6 @@ void cliplabel::setEditedMode(isEdited mode)
 		this->setStyleSheet("border: 3px dashed rgb(0, 0, 0)");
 		break;
 
-	case isGrouped:
-		this->setStyleSheet("border: none");
-		break;
-
 	default:
 		break;
 	}
@@ -196,15 +176,10 @@ void cliplabel::setCutIndex(int index)
 	cut_index = index;
 }
 
-void cliplabel::setTrackIndex(int index)
+/*void cliplabel::setTrackIndex(int index)
 {
 	track_index = index;
-}
-
-void cliplabel::setIsGrouped(bool isGrouped)
-{
-	grouped = isGrouped;
-}
+}*/
 
 void cliplabel::setCutType(int type)
 {
@@ -223,15 +198,9 @@ void cliplabel::cast(cliplabel *castedClip)
 	edited_mode = NotEdited;
 	cut_index = castedClip->getCutIndex();
 	if (castedClip->getCutType() == 1)
-	{
 		cut_type = 2;
-		originMoving = true;
-	}
 	else
-	{
 		cut_type = 1;
-		originMoving = false;
-	}
 	this->setMouseTracking(true);
 	this->setCursor(Qt::PointingHandCursor);
 }
@@ -241,8 +210,6 @@ void cliplabel::uncast()
 	this->setPixmap(QPixmap(""));
 	this->setScaledContents(false);
 	edited_mode = NotEdited;
-	if (cut_type == 1) originMoving = true;
-	else originMoving = false;
 	cut_index = -1;
 	cut_type = -1;
 	this->setMouseTracking(false);
@@ -255,55 +222,12 @@ void cliplabel::setSizeThreshold(int w, int h)
 	h_threshold = h;
 }
 
-void cliplabel::setOriginRange(vector<int> range)
+void cliplabel::setRange(vector<int> rng)
 {
-	originRange = range;
+	range = rng;
 }
 
-void cliplabel::setGroupIndices(vector<int> indices)
-{
-	groupIndices = indices;
-}
-
-void cliplabel::setGroupRange(vector<int> range)
-{
-	groupRange = range;
-}
-
-void cliplabel::setOriginMoving(bool isMoving)
-{
-	originMoving = isMoving;
-}
-
-void cliplabel::setGroupMovingRange(vector<bool> range)
-{
-	groupMovingRange = range;
-}
-
-void cliplabel::setUnGroupIndices()
-{
-	groupIndices.clear();
-	groupIndices.push_back(cut_index);
-}
-
-void cliplabel::setUnGroupRange()
-{
-	groupRange.clear();
-	groupRange = originRange;
-}
-
-void cliplabel::setUnGroupMovingRange()
-{
-	groupMovingRange.clear();
-	groupMovingRange.push_back(originMoving);
-}
-
-void cliplabel::clearGroupIndices()
-{
-	groupIndices.clear();
-}
-
-void cliplabel::zoomIn()
+/*void cliplabel::zoomIn()
 {
 	int w = this->width();
 	int h = this->height();
@@ -324,40 +248,9 @@ void cliplabel::zoomIn()
 	}
 	else
 	this->setFixedWidth(2 * w);
+}*/
 
-	/*int w = this->width();
-	int h = this->height();
-	
-	int size = 0;
-	for (int i = 0; i < groupRange.size(); i += 2)
-		size += (groupRange.at(i + 1) - groupRange.at(i) + 1);
-
-	if (display_scale * 2 <= size)
-	{
-		if (this->cut_index != -1)
-		{
-			cv::Mat temp;
-			pm = new QPixmap(w, h);
-			QPainter *painter = new QPainter(pm);
-			int base_width = w / size;
-
-			for (int i = 0; i < length; i += scale)
-			{
-				cv::cvtColor(src.at(i), temp, CV_BGR2RGB);
-				QImage image((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
-				image.bits();
-				painter->drawPixmap(i*base_width, 0, base_width, h, QPixmap::fromImage(image));
-			}
-			painter->end();
-			this->setPixmap(*pm);
-			this->setFixedSize(w, h);
-		}
-		else
-			this->setFixedWidth(2 * w);
-	}*/
-}
-
-void cliplabel::zoomOut()
+/*void cliplabel::zoomOut()
 {
 	int w = floor(0.5*this->width());
 	int h = this->height();
@@ -377,4 +270,4 @@ void cliplabel::zoomOut()
 	}
 	else
 		this->setFixedWidth(w);
-}
+}*/

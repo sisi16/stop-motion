@@ -13,6 +13,8 @@
 #include <QGridLayout>
 #include <QMimeData>
 #include <QDrag>
+#include <QTimer>
+#include <windows.h>
 #include "videoprocessor.h"
 #include "myslider.h"
 #include "cliplabel.h"
@@ -31,30 +33,26 @@ public:
     ~MainWindow();
 	void setClickRange(std::vector<int> indices);
 
-protected:
-	void resizeEvent(QResizeEvent* ev);
+//protected:
+	//void resizeEvent(QResizeEvent* ev);
 
 private slots:
 
     void on_playButton1_clicked();
 
-    void on_stopButton1_clicked();
+    void on_nextButton_clicked();
 
-    void on_pauseButton1_clicked();
+    void on_pauseButton_clicked();
 
     void on_cutButton_clicked();
 
-	void on_okButton_clicked();
-
-    void refresh(int value);
+    void refresh(cv::Mat img);
 
     void seek(int seconds);
 
     void on_actionLoad_triggered();
 
-    void on_actionCandidates_triggered();
-
-    void on_actionTest_triggered();
+    void visualizeClips();
 
 	void on_actionSelect_triggered();
 
@@ -70,19 +68,15 @@ private slots:
 
 	void on_actionCast_triggered();
 
-	void on_actionGroup_triggered();
+	//void on_actionZoomIn_triggered();
 
-	void on_actionUngroup_triggered();
-
-	void on_actionZoomIn_triggered();
-
-	void on_actionZoomOut_triggered();
+	//void on_actionZoomOut_triggered();
 
 	void on_actionSelectTrack_triggered();
 
-	void on_actionAddTrack_triggered();
+	//void on_actionAddTrack_triggered();
 
-	void on_actionDeleteTrack_triggered();
+	//void on_actionDeleteTrack_triggered();
 
 	void on_actionViewTrack_triggered();
 
@@ -92,7 +86,7 @@ private slots:
 
     void playRange();
 
-    void on_editCheckBox_clicked();
+	void on_editRadioButton_clicked();
 
     void delete_action();
 
@@ -100,7 +94,7 @@ private slots:
 
     void show_context_menu();
 
-	void initFrameSlider();
+	//void initFrameSlider();
 
 private:
     int resize_count;
@@ -109,24 +103,23 @@ private:
 	QString fileName;
     Ui::MainWindow *ui;
     videoprocessor vproc;
-    QMediaPlayer *mediaplayer_1;
-    QMediaPlayer *mediaplayer_2;
-    QVideoWidget *videoWidget_1;
-    QVideoWidget *videoWidget_2;
-    myslider *frame_slider;
+    //myslider *frame_slider;
     QProgressBar *progressBar;
     QLabel *preview_1;
     QLabel *preview_2;
+	cliplabel *current_clip;
+	int current_clip_index;
     bool isCut;
     std::vector<int> clickRange;
-	std::vector<bool> movingRange;
+	std::vector<int> movingRange;
 	clipOperation action;
     QMenu *sliderMenu;
-	std::vector<cliplabel *> selectedClip;
-	std::vector<cliplabel *> stableClip;
-	std::vector<cliplabel *> movingClip;
-	int addedTrackCount;
-	std::vector<myscrollarea *> addedTrack;
+	std::vector<cliplabel *> selectedClips;
+	std::vector<cliplabel *> stableClips;
+	std::vector<cliplabel *> movingClips;
+	std::vector<cliplabel *> clips;
+	//int addedTrackCount;
+	//std::vector<myscrollarea *> addedTrack;
 	std::vector<QScrollArea *> selectedTrack;
 	std::vector<QPoint> seletedPos;
 };

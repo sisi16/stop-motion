@@ -28,5 +28,6 @@
     <file>icons/cancel.png</file>
     <file>icons/ungroup_48.png</file>
     <file>icons/tick.png</file>
+    <file>icons/next.png</file>
   </qresource>
 </RCC>

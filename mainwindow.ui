@@ -21,10 +21,16 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="1" rowspan="2" colspan="2">
-     <layout class="QHBoxLayout" name="horizontalLayout_1">
+    <item row="0" column="0" rowspan="3" colspan="3">
+     <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QLabel" name="bgLabel_1">
+       <widget class="QLabel" name="frameLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="styleSheet">
          <string notr="true">background-color: rgb(130, 130, 130);
 
@@ -37,104 +43,9 @@
       </item>
      </layout>
     </item>
-    <item row="10" column="1">
-     <widget class="QCheckBox" name="editCheckBox">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">font: 75 12pt &quot;Times New Roman&quot;;</string>
-      </property>
-      <property name="text">
-       <string>Edit Mode</string>
-      </property>
-     </widget>
-    </item>
-    <item row="8" column="1" colspan="5">
-     <widget class="Line" name="line_1">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="4">
-     <widget class="QPushButton" name="cancelButton">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="icon">
-       <iconset resource="myres.qrc">
-        <normaloff>:/Images/icons/cancel.png</normaloff>:/Images/icons/cancel.png</iconset>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>20</width>
-        <height>20</height>
-       </size>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="3">
-     <widget class="QPushButton" name="okButton">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="icon">
-       <iconset resource="myres.qrc">
-        <normaloff>:/Images/icons/tick.png</normaloff>:/Images/icons/tick.png</iconset>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>20</width>
-        <height>20</height>
-       </size>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="1">
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
-      <item>
-       <widget class="QPushButton" name="cutButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="myres.qrc">
-          <normaloff>:/Images/icons/cut_32.png</normaloff>:/Images/icons/cut_32.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item>
+    <item row="2" column="4">
+     <layout class="QGridLayout" name="gridLayout_1">
+      <item row="2" column="0">
        <widget class="QPushButton" name="playButton1">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -157,8 +68,31 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="pauseButton1">
+      <item row="2" column="2">
+       <widget class="QPushButton" name="nextButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="myres.qrc">
+          <normaloff>:/Images/icons/next.png</normaloff>:/Images/icons/next.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QPushButton" name="pauseButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -180,8 +114,8 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="stopButton1">
+      <item row="2" column="3">
+       <widget class="QPushButton" name="cutButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -193,7 +127,7 @@
         </property>
         <property name="icon">
          <iconset resource="myres.qrc">
-          <normaloff>:/Images/icons/stop_24.png</normaloff>:/Images/icons/stop_24.png</iconset>
+          <normaloff>:/Images/icons/cut_32.png</normaloff>:/Images/icons/cut_32.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -203,116 +137,54 @@
         </property>
        </widget>
       </item>
-     </layout>
-    </item>
-    <item row="0" column="3" rowspan="2" colspan="3">
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QLabel" name="bgLabel_2">
+      <item row="0" column="0" colspan="4">
+       <widget class="QRadioButton" name="keepRadioButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(130, 130, 130);
-</string>
+         <string notr="true">font: 75 12pt &quot;Times New Roman&quot;;</string>
         </property>
         <property name="text">
-         <string/>
+         <string>Keep</string>
+        </property>
+        <property name="autoExclusive">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="4">
+       <widget class="QRadioButton" name="editRadioButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 75 12pt &quot;Times New Roman&quot;;</string>
+        </property>
+        <property name="text">
+         <string>Edit</string>
+        </property>
+        <property name="autoExclusive">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
      </layout>
     </item>
-    <item row="14" column="1" colspan="5">
-     <widget class="QScrollArea" name="scrollArea">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
+    <item row="4" column="0" colspan="5">
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
       </property>
-      <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
-      </property>
-      <property name="widgetResizable">
-       <bool>true</bool>
-      </property>
-      <widget class="QWidget" name="scrollAreaWidgetContents_0">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>1262</width>
-         <height>85</height>
-        </rect>
-       </property>
-       <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout"/>
-      </widget>
      </widget>
     </item>
-    <item row="11" column="1" colspan="5">
-     <widget class="QScrollArea" name="scrollArea_3">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::Box</enum>
-      </property>
-      <property name="widgetResizable">
-       <bool>true</bool>
-      </property>
-      <widget class="QWidget" name="scrollAreaWidgetContents_3">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>1260</width>
-         <height>83</height>
-        </rect>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <widget class="QSlider" name="timeLineSlider">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-    </item>
-    <item row="13" column="1" colspan="5">
-     <widget class="QScrollArea" name="scrollArea_2">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
-      </property>
-      <property name="widgetResizable">
-       <bool>true</bool>
-      </property>
-      <widget class="QWidget" name="scrollAreaWidgetContents_2">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>1262</width>
-         <height>85</height>
-        </rect>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_3"/>
-      </widget>
-     </widget>
-    </item>
-    <item row="12" column="1" colspan="5">
+    <item row="12" column="0" colspan="5">
      <widget class="QScrollArea" name="scrollArea_1">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
@@ -332,11 +204,48 @@
          <x>0</x>
          <y>0</y>
          <width>1262</width>
-         <height>86</height>
+         <height>117</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_2"/>
       </widget>
+     </widget>
+    </item>
+    <item row="13" column="0" colspan="5">
+     <widget class="QScrollArea" name="scrollArea_2">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents_2">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>1262</width>
+         <height>116</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_3"/>
+      </widget>
+     </widget>
+    </item>
+    <item row="0" column="3" rowspan="3">
+     <widget class="Line" name="line_2">
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
      </widget>
     </item>
    </layout>
@@ -357,21 +266,7 @@
     <addaction name="actionLoad"/>
     <addaction name="actionSave"/>
    </widget>
-   <widget class="QMenu" name="menuEdit">
-    <property name="title">
-     <string>Edit</string>
-    </property>
-    <addaction name="actionCandidates"/>
-    <addaction name="actionTest"/>
-   </widget>
-   <widget class="QMenu" name="menuSettings">
-    <property name="title">
-     <string>Settings</string>
-    </property>
-   </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuEdit"/>
-   <addaction name="menuSettings"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="movable">
@@ -393,9 +288,6 @@
    <addaction name="separator"/>
    <addaction name="actionSwap"/>
    <addaction name="separator"/>
-   <addaction name="actionConfirm"/>
-   <addaction name="separator"/>
-   <addaction name="separator"/>
    <addaction name="actionResume"/>
    <addaction name="separator"/>
    <addaction name="actionView"/>
@@ -405,11 +297,6 @@
    <addaction name="actionReverse"/>
    <addaction name="separator"/>
    <addaction name="actionCast"/>
-   <addaction name="separator"/>
-   <addaction name="separator"/>
-   <addaction name="actionGroup"/>
-   <addaction name="separator"/>
-   <addaction name="actionUngroup"/>
    <addaction name="separator"/>
    <addaction name="actionZoomIn"/>
    <addaction name="separator"/>

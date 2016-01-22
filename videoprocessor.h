@@ -36,7 +36,7 @@ public:
     void readVideo(const std::string file);
     std::vector<cv::Mat> getFrames();
     std::vector<int> getStableFrames();
-    void calAvgOpFlows();
+    float calAvgOpFlow(cv::Mat frame_1, cv::Mat frame_2);
     void cut2Scenes();
     std::vector<int> getSceneCuts();
 	std::vector<int> getCutTypes();
@@ -48,7 +48,7 @@ public:
     std::vector<int> getRange(int current, int width);
     int getNumOfFrames();
 	int getFrameRate();
-	void writeVideo(std::vector<int> range, std::vector<bool> moving_range, clipOperation operation);
+	void writeVideo(std::vector<int> range, std::vector<int> moving_range, clipOperation operation);
     void test();
 	void writeBuffers();
 	void readBuffers();

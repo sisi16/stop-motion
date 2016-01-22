@@ -21,7 +21,6 @@ enum isEdited
 	isResumed,
 	isReversed,
 	isCasted,
-	isGrouped
 };
 
 class cliplabel : public QLabel
@@ -30,41 +29,30 @@ class cliplabel : public QLabel
 
 public:
     cliplabel(QWidget* parent = 0, Qt::WindowFlags f = 0);
-	cliplabel(std::vector<cv::Mat> src, int w, int h, int index, int type, int scale, QWidget* parent = 0, Qt::WindowFlags f = 0);
+	cliplabel(std::vector<cv::Mat> src, int bw, int w, int h, int index, int type, int l, QWidget* parent = 0, Qt::WindowFlags f = 0);
     cliplabel(const QString& text, QWidget* parent = 0, Qt::WindowFlags f = 0);
     ~cliplabel();
-	bool getIsGrouped();
 	int getCutIndex();
 	int getCutType();
-	int getTrackIndex();
-	int getDisplayScale();
+	//int getTrackIndex();
+	int getWidth();
+	int getHeight();
 	std::vector<cv::Mat> getSrcImages();
 	isEdited getEditedMode();
-	std::vector<int> getOriginRange();
-	std::vector<int> getGroupIndices();
-	std::vector<int> getGroupRange();
+	std::vector<int> getRange();
 	bool getOriginMoving();
-	std::vector<bool> getGroupMovingRange();
 	void setEditedMode(isEdited mode);
 	void setCutType(int type);
 	void setCutIndex(int index);
-	void setTrackIndex(int index);
-	void setIsGrouped(bool isGrouped);
+	//void setTrackIndex(int index);
 	void setSrcImages(std::vector<cv::Mat> src);
 	void setSizeThreshold(int w, int h);
-	void setUnGroupIndices();
-	void setUnGroupRange();
-	void setUnGroupMovingRange();
-	void setOriginRange(std::vector<int> range);
-	void setGroupIndices(std::vector<int> indices);
-	void setGroupRange(std::vector<int> range);
+	void setRange(std::vector<int> rng);
 	void setOriginMoving(bool isMoving);
-	void setGroupMovingRange(std::vector<bool> range);
-	void clearGroupIndices();
 	void cast(cliplabel *castedClip);
 	void uncast();
-	void zoomIn();
-	void zoomOut();
+	//void zoomIn();
+	//void zoomOut();
 
 signals:
 	void enter(int value);
@@ -78,15 +66,10 @@ private:
 	int h_threshold;
 	int cut_index;
 	int cut_type;
-	int track_index;
-	int display_scale;
-	bool grouped;
+	//int track_index;
+	int length;
 	QPixmap *pm;
-	std::vector<int> originRange;
-	std::vector<int> groupIndices;
-	std::vector<int> groupRange;
-	bool originMoving;
-	std::vector<bool> groupMovingRange;
+	std::vector<int> range;
 	isEdited edited_mode;
 	std::vector<cv::Mat> srcImages;
 };
