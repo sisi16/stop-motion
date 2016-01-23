@@ -9,8 +9,9 @@ cliplabel::cliplabel(QWidget* parent, Qt::WindowFlags f)
 {
 	cut_index = -1;
 	cut_type = -1;
-	//track_index = -1;
 	edited_mode = NotEdited;
+	this->setMouseTracking(false);
+	this->setCursor(Qt::ArrowCursor);
 }
 
 cliplabel::cliplabel(vector<Mat> src, int bw, int w, int h, int index, int type, int l, QWidget* parent, Qt::WindowFlags f)
@@ -21,7 +22,6 @@ cliplabel::cliplabel(vector<Mat> src, int bw, int w, int h, int index, int type,
 	srcImages = src;
 	cut_index = index;
 	cut_type = type;
-	//track_index = type;
 	length = l;
 	edited_mode = NotEdited;
 
@@ -80,11 +80,6 @@ int cliplabel::getCutType()
 	return cut_type;
 }
 
-/*int cliplabel::getTrackIndex()
-{
-	return track_index;
-}*/
-
 int cliplabel::getWidth()
 {
 	return w_threshold;
@@ -94,7 +89,6 @@ int cliplabel::getHeight()
 {
 	return h_threshold;
 }
-
 
 vector<Mat> cliplabel::getSrcImages()
 {
@@ -113,7 +107,7 @@ vector<int> cliplabel::getRange()
 
 void cliplabel::enterEvent(QEvent *)
 {
-	if (edited_mode != isSelected && edited_mode != isMoved && edited_mode != isDeleted && edited_mode != isCasted)
+	if (edited_mode != isSelected && edited_mode != isSelectedDeleted && edited_mode != isDeleted)
 	{
 		if (cut_type == 1)
 			this->setStyleSheet("border: 5px outset rgb(85, 170, 255)");
@@ -121,14 +115,15 @@ void cliplabel::enterEvent(QEvent *)
 			this->setStyleSheet("border: 5px outset rgb(170, 255, 127)");
 		else if (cut_type > 2)
 			this->setStyleSheet("border: 5px outset rgb(255, 255, 127)");
-		//emit enter(cut_index);
 	}
+	emit signalEntered(true);
 }
 
 void cliplabel::leaveEvent(QEvent *)
 {
-	if (edited_mode != isSelected && edited_mode != isMoved && edited_mode != isDeleted && edited_mode != isCasted && cut_type != -1)
+	if (edited_mode != isSelected && edited_mode != isSelectedDeleted && edited_mode != isDeleted)
 		this->setStyleSheet("border: none");
+	emit signalEntered(false);
 }
 
 void cliplabel::setEditedMode(isEdited mode)
@@ -148,14 +143,6 @@ void cliplabel::setEditedMode(isEdited mode)
 			this->setStyleSheet("border: 5px inset green");
 		break;
 
-	case isResumed:
-		this->setStyleSheet("border: none");
-		break;
-
-	case isMoved:
-		this->setStyleSheet("border: 3px dashed rgb(0, 0, 0)");
-		break;
-
 	case isDeleted:
 		this->setStyleSheet("border: 3px dashed rgb(0, 0, 0)");
 		break;
@@ -167,7 +154,7 @@ void cliplabel::setEditedMode(isEdited mode)
 			this->setStyleSheet("border: 5px dashed green");
 		break;
 
-	case isCasted:
+	case isMoved:
 		this->setStyleSheet("border: 3px dashed rgb(0, 0, 0)");
 		break;
 
@@ -180,11 +167,6 @@ void cliplabel::setCutIndex(int index)
 {
 	cut_index = index;
 }
-
-/*void cliplabel::setTrackIndex(int index)
-{
-	track_index = index;
-}*/
 
 void cliplabel::setCutType(int type)
 {

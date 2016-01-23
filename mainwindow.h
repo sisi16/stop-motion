@@ -50,23 +50,21 @@ private slots:
 
     void seek(int seconds);
 
+	void slotEntered(bool isEntered);
+
     void on_actionLoad_triggered();
 
     void visualizeClips();
 
-	void on_actionSelect_triggered();
-
-	void on_actionResume_triggered();
+	//void on_actionSelect_triggered();
 
 	void on_actionView_triggered();
 
 	void on_actionSwap_triggered();
 
-	void on_actionDelete_triggered();
+	//void on_actionReverse_triggered();
 
-	void on_actionReverse_triggered();
-
-	void on_actionCast_triggered();
+	//void on_actionCast_triggered();
 
 	//void on_actionZoomIn_triggered();
 
@@ -80,8 +78,6 @@ private slots:
 
 	void on_actionViewTrack_triggered();
 
-	void on_actionItpl_triggered();
-
     bool eventFilter(QObject *widget, QEvent *event);
 
     void playRange();
@@ -89,33 +85,32 @@ private slots:
 	void on_editRadioButton_clicked();
 
 	void on_keepRadioButton_clicked();
+	
+	void setCurrentClip(cliplabel *clip);
 
-    void delete_action();
+    //void reverse_action();
 
-    void reverse_action();
-
-    void show_context_menu();
+    //void show_context_menu();
 
 	//void initFrameSlider();
 
 private:
-    int resize_count;
-    int window_current_width;
-    int window_current_height;
+    //int resize_count;
+    //int window_current_width;
+    //int window_current_height;
 	QString fileName;
     Ui::MainWindow *ui;
     videoprocessor vproc;
     //myslider *frame_slider;
     QProgressBar *progressBar;
-    QLabel *preview_1;
-    QLabel *preview_2;
 	cliplabel *current_clip = NULL;
 	int current_clip_index;
     bool isCut;
+	bool entered;
     std::vector<int> clickRange;
 	std::vector<int> movingRange;
 	clipOperation action;
-    QMenu *sliderMenu;
+    //QMenu *sliderMenu;
 	std::vector<cliplabel *> selectedClips;
 	std::vector<cliplabel *> stableClips;
 	std::vector<cliplabel *> movingClips;

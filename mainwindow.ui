@@ -288,30 +288,12 @@
    <addaction name="separator"/>
    <addaction name="actionSwap"/>
    <addaction name="separator"/>
-   <addaction name="actionResume"/>
-   <addaction name="separator"/>
    <addaction name="actionView"/>
-   <addaction name="separator"/>
-   <addaction name="actionDelete"/>
-   <addaction name="separator"/>
-   <addaction name="actionReverse"/>
-   <addaction name="separator"/>
-   <addaction name="actionCast"/>
-   <addaction name="separator"/>
-   <addaction name="actionZoomIn"/>
-   <addaction name="separator"/>
-   <addaction name="actionZoomOut"/>
    <addaction name="separator"/>
    <addaction name="actionSelectTrack"/>
    <addaction name="separator"/>
-   <addaction name="actionAddTrack"/>
-   <addaction name="separator"/>
-   <addaction name="actionDeleteTrack"/>
-   <addaction name="separator"/>
    <addaction name="actionViewTrack"/>
    <addaction name="separator"/>
-   <addaction name="separator"/>
-   <addaction name="actionItpl"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionLoad">

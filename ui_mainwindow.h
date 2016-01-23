@@ -360,30 +360,12 @@ public:
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionSwap);
         mainToolBar->addSeparator();
-        mainToolBar->addAction(actionResume);
-        mainToolBar->addSeparator();
         mainToolBar->addAction(actionView);
-        mainToolBar->addSeparator();
-        mainToolBar->addAction(actionDelete);
-        mainToolBar->addSeparator();
-        mainToolBar->addAction(actionReverse);
-        mainToolBar->addSeparator();
-        mainToolBar->addAction(actionCast);
-        mainToolBar->addSeparator();
-        mainToolBar->addAction(actionZoomIn);
-        mainToolBar->addSeparator();
-        mainToolBar->addAction(actionZoomOut);
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionSelectTrack);
         mainToolBar->addSeparator();
-        mainToolBar->addAction(actionAddTrack);
-        mainToolBar->addSeparator();
-        mainToolBar->addAction(actionDeleteTrack);
-        mainToolBar->addSeparator();
         mainToolBar->addAction(actionViewTrack);
         mainToolBar->addSeparator();
-        mainToolBar->addSeparator();
-        mainToolBar->addAction(actionItpl);
 
         retranslateUi(MainWindow);
 

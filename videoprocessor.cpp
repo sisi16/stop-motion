@@ -463,9 +463,9 @@ void videoprocessor::writeVideo(vector<int> range, vector<int> moving_range, cli
 		}
 		break;
 			
-	case DeleteClip :
+	/*case DeleteClip :
 		{
-			/*namedWindow("Delete Clip", CV_WINDOW_AUTOSIZE);
+			namedWindow("Delete Clip", CV_WINDOW_AUTOSIZE);
 			int size = range.size();
 			if (range.at(size - 1) == 0) start = scene_cuts.at(0) + 1;
 			else if (range.at(size - 1) == 1) start = 0;
@@ -488,11 +488,12 @@ void videoprocessor::writeVideo(vector<int> range, vector<int> moving_range, cli
 					//frame = frames.at(i);
 					//out << frame;
 				}
-			}*/
+			}
 		}
 		break;
+	*/
 
-	case ReverseClip :
+	/*case ReverseClip :
 		{
 			namedWindow("Reverse Clip", CV_WINDOW_AUTOSIZE);
 			for (int i = size-1; i >= 1; i-=2)
@@ -536,6 +537,10 @@ void videoprocessor::writeVideo(vector<int> range, vector<int> moving_range, cli
 				}
 			}
 		}
+		break;
+	*/
+
+	default:
 		break;
 	}
 

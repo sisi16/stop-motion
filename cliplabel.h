@@ -16,12 +16,10 @@ enum isEdited
 {
 	NotEdited,
 	isSelected,
-	isMoved,
 	isDeleted,
 	isSelectedDeleted,
-	isResumed,
-	isReversed,
-	isCasted
+	isMoved
+	//isReversed,
 };
 
 class cliplabel : public QLabel
@@ -35,7 +33,6 @@ public:
     ~cliplabel();
 	int getCutIndex();
 	int getCutType();
-	//int getTrackIndex();
 	int getWidth();
 	int getHeight();
 	std::vector<cv::Mat> getSrcImages();
@@ -45,7 +42,6 @@ public:
 	void setEditedMode(isEdited mode);
 	void setCutType(int type);
 	void setCutIndex(int index);
-	//void setTrackIndex(int index);
 	void setSrcImages(std::vector<cv::Mat> src);
 	void setSizeThreshold(int w, int h);
 	void setRange(std::vector<int> rng);
@@ -55,19 +51,18 @@ public:
 	//void zoomIn();
 	//void zoomOut();
 
-signals:
-	void enter(int value);
-
 protected:
     void enterEvent(QEvent *);
 	void leaveEvent(QEvent *);
+
+signals:
+	void signalEntered(bool entered);
 
 private:
 	int w_threshold;
 	int h_threshold;
 	int cut_index;
 	int cut_type;
-	//int track_index;
 	int length;
 	std::vector<int> range;
 	isEdited edited_mode;

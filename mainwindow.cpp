@@ -13,9 +13,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     isCut = false;
-    resize_count = -1;
-    window_current_width = this->width();
-    window_current_height = this->height() - ui->menuBar->height() - ui->mainToolBar->height();
+	entered = false;
+    //resize_count = -1;
+    //window_current_width = this->width();
+    //window_current_height = this->height() - ui->menuBar->height() - ui->mainToolBar->height();
 	ui->frameLabel->setScaledContents(true);
 	//ui->scrollArea->setBackgroundRole(QPalette::Midlight);
 	ui->scrollArea_1->setBackgroundRole(QPalette::Midlight);
@@ -142,38 +143,7 @@ void MainWindow::on_playButton1_clicked()
 void MainWindow::on_nextButton_clicked()
 {
 	if (current_clip_index < clips.size() - 1)
-	{
-		if (current_clip->getEditedMode() == isSelected)
-			current_clip->setEditedMode(NotEdited);
-		else
-			current_clip->setEditedMode(isDeleted);
-		current_clip_index++;
-		current_clip = clips.at(current_clip_index);
-		if (current_clip->getEditedMode() == NotEdited)
-		{
-			current_clip->setEditedMode(isSelected);
-			ui->keepRadioButton->setChecked(true);
-		}
-		else
-		{
-			current_clip->setEditedMode(isSelectedDeleted);
-			ui->keepRadioButton->setChecked(false);
-		}
-		stringstream ss;
-		string type = ".jpg";
-		Mat frame;
-
-		ss << current_clip->getRange().at(0) << type;
-		if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
-		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
-		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
-		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/540/" + ss.str());
-		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/540/" + ss.str());
-		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/540/" + ss.str());
-		ss.str("");
-
-		refresh(frame);
-	}
+		setCurrentClip(clips.at(current_clip_index+1));
 }
 
 void MainWindow::on_pauseButton_clicked()
@@ -236,6 +206,11 @@ void MainWindow::refresh(Mat img)
 void MainWindow::seek(int seconds)
 {
 	//mediaplayer_1->setPosition(seconds);//mediaplayer_1->setPosition(seconds * 1000);
+}
+
+void MainWindow::slotEntered(bool isEntered)
+{
+	entered = isEntered;
 }
 
 void MainWindow::on_actionLoad_triggered()
@@ -370,7 +345,7 @@ void MainWindow::visualizeClips()
 		else
 			movingClips.push_back(clip);
 
-		//connect(clip, SIGNAL(enter(int)), frame_slider, SLOT(highLight(int)));
+		connect(clip, SIGNAL(signalEntered(bool)), this, SLOT(slotEntered(bool)));
 	}
 
 	flowfile.close();
@@ -382,7 +357,7 @@ void MainWindow::visualizeClips()
 
 }
 
-void MainWindow::on_actionSelect_triggered()
+/*void MainWindow::on_actionSelect_triggered()
 {
 	if (!ui->actionSelect->isCheckable())
 	{
@@ -397,39 +372,7 @@ void MainWindow::on_actionSelect_triggered()
 	}
 	else
 		action = NullOperation;
-}
-
-void MainWindow::on_actionResume_triggered()
-{
-	if (!ui->actionResume->isCheckable())
-	{
-		QString tip = "Please enable edit mode first.";
-		statusBar()->showMessage(tip);
-	}
-	else if (ui->actionResume->isChecked() && !selectedClips.empty() && !seletedPos.empty())
-	{
-		ui->actionSelect->setChecked(false);
-		for (int i = 0; i < selectedClips.size(); i++)
-		{
-			cliplabel *item = selectedClips.at(i);
-			QPoint pos = seletedPos.at(i);
-			if (item->getEditedMode() == isCasted)
-			{
-				cliplabel *cast2item;
-				if (item->getCutType() == 1)
-					cast2item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(pos));
-				else
-					cast2item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(pos));
-				cast2item->uncast();
-			}
-			item->setEditedMode(isResumed);
-		}
-		action = ResumeClip;
-		ui->actionResume->setChecked(false);
-	}
-	else
-		action = NullOperation;
-}
+}*/
 
 void MainWindow::on_actionView_triggered()
 {
@@ -440,7 +383,7 @@ void MainWindow::on_actionView_triggered()
 	}
 	else if (ui->actionView->isChecked() && !selectedClips.empty() && !seletedPos.empty())
 	{
-		ui->actionSelect->setChecked(false);
+		//ui->actionSelect->setChecked(false);
 		if (selectedClips.size() == 1)
 		{
 			cliplabel *item = selectedClips.at(0);
@@ -482,44 +425,7 @@ void MainWindow::on_actionSwap_triggered()
 		action = NullOperation;
 }
 
-void MainWindow::on_actionDelete_triggered()
-{
-	if (!ui->actionDelete->isCheckable())
-	{
-		QString tip = "Please enable edit mode first.";
-		statusBar()->showMessage(tip);
-	}
-	else if (ui->actionDelete->isChecked() && !selectedClips.empty() && !seletedPos.empty())
-	{
-		ui->actionSelect->setChecked(false);
-		if (selectedClips.size() == 1)
-		{
-			cliplabel *item = selectedClips.at(0);
-			if (!clickRange.empty()) clickRange.clear();
-			if (!movingRange.empty()) movingRange.clear();
-			clickRange = item->getRange();
-			movingRange.push_back(item->getCutType());
-			action = DeleteClip;
-			playRange();
-			item->setEditedMode(isDeleted);
-		}
-		else
-		{
-			QString tip = "Please select one and only one clip.";
-			statusBar()->showMessage(tip);
-			for (int i = 0; i < selectedClips.size(); i++)
-			{
-				cliplabel *item = selectedClips.at(i);
-				item->setEditedMode(NotEdited);
-			}
-		}
-		ui->actionDelete->setChecked(false);
-	}
-	else
-		action = NullOperation;
-}
-
-void MainWindow::on_actionReverse_triggered()
+/*void MainWindow::on_actionReverse_triggered()
 {
 	if (!ui->actionReverse->isCheckable())
 	{
@@ -553,9 +459,9 @@ void MainWindow::on_actionReverse_triggered()
 	}
 	else
 		action = NullOperation;
-}
+}*/
 
-void MainWindow::on_actionCast_triggered()
+/*void MainWindow::on_actionCast_triggered()
 {
 	if (!ui->actionCast->isCheckable())
 	{
@@ -582,7 +488,7 @@ void MainWindow::on_actionCast_triggered()
 	}
 	else
 		action = NullOperation;
-}
+}*/
 
 /*void MainWindow::on_actionZoomIn_triggered()
 {
@@ -744,7 +650,7 @@ void MainWindow::on_actionViewTrack_triggered()
 			while ((child = layout->itemAt(count)) != 0)
 			{
 				cliplabel* item = static_cast<cliplabel*>(child->widget());
-				if (item->getCutType() != -1 && item->getEditedMode() != isMoved && item->getEditedMode() != isDeleted && item->getEditedMode() != isCasted)
+				if (item->getCutType() != -1 && item->getEditedMode() != isMoved && item->getEditedMode() != isDeleted && item->getEditedMode() != isSelectedDeleted)
 				{
 					clickRange.push_back(item->getRange().at(0));
 					clickRange.push_back(item->getRange().at(1));
@@ -793,12 +699,6 @@ void MainWindow::on_actionViewTrack_triggered()
 		action = NullOperation;
 }
 
-void MainWindow::on_actionItpl_triggered()
-{
-	cliplabel* item = static_cast<cliplabel*>(ui->gridLayout_2->itemAt(1)->widget());
-	item->setFixedWidth(500);
-}
-
 bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 {
     /*if (widget == frame_slider)
@@ -837,14 +737,14 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 		return true;
 	}*/
 
-	if (widget == ui->scrollAreaWidgetContents_1 || widget == ui->scrollAreaWidgetContents_2) //|| addedTrackCount != 0)
+	if ((widget == ui->scrollAreaWidgetContents_1 || widget == ui->scrollAreaWidgetContents_2) && entered == true) //|| addedTrackCount != 0)
 	{
 		if (event->type() == QEvent::MouseButtonPress)
 		{
 			QMouseEvent *m = (QMouseEvent*)event;
 			if (m->button() == Qt::LeftButton)
 			{
-				if (action == SelectTrack)
+				/*if (action == SelectTrack)
 				{
 					if (widget == ui->scrollAreaWidgetContents_1)
 					{
@@ -858,7 +758,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 						selectedTrack.push_back(ui->scrollArea_2);
 					}
 
-					/*else if (addedTrackCount != 0)
+					else if (addedTrackCount != 0)
 					{
 						for (int i = 0; i < addedTrackCount; i++)
 						{
@@ -869,36 +769,31 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 								return true;
 							}
 						}
-					}*/
-				}
+					}
+				}*/
 
-				else if (action == SelectClip)
+				cliplabel *item;
+				if (widget == ui->scrollAreaWidgetContents_1)
+					item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(m->pos()));
+				else if (widget == ui->scrollAreaWidgetContents_2)
+					item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(m->pos()));
+				/*else
 				{
-					cliplabel *item;
-					if (widget == ui->scrollAreaWidgetContents_1)
-						item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(m->pos()));
-					else if (widget == ui->scrollAreaWidgetContents_2)
-						item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(m->pos()));
-					/*else
+					QWidget *contents;
+					for (int i = 0; i < addedTrackCount; i++)
 					{
-						QWidget *contents;
-						for (int i = 0; i < addedTrackCount; i++)
+						contents = addedTrack.at(i)->getCentralWidget();
+						if (widget == contents && contents->childAt(m->pos()) != 0)
 						{
-							contents = addedTrack.at(i)->getCentralWidget();
-							if (widget == contents && contents->childAt(m->pos()) != 0)
-							{
-								item = static_cast<cliplabel*>(contents->childAt(m->pos()));
-								break;
-							}
+							item = static_cast<cliplabel*>(contents->childAt(m->pos()));
+							break;
 						}
-					}*/
-
-					if (item->getEditedMode() != isCasted) item->setEditedMode(isSelected);
-					selectedClips.push_back(item);
-					seletedPos.push_back(m->pos());
-				}
-
-				else if (action == MoveClip)
+					}
+				}*/
+				setCurrentClip(item);
+				//selectedClips.push_back(item);
+				
+				/*else if (action == MoveClip)
 				{
 					cliplabel *item;
 					//int track_index = -1;
@@ -906,7 +801,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 					{
 						item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(m->pos()));
 						
-						/*int counter = item->getCutIndex()/2;
+						int counter = item->getCutIndex()/2;
 						if (!clickRange.empty()) clickRange.clear(); //vector<Mat> canFrames;
 						if (!movingRange.empty()) movingRange.clear();
 						vector<int>::iterator it_1;
@@ -1056,11 +951,11 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 							//imshow("Candidate Frames", canFrames.at(i));
 							//waitKey(250);
 						//}
-						vproc.writeVideo(clickRange, movingRange, ViewTrack);*/
+						vproc.writeVideo(clickRange, movingRange, ViewTrack);
 					}
 					else if (widget == ui->scrollAreaWidgetContents_2)
 						item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(m->pos()));
-					/*else
+					else
 					{
 						QWidget *contents;
 						for (int i = 0; i < addedTrackCount; i++)
@@ -1073,7 +968,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 								break;
 							}
 						}
-					}*/
+					}
 
 					QPixmap pixmap = *item->pixmap();
 					QMimeData *mimeData = new QMimeData;
@@ -1096,7 +991,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 						item->close();
 					else
 						item->show();
-				}
+				}*/
 			}
 
 			return true;
@@ -1184,16 +1079,14 @@ void MainWindow::on_editRadioButton_clicked()
 			ui->scrollAreaWidgetContents_1->installEventFilter(this);
 			ui->scrollAreaWidgetContents_2->installEventFilter(this);
 
-			ui->actionSelect->setCheckable(true);
-			ui->actionResume->setCheckable(true);
+			//ui->actionSelect->setCheckable(true);
 			ui->actionView->setCheckable(true);
 			ui->actionSwap->setCheckable(true);
-			ui->actionDelete->setCheckable(true);
-			ui->actionReverse->setCheckable(true);
-			ui->actionCast->setCheckable(true);
+			//ui->actionReverse->setCheckable(true);
+			//ui->actionCast->setCheckable(true);
 			ui->actionSelectTrack->setCheckable(true);
-			ui->actionAddTrack->setCheckable(true);
-			ui->actionDeleteTrack->setCheckable(true);
+			//ui->actionAddTrack->setCheckable(true);
+			//ui->actionDeleteTrack->setCheckable(true);
 			ui->actionViewTrack->setCheckable(true);
         }
         else
@@ -1207,16 +1100,14 @@ void MainWindow::on_editRadioButton_clicked()
 			ui->scrollAreaWidgetContents_1->removeEventFilter(this);
 			ui->scrollAreaWidgetContents_2->removeEventFilter(this);
 
-			ui->actionSelect->setCheckable(false);
-			ui->actionResume->setCheckable(false);
+			//ui->actionSelect->setCheckable(false);
 			ui->actionView->setCheckable(false);
 			ui->actionSwap->setCheckable(false);
-			ui->actionDelete->setCheckable(false);
-			ui->actionReverse->setCheckable(false);
-			ui->actionCast->setCheckable(false);
+			//ui->actionReverse->setCheckable(false);
+			//ui->actionCast->setCheckable(false);
 			ui->actionSelectTrack->setCheckable(false);
-			ui->actionAddTrack->setCheckable(false);
-			ui->actionDeleteTrack->setCheckable(false);
+			//ui->actionAddTrack->setCheckable(false);
+			//ui->actionDeleteTrack->setCheckable(false);
 			ui->actionViewTrack->setCheckable(false);
         }
     }
@@ -1255,18 +1146,43 @@ void MainWindow::on_keepRadioButton_clicked()
 	}
 }
 
-void MainWindow::delete_action()
+void MainWindow::setCurrentClip(cliplabel *clip)
 {
-    //cout << "Delete from " << clickRange.x << " to " << clickRange.y << endl;
-	action = DeleteClip;
-	playRange();
+	if (current_clip->getEditedMode() == isSelected)
+		current_clip->setEditedMode(NotEdited);
+	else if (current_clip->getEditedMode() == isSelectedDeleted)
+		current_clip->setEditedMode(isDeleted);
+	
+	current_clip = clip;
+	current_clip_index = clip->getCutIndex();
+	
+	if (current_clip->getEditedMode() == NotEdited)
+	{
+		current_clip->setEditedMode(isSelected);
+		ui->keepRadioButton->setChecked(true);
+	}
+	else if (current_clip->getEditedMode() == isDeleted)
+	{
+		current_clip->setEditedMode(isSelectedDeleted);
+		ui->keepRadioButton->setChecked(false);
+	}
 
-	int end = clickRange.size() - 1;
-    QString tip = "Delete from " + QString::number(clickRange.at(1)) + " to " + QString::number(clickRange.at(end));
-    statusBar()->showMessage(tip);
+	stringstream ss;
+	string type = ".jpg";
+	Mat frame;
+	ss << current_clip->getRange().at(0) << type;
+	if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/540/" + ss.str());
+	ss.str("");
+
+	refresh(frame);
 }
 
-void MainWindow::reverse_action()
+/*void MainWindow::reverse_action()
 {
     //cout << "Reverse from " << clickRange.x << " to " << clickRange.y << endl;
 	action = ReverseClip;
@@ -1275,9 +1191,9 @@ void MainWindow::reverse_action()
 	int end = clickRange.size() - 1;
     QString tip = "Reverse from " + QString::number(clickRange.at(1)) + " to " + QString::number(clickRange.at(end));
     statusBar()->showMessage(tip);
-}
+}*/
 
-void MainWindow::show_context_menu()
+/*void MainWindow::show_context_menu()
 {
     if (sliderMenu)
     {
@@ -1297,7 +1213,7 @@ void MainWindow::show_context_menu()
     connect(reverseAction, SIGNAL(triggered(bool)), this, SLOT(reverse_action()));
 
     sliderMenu->exec(QCursor::pos());
-}
+}*/
 
 /*void MainWindow::initFrameSlider()
 {
