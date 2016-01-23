@@ -88,6 +88,8 @@ private slots:
 
 	void on_editRadioButton_clicked();
 
+	void on_keepRadioButton_clicked();
+
     void delete_action();
 
     void reverse_action();
@@ -107,7 +109,7 @@ private:
     QProgressBar *progressBar;
     QLabel *preview_1;
     QLabel *preview_2;
-	cliplabel *current_clip;
+	cliplabel *current_clip = NULL;
 	int current_clip_index;
     bool isCut;
     std::vector<int> clickRange;

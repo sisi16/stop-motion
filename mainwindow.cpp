@@ -141,25 +141,39 @@ void MainWindow::on_playButton1_clicked()
 
 void MainWindow::on_nextButton_clicked()
 {
-	current_clip->setEditedMode(NotEdited);
-	current_clip_index++;
-	current_clip = clips.at(current_clip_index);
-	current_clip->setEditedMode(isSelected);
+	if (current_clip_index < clips.size() - 1)
+	{
+		if (current_clip->getEditedMode() == isSelected)
+			current_clip->setEditedMode(NotEdited);
+		else
+			current_clip->setEditedMode(isDeleted);
+		current_clip_index++;
+		current_clip = clips.at(current_clip_index);
+		if (current_clip->getEditedMode() == NotEdited)
+		{
+			current_clip->setEditedMode(isSelected);
+			ui->keepRadioButton->setChecked(true);
+		}
+		else
+		{
+			current_clip->setEditedMode(isSelectedDeleted);
+			ui->keepRadioButton->setChecked(false);
+		}
+		stringstream ss;
+		string type = ".jpg";
+		Mat frame;
 
-	stringstream ss;
-	string type = ".jpg";
-	Mat frame;
+		ss << current_clip->getRange().at(0) << type;
+		if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/540/" + ss.str());
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/540/" + ss.str());
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/540/" + ss.str());
+		ss.str("");
 
-	ss << current_clip->getRange().at(0) << type;
-	if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/540/" + ss.str());
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/540/" + ss.str());
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/540/" + ss.str());
-	ss.str("");
-
-	refresh(frame);
+		refresh(frame);
+	}
 }
 
 void MainWindow::on_pauseButton_clicked()
@@ -188,7 +202,16 @@ void MainWindow::on_cutButton_clicked()
 	visualizeClips();
 	current_clip = clips.at(0);
 	current_clip_index = 0;
-	current_clip->setEditedMode(isSelected);
+	if (current_clip->getEditedMode() == NotEdited)
+	{
+		current_clip->setEditedMode(isSelected);
+		ui->keepRadioButton->setChecked(true);
+	}
+	else
+	{
+		current_clip->setEditedMode(isSelectedDeleted);
+		ui->keepRadioButton->setChecked(false);
+	}
 	//vproc.test();
 }
 
@@ -1201,6 +1224,35 @@ void MainWindow::on_editRadioButton_clicked()
     {
         statusBar()->showMessage("Please cut the video first.");
     }
+}
+
+void MainWindow::on_keepRadioButton_clicked()
+{
+	if (current_clip != NULL)
+	{
+		if (!ui->keepRadioButton->isChecked() && current_clip->getEditedMode() == isSelected)
+		{
+			QPoint pos = current_clip->pos();
+			cliplabel *cast2item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(pos));
+			cast2item->cast(current_clip);
+			current_clip->uncast();
+			current_clip = cast2item;
+			clips.at(current_clip_index) = current_clip;
+		}
+		else if (ui->keepRadioButton->isChecked() && current_clip->getEditedMode() == isSelectedDeleted)
+		{
+			QPoint pos = current_clip->pos();
+			cliplabel *cast2item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(pos));
+			cast2item->cast(current_clip);
+			current_clip->uncast();
+			current_clip = cast2item;
+			clips.at(current_clip_index) = current_clip;
+		}
+	}
+	else
+	{
+		statusBar()->showMessage("Please cut the video first.");
+	}
 }
 
 void MainWindow::delete_action()

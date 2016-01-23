@@ -27,7 +27,7 @@ cliplabel::cliplabel(vector<Mat> src, int bw, int w, int h, int index, int type,
 
 	this->setScaledContents(true);
 	cv::Mat temp;
-	pm = new QPixmap(w, h);
+	QPixmap *pm = new QPixmap(w, h);
 	//pixmap->fill(Qt::transparent);
 	QPainter *painter = new QPainter(pm);
 
@@ -45,8 +45,8 @@ cliplabel::cliplabel(vector<Mat> src, int bw, int w, int h, int index, int type,
 				painter->drawPixmap(0, 0, bw, h, QPixmap::fromImage(image));
 			else
 			{
-				QPixmap pm = QPixmap::fromImage(image);
-				painter->drawPixmap(bw+bw/10*(i-1), 0, bw / 10, h, pm, pm.width() / 10 * 9, 0, 0, 0);
+				QPixmap img = QPixmap::fromImage(image);
+				painter->drawPixmap(bw+bw/10*(i-1), 0, bw / 10, h, img, img.width() / 10 * 9, 0, 0, 0);
 			}
 		}
 		else
@@ -146,8 +146,6 @@ void cliplabel::setEditedMode(isEdited mode)
 			this->setStyleSheet("border: 5px inset blue");
 		else if (cut_type == 2)
 			this->setStyleSheet("border: 5px inset green");
-		else if (cut_type > 2)
-			this->setStyleSheet("border: 5px inset yellow");
 		break;
 
 	case isResumed:
@@ -160,6 +158,13 @@ void cliplabel::setEditedMode(isEdited mode)
 
 	case isDeleted:
 		this->setStyleSheet("border: 3px dashed rgb(0, 0, 0)");
+		break;
+
+	case isSelectedDeleted:
+		if (cut_type == 1)
+			this->setStyleSheet("border: 5px dashed blue");
+		else if (cut_type == 2)
+			this->setStyleSheet("border: 5px dashed green");
 		break;
 
 	case isCasted:
@@ -195,12 +200,16 @@ void cliplabel::cast(cliplabel *castedClip)
 {
 	this->setScaledContents(true);
 	this->setPixmap(*castedClip->pixmap());
-	edited_mode = NotEdited;
+	w_threshold = castedClip->getWidth();
+	h_threshold = castedClip->getHeight();
+	cut_type = castedClip->getCutType();
 	cut_index = castedClip->getCutIndex();
-	if (castedClip->getCutType() == 1)
-		cut_type = 2;
-	else
-		cut_type = 1;
+	if (castedClip->getEditedMode() == isSelectedDeleted)
+		this->setEditedMode(isSelected);
+	else if (castedClip->getEditedMode() == isSelected)
+		this->setEditedMode(isSelectedDeleted);
+	srcImages = castedClip->getSrcImages();
+	range = castedClip->getRange();
 	this->setMouseTracking(true);
 	this->setCursor(Qt::PointingHandCursor);
 }
@@ -209,9 +218,11 @@ void cliplabel::uncast()
 {
 	this->setPixmap(QPixmap(""));
 	this->setScaledContents(false);
-	edited_mode = NotEdited;
+	this->setEditedMode(NotEdited);
 	cut_index = -1;
 	cut_type = -1;
+	srcImages.clear();
+	range.clear();
 	this->setMouseTracking(false);
 	this->setCursor(Qt::ArrowCursor);
 }

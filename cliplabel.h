@@ -18,9 +18,10 @@ enum isEdited
 	isSelected,
 	isMoved,
 	isDeleted,
+	isSelectedDeleted,
 	isResumed,
 	isReversed,
-	isCasted,
+	isCasted
 };
 
 class cliplabel : public QLabel
@@ -68,7 +69,6 @@ private:
 	int cut_type;
 	//int track_index;
 	int length;
-	QPixmap *pm;
 	std::vector<int> range;
 	isEdited edited_mode;
 	std::vector<cv::Mat> srcImages;
