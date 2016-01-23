@@ -182,8 +182,6 @@ void cliplabel::cast(cliplabel *castedClip)
 {
 	this->setScaledContents(true);
 	this->setPixmap(*castedClip->pixmap());
-	w_threshold = castedClip->getWidth();
-	h_threshold = castedClip->getHeight();
 	cut_type = castedClip->getCutType();
 	cut_index = castedClip->getCutIndex();
 	if (castedClip->getEditedMode() == isSelectedDeleted)

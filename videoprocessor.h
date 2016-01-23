@@ -13,18 +13,18 @@
 #include "opflow.h"
 #include "handdetection.h"
 
-enum clipOperation
+/*enum clipOperation
 {
 	NullOperation,
-	SelectClip,
-	SelectTrack,
-	ViewClip,
-	ViewTrack,
+	//SelectClip,
+	//SelectTrack,
+	//ViewClip,
+	//ViewTrack,
 	MoveClip,
 	//DeleteClip,
 	//ReverseClip,
 	//CastClip
-};
+};*/
 
 class videoprocessor
 {
@@ -46,7 +46,7 @@ public:
     std::vector<int> getRange(int current, int width);
     int getNumOfFrames();
 	int getFrameRate();
-	void writeVideo(std::vector<int> range, std::vector<int> moving_range, clipOperation operation);
+	//void writeVideo(std::vector<int> range, std::vector<int> moving_range, clipOperation operation);
     void test();
 	void writeBuffers();
 	void readBuffers();

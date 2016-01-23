@@ -380,9 +380,9 @@ int videoprocessor::getFrameRate()
 	return frame_rate;
 }
 
-void videoprocessor::writeVideo(vector<int> range, vector<int> moving_range, clipOperation operation)
+/*void videoprocessor::writeVideo(vector<int> range, vector<int> moving_range, clipOperation operation)
 {
-    /*if (out.isOpened())
+    if (out.isOpened())
     {
         cout << "Open" << endl;
     }
@@ -392,7 +392,7 @@ void videoprocessor::writeVideo(vector<int> range, vector<int> moving_range, cli
 
     if(!out.isOpened()) {
 		throw "Error! Unable to open video file for output.";
-    }*/
+    }
 
 	int start = -1;
 	int end = -1;
@@ -463,7 +463,7 @@ void videoprocessor::writeVideo(vector<int> range, vector<int> moving_range, cli
 		}
 		break;
 			
-	/*case DeleteClip :
+	case DeleteClip :
 		{
 			namedWindow("Delete Clip", CV_WINDOW_AUTOSIZE);
 			int size = range.size();
@@ -491,9 +491,9 @@ void videoprocessor::writeVideo(vector<int> range, vector<int> moving_range, cli
 			}
 		}
 		break;
-	*/
+	
 
-	/*case ReverseClip :
+	case ReverseClip :
 		{
 			namedWindow("Reverse Clip", CV_WINDOW_AUTOSIZE);
 			for (int i = size-1; i >= 1; i-=2)
@@ -538,14 +538,13 @@ void videoprocessor::writeVideo(vector<int> range, vector<int> moving_range, cli
 			}
 		}
 		break;
-	*/
 
 	default:
 		break;
 	}
 
     //out.release();
-}
+}*/
 
 void videoprocessor::test()
 {

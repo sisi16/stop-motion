@@ -15,6 +15,7 @@
 #include <QDrag>
 #include <QTimer>
 #include <windows.h>
+#include <stdio.h>
 #include "videoprocessor.h"
 #include "myslider.h"
 #include "cliplabel.h"
@@ -38,13 +39,15 @@ public:
 
 private slots:
 
-    void on_playButton1_clicked();
+    void on_playClipButton_clicked();
 
     void on_nextButton_clicked();
 
     void on_pauseButton_clicked();
 
     void on_cutButton_clicked();
+
+	void on_playTrackButton_clicked();
 
     void refresh(cv::Mat img);
 
@@ -58,9 +61,9 @@ private slots:
 
 	//void on_actionSelect_triggered();
 
-	void on_actionView_triggered();
+	//void on_actionView_triggered();
 
-	void on_actionSwap_triggered();
+	//void on_actionSwap_triggered();
 
 	//void on_actionReverse_triggered();
 
@@ -70,17 +73,17 @@ private slots:
 
 	//void on_actionZoomOut_triggered();
 
-	void on_actionSelectTrack_triggered();
+	//void on_actionSelectTrack_triggered();
 
 	//void on_actionAddTrack_triggered();
 
 	//void on_actionDeleteTrack_triggered();
 
-	void on_actionViewTrack_triggered();
+	//void on_actionViewTrack_triggered();
 
     bool eventFilter(QObject *widget, QEvent *event);
 
-    void playRange();
+    //void playRange();
 
 	void on_editRadioButton_clicked();
 
@@ -107,13 +110,12 @@ private:
 	int current_clip_index;
     bool isCut;
 	bool entered;
+	bool paused;
     std::vector<int> clickRange;
 	std::vector<int> movingRange;
-	clipOperation action;
+	//clipOperation action;
     //QMenu *sliderMenu;
-	std::vector<cliplabel *> selectedClips;
-	std::vector<cliplabel *> stableClips;
-	std::vector<cliplabel *> movingClips;
+	//std::vector<cliplabel *> selectedClips;
 	std::vector<cliplabel *> clips;
 	//int addedTrackCount;
 	//std::vector<myscrollarea *> addedTrack;

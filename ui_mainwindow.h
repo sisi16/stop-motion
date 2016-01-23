@@ -25,7 +25,6 @@
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QStatusBar>
-#include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -60,12 +59,17 @@ public:
     QHBoxLayout *horizontalLayout;
     QLabel *frameLabel;
     QGridLayout *gridLayout_1;
-    QPushButton *playButton1;
+    QFrame *line_3;
+    QPushButton *playClipButton;
     QPushButton *nextButton;
     QPushButton *pauseButton;
     QPushButton *cutButton;
     QRadioButton *keepRadioButton;
     QRadioButton *editRadioButton;
+    QLabel *trackLabel;
+    QLabel *clipLabel;
+    QPushButton *playTrackButton;
+    QFrame *line_4;
     QFrame *line;
     QScrollArea *scrollArea_1;
     QWidget *scrollAreaWidgetContents_1;
@@ -76,7 +80,6 @@ public:
     QFrame *line_2;
     QMenuBar *menuBar;
     QMenu *menuFile;
-    QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -213,129 +216,176 @@ public:
         horizontalLayout->addWidget(frameLabel);
 
 
-        gridLayout->addLayout(horizontalLayout, 0, 0, 3, 3);
+        gridLayout->addLayout(horizontalLayout, 0, 0, 2, 3);
 
         gridLayout_1 = new QGridLayout();
         gridLayout_1->setSpacing(6);
         gridLayout_1->setObjectName(QStringLiteral("gridLayout_1"));
-        playButton1 = new QPushButton(centralWidget);
-        playButton1->setObjectName(QStringLiteral("playButton1"));
-        QSizePolicy sizePolicy1(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        line_3 = new QFrame(centralWidget);
+        line_3->setObjectName(QStringLiteral("line_3"));
+        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Fixed);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(playButton1->sizePolicy().hasHeightForWidth());
-        playButton1->setSizePolicy(sizePolicy1);
+        sizePolicy1.setHeightForWidth(line_3->sizePolicy().hasHeightForWidth());
+        line_3->setSizePolicy(sizePolicy1);
+        line_3->setFrameShape(QFrame::HLine);
+        line_3->setFrameShadow(QFrame::Sunken);
+
+        gridLayout_1->addWidget(line_3, 3, 0, 1, 4);
+
+        playClipButton = new QPushButton(centralWidget);
+        playClipButton->setObjectName(QStringLiteral("playClipButton"));
+        QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(playClipButton->sizePolicy().hasHeightForWidth());
+        playClipButton->setSizePolicy(sizePolicy2);
         QIcon icon20;
         icon20.addFile(QStringLiteral(":/Images/icons/play_24.png"), QSize(), QIcon::Normal, QIcon::Off);
-        playButton1->setIcon(icon20);
-        playButton1->setIconSize(QSize(20, 20));
+        playClipButton->setIcon(icon20);
+        playClipButton->setIconSize(QSize(20, 20));
 
-        gridLayout_1->addWidget(playButton1, 2, 0, 1, 1);
+        gridLayout_1->addWidget(playClipButton, 7, 0, 1, 1);
 
         nextButton = new QPushButton(centralWidget);
         nextButton->setObjectName(QStringLiteral("nextButton"));
-        sizePolicy1.setHeightForWidth(nextButton->sizePolicy().hasHeightForWidth());
-        nextButton->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(nextButton->sizePolicy().hasHeightForWidth());
+        nextButton->setSizePolicy(sizePolicy2);
         QIcon icon21;
         icon21.addFile(QStringLiteral(":/Images/icons/next.png"), QSize(), QIcon::Normal, QIcon::Off);
         nextButton->setIcon(icon21);
         nextButton->setIconSize(QSize(20, 20));
 
-        gridLayout_1->addWidget(nextButton, 2, 2, 1, 1);
+        gridLayout_1->addWidget(nextButton, 7, 2, 1, 1);
 
         pauseButton = new QPushButton(centralWidget);
         pauseButton->setObjectName(QStringLiteral("pauseButton"));
-        sizePolicy1.setHeightForWidth(pauseButton->sizePolicy().hasHeightForWidth());
-        pauseButton->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(pauseButton->sizePolicy().hasHeightForWidth());
+        pauseButton->setSizePolicy(sizePolicy2);
         QIcon icon22;
         icon22.addFile(QStringLiteral(":/Images/icons/pause_24.png"), QSize(), QIcon::Normal, QIcon::Off);
         pauseButton->setIcon(icon22);
         pauseButton->setIconSize(QSize(20, 20));
 
-        gridLayout_1->addWidget(pauseButton, 2, 1, 1, 1);
+        gridLayout_1->addWidget(pauseButton, 7, 1, 1, 1);
 
         cutButton = new QPushButton(centralWidget);
         cutButton->setObjectName(QStringLiteral("cutButton"));
-        sizePolicy1.setHeightForWidth(cutButton->sizePolicy().hasHeightForWidth());
-        cutButton->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(cutButton->sizePolicy().hasHeightForWidth());
+        cutButton->setSizePolicy(sizePolicy2);
         QIcon icon23;
         icon23.addFile(QStringLiteral(":/Images/icons/cut_32.png"), QSize(), QIcon::Normal, QIcon::Off);
         cutButton->setIcon(icon23);
         cutButton->setIconSize(QSize(20, 20));
 
-        gridLayout_1->addWidget(cutButton, 2, 3, 1, 1);
+        gridLayout_1->addWidget(cutButton, 7, 3, 1, 1);
 
         keepRadioButton = new QRadioButton(centralWidget);
         keepRadioButton->setObjectName(QStringLiteral("keepRadioButton"));
-        sizePolicy1.setHeightForWidth(keepRadioButton->sizePolicy().hasHeightForWidth());
-        keepRadioButton->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(keepRadioButton->sizePolicy().hasHeightForWidth());
+        keepRadioButton->setSizePolicy(sizePolicy2);
         keepRadioButton->setStyleSheet(QStringLiteral("font: 75 12pt \"Times New Roman\";"));
         keepRadioButton->setAutoExclusive(false);
 
-        gridLayout_1->addWidget(keepRadioButton, 0, 0, 1, 4);
+        gridLayout_1->addWidget(keepRadioButton, 5, 0, 1, 4);
 
         editRadioButton = new QRadioButton(centralWidget);
         editRadioButton->setObjectName(QStringLiteral("editRadioButton"));
-        sizePolicy1.setHeightForWidth(editRadioButton->sizePolicy().hasHeightForWidth());
-        editRadioButton->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(editRadioButton->sizePolicy().hasHeightForWidth());
+        editRadioButton->setSizePolicy(sizePolicy2);
         editRadioButton->setStyleSheet(QStringLiteral("font: 75 12pt \"Times New Roman\";"));
         editRadioButton->setAutoExclusive(false);
 
-        gridLayout_1->addWidget(editRadioButton, 1, 0, 1, 4);
+        gridLayout_1->addWidget(editRadioButton, 6, 0, 1, 4);
+
+        trackLabel = new QLabel(centralWidget);
+        trackLabel->setObjectName(QStringLiteral("trackLabel"));
+        sizePolicy2.setHeightForWidth(trackLabel->sizePolicy().hasHeightForWidth());
+        trackLabel->setSizePolicy(sizePolicy2);
+        trackLabel->setStyleSheet(QLatin1String("font: 75 18pt \"Times New Roman\";\n"
+"color: darkblue;"));
+
+        gridLayout_1->addWidget(trackLabel, 1, 0, 1, 4);
+
+        clipLabel = new QLabel(centralWidget);
+        clipLabel->setObjectName(QStringLiteral("clipLabel"));
+        sizePolicy2.setHeightForWidth(clipLabel->sizePolicy().hasHeightForWidth());
+        clipLabel->setSizePolicy(sizePolicy2);
+        clipLabel->setStyleSheet(QLatin1String("font: 75 18pt \"Times New Roman\";\n"
+"color: darkblue;"));
+
+        gridLayout_1->addWidget(clipLabel, 4, 0, 1, 4);
+
+        playTrackButton = new QPushButton(centralWidget);
+        playTrackButton->setObjectName(QStringLiteral("playTrackButton"));
+        sizePolicy2.setHeightForWidth(playTrackButton->sizePolicy().hasHeightForWidth());
+        playTrackButton->setSizePolicy(sizePolicy2);
+        playTrackButton->setIcon(icon19);
+
+        gridLayout_1->addWidget(playTrackButton, 2, 0, 1, 1);
+
+        line_4 = new QFrame(centralWidget);
+        line_4->setObjectName(QStringLiteral("line_4"));
+        sizePolicy1.setHeightForWidth(line_4->sizePolicy().hasHeightForWidth());
+        line_4->setSizePolicy(sizePolicy1);
+        line_4->setFrameShape(QFrame::HLine);
+        line_4->setFrameShadow(QFrame::Sunken);
+
+        gridLayout_1->addWidget(line_4, 0, 0, 1, 4);
 
 
-        gridLayout->addLayout(gridLayout_1, 2, 4, 1, 1);
+        gridLayout->addLayout(gridLayout_1, 1, 4, 1, 1);
 
         line = new QFrame(centralWidget);
         line->setObjectName(QStringLiteral("line"));
         line->setFrameShape(QFrame::HLine);
         line->setFrameShadow(QFrame::Sunken);
 
-        gridLayout->addWidget(line, 4, 0, 1, 5);
+        gridLayout->addWidget(line, 3, 0, 1, 5);
 
         scrollArea_1 = new QScrollArea(centralWidget);
         scrollArea_1->setObjectName(QStringLiteral("scrollArea_1"));
-        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Minimum);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(scrollArea_1->sizePolicy().hasHeightForWidth());
-        scrollArea_1->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Minimum);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(scrollArea_1->sizePolicy().hasHeightForWidth());
+        scrollArea_1->setSizePolicy(sizePolicy3);
         scrollArea_1->setFrameShape(QFrame::NoFrame);
         scrollArea_1->setWidgetResizable(true);
         scrollAreaWidgetContents_1 = new QWidget();
         scrollAreaWidgetContents_1->setObjectName(QStringLiteral("scrollAreaWidgetContents_1"));
-        scrollAreaWidgetContents_1->setGeometry(QRect(0, 0, 1262, 117));
+        scrollAreaWidgetContents_1->setGeometry(QRect(0, 0, 1262, 142));
         gridLayout_2 = new QGridLayout(scrollAreaWidgetContents_1);
         gridLayout_2->setSpacing(6);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);
         gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
         scrollArea_1->setWidget(scrollAreaWidgetContents_1);
 
-        gridLayout->addWidget(scrollArea_1, 12, 0, 1, 5);
+        gridLayout->addWidget(scrollArea_1, 11, 0, 1, 5);
 
         scrollArea_2 = new QScrollArea(centralWidget);
         scrollArea_2->setObjectName(QStringLiteral("scrollArea_2"));
-        sizePolicy2.setHeightForWidth(scrollArea_2->sizePolicy().hasHeightForWidth());
-        scrollArea_2->setSizePolicy(sizePolicy2);
+        sizePolicy3.setHeightForWidth(scrollArea_2->sizePolicy().hasHeightForWidth());
+        scrollArea_2->setSizePolicy(sizePolicy3);
         scrollArea_2->setFrameShape(QFrame::NoFrame);
         scrollArea_2->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QStringLiteral("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 1262, 116));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 1262, 143));
         gridLayout_3 = new QGridLayout(scrollAreaWidgetContents_2);
         gridLayout_3->setSpacing(6);
         gridLayout_3->setContentsMargins(11, 11, 11, 11);
         gridLayout_3->setObjectName(QStringLiteral("gridLayout_3"));
         scrollArea_2->setWidget(scrollAreaWidgetContents_2);
 
-        gridLayout->addWidget(scrollArea_2, 13, 0, 1, 5);
+        gridLayout->addWidget(scrollArea_2, 12, 0, 1, 5);
 
         line_2 = new QFrame(centralWidget);
         line_2->setObjectName(QStringLiteral("line_2"));
         line_2->setFrameShadow(QFrame::Sunken);
         line_2->setFrameShape(QFrame::VLine);
 
-        gridLayout->addWidget(line_2, 0, 3, 3, 1);
+        gridLayout->addWidget(line_2, 0, 3, 2, 1);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
@@ -344,11 +394,6 @@ public:
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         MainWindow->setMenuBar(menuBar);
-        mainToolBar = new QToolBar(MainWindow);
-        mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
-        mainToolBar->setMovable(false);
-        mainToolBar->setIconSize(QSize(32, 32));
-        MainWindow->addToolBar(Qt::BottomToolBarArea, mainToolBar);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         MainWindow->setStatusBar(statusBar);
@@ -356,16 +401,6 @@ public:
         menuBar->addAction(menuFile->menuAction());
         menuFile->addAction(actionLoad);
         menuFile->addAction(actionSave);
-        mainToolBar->addAction(actionSelect);
-        mainToolBar->addSeparator();
-        mainToolBar->addAction(actionSwap);
-        mainToolBar->addSeparator();
-        mainToolBar->addAction(actionView);
-        mainToolBar->addSeparator();
-        mainToolBar->addAction(actionSelectTrack);
-        mainToolBar->addSeparator();
-        mainToolBar->addAction(actionViewTrack);
-        mainToolBar->addSeparator();
 
         retranslateUi(MainWindow);
 
@@ -455,12 +490,15 @@ public:
         actionViewTrack->setToolTip(QApplication::translate("MainWindow", "View track", 0));
 #endif // QT_NO_TOOLTIP
         frameLabel->setText(QString());
-        playButton1->setText(QString());
+        playClipButton->setText(QString());
         nextButton->setText(QString());
         pauseButton->setText(QString());
         cutButton->setText(QString());
         keepRadioButton->setText(QApplication::translate("MainWindow", "Keep", 0));
         editRadioButton->setText(QApplication::translate("MainWindow", "Edit", 0));
+        trackLabel->setText(QApplication::translate("MainWindow", "Track:", 0));
+        clipLabel->setText(QApplication::translate("MainWindow", "Clip:", 0));
+        playTrackButton->setText(QString());
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
     } // retranslateUi
 
