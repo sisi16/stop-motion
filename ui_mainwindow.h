@@ -15,7 +15,6 @@
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
-#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
@@ -25,6 +24,7 @@
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -56,20 +56,20 @@ public:
     QAction *actionViewTrack;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
-    QHBoxLayout *horizontalLayout;
+    QVBoxLayout *verticalLayout;
     QLabel *frameLabel;
     QGridLayout *gridLayout_1;
     QFrame *line_3;
     QPushButton *playClipButton;
-    QPushButton *nextButton;
     QPushButton *pauseButton;
-    QPushButton *cutButton;
     QRadioButton *keepRadioButton;
-    QRadioButton *editRadioButton;
     QLabel *trackLabel;
     QLabel *clipLabel;
     QPushButton *playTrackButton;
     QFrame *line_4;
+    QPushButton *nextButton;
+    QPushButton *preButton;
+    QRadioButton *editRadioButton;
     QFrame *line;
     QScrollArea *scrollArea_1;
     QWidget *scrollAreaWidgetContents_1;
@@ -202,9 +202,9 @@ public:
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
-        horizontalLayout = new QHBoxLayout();
-        horizontalLayout->setSpacing(6);
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        verticalLayout = new QVBoxLayout();
+        verticalLayout->setSpacing(6);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         frameLabel = new QLabel(centralWidget);
         frameLabel->setObjectName(QStringLiteral("frameLabel"));
         sizePolicy.setHeightForWidth(frameLabel->sizePolicy().hasHeightForWidth());
@@ -213,10 +213,10 @@ public:
 "\n"
 ""));
 
-        horizontalLayout->addWidget(frameLabel);
+        verticalLayout->addWidget(frameLabel);
 
 
-        gridLayout->addLayout(horizontalLayout, 0, 0, 2, 3);
+        gridLayout->addLayout(verticalLayout, 0, 0, 2, 3);
 
         gridLayout_1 = new QGridLayout();
         gridLayout_1->setSpacing(6);
@@ -247,38 +247,16 @@ public:
 
         gridLayout_1->addWidget(playClipButton, 7, 0, 1, 1);
 
-        nextButton = new QPushButton(centralWidget);
-        nextButton->setObjectName(QStringLiteral("nextButton"));
-        sizePolicy2.setHeightForWidth(nextButton->sizePolicy().hasHeightForWidth());
-        nextButton->setSizePolicy(sizePolicy2);
-        QIcon icon21;
-        icon21.addFile(QStringLiteral(":/Images/icons/next.png"), QSize(), QIcon::Normal, QIcon::Off);
-        nextButton->setIcon(icon21);
-        nextButton->setIconSize(QSize(20, 20));
-
-        gridLayout_1->addWidget(nextButton, 7, 2, 1, 1);
-
         pauseButton = new QPushButton(centralWidget);
         pauseButton->setObjectName(QStringLiteral("pauseButton"));
         sizePolicy2.setHeightForWidth(pauseButton->sizePolicy().hasHeightForWidth());
         pauseButton->setSizePolicy(sizePolicy2);
-        QIcon icon22;
-        icon22.addFile(QStringLiteral(":/Images/icons/pause_24.png"), QSize(), QIcon::Normal, QIcon::Off);
-        pauseButton->setIcon(icon22);
+        QIcon icon21;
+        icon21.addFile(QStringLiteral(":/Images/icons/pause_24.png"), QSize(), QIcon::Normal, QIcon::Off);
+        pauseButton->setIcon(icon21);
         pauseButton->setIconSize(QSize(20, 20));
 
         gridLayout_1->addWidget(pauseButton, 7, 1, 1, 1);
-
-        cutButton = new QPushButton(centralWidget);
-        cutButton->setObjectName(QStringLiteral("cutButton"));
-        sizePolicy2.setHeightForWidth(cutButton->sizePolicy().hasHeightForWidth());
-        cutButton->setSizePolicy(sizePolicy2);
-        QIcon icon23;
-        icon23.addFile(QStringLiteral(":/Images/icons/cut_32.png"), QSize(), QIcon::Normal, QIcon::Off);
-        cutButton->setIcon(icon23);
-        cutButton->setIconSize(QSize(20, 20));
-
-        gridLayout_1->addWidget(cutButton, 7, 3, 1, 1);
 
         keepRadioButton = new QRadioButton(centralWidget);
         keepRadioButton->setObjectName(QStringLiteral("keepRadioButton"));
@@ -288,15 +266,6 @@ public:
         keepRadioButton->setAutoExclusive(false);
 
         gridLayout_1->addWidget(keepRadioButton, 5, 0, 1, 4);
-
-        editRadioButton = new QRadioButton(centralWidget);
-        editRadioButton->setObjectName(QStringLiteral("editRadioButton"));
-        sizePolicy2.setHeightForWidth(editRadioButton->sizePolicy().hasHeightForWidth());
-        editRadioButton->setSizePolicy(sizePolicy2);
-        editRadioButton->setStyleSheet(QStringLiteral("font: 75 12pt \"Times New Roman\";"));
-        editRadioButton->setAutoExclusive(false);
-
-        gridLayout_1->addWidget(editRadioButton, 6, 0, 1, 4);
 
         trackLabel = new QLabel(centralWidget);
         trackLabel->setObjectName(QStringLiteral("trackLabel"));
@@ -332,6 +301,37 @@ public:
         line_4->setFrameShadow(QFrame::Sunken);
 
         gridLayout_1->addWidget(line_4, 0, 0, 1, 4);
+
+        nextButton = new QPushButton(centralWidget);
+        nextButton->setObjectName(QStringLiteral("nextButton"));
+        sizePolicy2.setHeightForWidth(nextButton->sizePolicy().hasHeightForWidth());
+        nextButton->setSizePolicy(sizePolicy2);
+        QIcon icon22;
+        icon22.addFile(QStringLiteral(":/Images/icons/next.png"), QSize(), QIcon::Normal, QIcon::Off);
+        nextButton->setIcon(icon22);
+        nextButton->setIconSize(QSize(20, 20));
+
+        gridLayout_1->addWidget(nextButton, 7, 3, 1, 1);
+
+        preButton = new QPushButton(centralWidget);
+        preButton->setObjectName(QStringLiteral("preButton"));
+        sizePolicy2.setHeightForWidth(preButton->sizePolicy().hasHeightForWidth());
+        preButton->setSizePolicy(sizePolicy2);
+        QIcon icon23;
+        icon23.addFile(QStringLiteral(":/Images/icons/previous.png"), QSize(), QIcon::Normal, QIcon::Off);
+        preButton->setIcon(icon23);
+        preButton->setIconSize(QSize(20, 20));
+
+        gridLayout_1->addWidget(preButton, 7, 2, 1, 1);
+
+        editRadioButton = new QRadioButton(centralWidget);
+        editRadioButton->setObjectName(QStringLiteral("editRadioButton"));
+        sizePolicy2.setHeightForWidth(editRadioButton->sizePolicy().hasHeightForWidth());
+        editRadioButton->setSizePolicy(sizePolicy2);
+        editRadioButton->setStyleSheet(QStringLiteral("font: 75 12pt \"Times New Roman\";"));
+        editRadioButton->setAutoExclusive(false);
+
+        gridLayout_1->addWidget(editRadioButton, 6, 0, 1, 2);
 
 
         gridLayout->addLayout(gridLayout_1, 1, 4, 1, 1);
@@ -491,14 +491,14 @@ public:
 #endif // QT_NO_TOOLTIP
         frameLabel->setText(QString());
         playClipButton->setText(QString());
-        nextButton->setText(QString());
         pauseButton->setText(QString());
-        cutButton->setText(QString());
         keepRadioButton->setText(QApplication::translate("MainWindow", "Keep", 0));
-        editRadioButton->setText(QApplication::translate("MainWindow", "Edit", 0));
         trackLabel->setText(QApplication::translate("MainWindow", "Track:", 0));
         clipLabel->setText(QApplication::translate("MainWindow", "Clip:", 0));
         playTrackButton->setText(QString());
+        nextButton->setText(QString());
+        preButton->setText(QString());
+        editRadioButton->setText(QApplication::translate("MainWindow", "Edit", 0));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
     } // retranslateUi
 

@@ -22,7 +22,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0" rowspan="2" colspan="3">
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="QLabel" name="frameLabel">
         <property name="sizePolicy">
@@ -81,29 +81,6 @@
         </property>
        </widget>
       </item>
-      <item row="7" column="2">
-       <widget class="QPushButton" name="nextButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="myres.qrc">
-          <normaloff>:/Images/icons/next.png</normaloff>:/Images/icons/next.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-       </widget>
-      </item>
       <item row="7" column="1">
        <widget class="QPushButton" name="pauseButton">
         <property name="sizePolicy">
@@ -127,29 +104,6 @@
         </property>
        </widget>
       </item>
-      <item row="7" column="3">
-       <widget class="QPushButton" name="cutButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="myres.qrc">
-          <normaloff>:/Images/icons/cut_32.png</normaloff>:/Images/icons/cut_32.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-       </widget>
-      </item>
       <item row="5" column="0" colspan="4">
        <widget class="QRadioButton" name="keepRadioButton">
         <property name="sizePolicy">
@@ -163,25 +117,6 @@
         </property>
         <property name="text">
          <string>Keep</string>
-        </property>
-        <property name="autoExclusive">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0" colspan="4">
-       <widget class="QRadioButton" name="editRadioButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">font: 75 12pt &quot;Times New Roman&quot;;</string>
-        </property>
-        <property name="text">
-         <string>Edit</string>
         </property>
         <property name="autoExclusive">
          <bool>false</bool>
@@ -249,6 +184,71 @@ color: darkblue;</string>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="3">
+       <widget class="QPushButton" name="nextButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="myres.qrc">
+          <normaloff>:/Images/icons/next.png</normaloff>:/Images/icons/next.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="2">
+       <widget class="QPushButton" name="preButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="myres.qrc">
+          <normaloff>:/Images/icons/previous.png</normaloff>:/Images/icons/previous.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0" colspan="2">
+       <widget class="QRadioButton" name="editRadioButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 75 12pt &quot;Times New Roman&quot;;</string>
+        </property>
+        <property name="text">
+         <string>Edit</string>
+        </property>
+        <property name="autoExclusive">
+         <bool>false</bool>
         </property>
        </widget>
       </item>

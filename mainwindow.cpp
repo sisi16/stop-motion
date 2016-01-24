@@ -29,6 +29,239 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::refresh(Mat img)
+{
+	cv::Mat temp;
+	cvtColor(img, temp, CV_BGR2RGB);
+	QImage current_image((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+	current_image.bits();
+
+	QPixmap pix(ui->frameLabel->width(), ui->frameLabel->height());
+	pix.fill(Qt::black);
+	QPainter *paint = new QPainter(&pix);
+	paint->drawPixmap((pix.width() - pix.height() * 16 / 9) / 2, 0, pix.height() * 16 / 9, pix.height(), QPixmap::fromImage(current_image));
+	paint->end();
+
+	ui->frameLabel->setStyleSheet("");
+	ui->frameLabel->setPixmap(pix);
+	ui->frameLabel->repaint();
+}
+
+void MainWindow::visualizeClips()
+{
+	vector<int> scene_cuts = vproc.getSceneCuts();
+	vector<int> cut_types = vproc.getCutTypes();
+	//vector<Mat> frames = vproc.getFrames();
+	int frameRate = vproc.getFrameRate();
+	int height = floor(0.8 * ui->scrollArea_1->height());
+	int base_width = ceil(height * vproc.getFrameWidth() / double(vproc.getFrameHeight()));
+	int base, width, cut_size, length;
+	int stableClipsCounter = 0;
+	cliplabel *previousMovingClip = NULL;
+
+	/*myscrollarea *scroll = new myscrollarea();
+	ui->verticalLayout->addWidget(scroll);
+	scroll->getCentralWidget()->installEventFilter(this);
+	addedTrackCount++;
+	addedTrack.push_back(scroll);*/
+
+	stringstream ss;
+	string type = ".jpg";
+
+	ifstream flowfile;
+	if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") flowfile.open("D:/CCCC/Stop Motion/Test6/suggestion_threshold.txt");
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") flowfile.open("D:/CCCC/Stop Motion/Test7/suggestion_threshold.txt");
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") flowfile.open("D:/CCCC/Stop Motion/Test8/suggestion_threshold.txt");
+
+	for (int i = 0; i < scene_cuts.size(); i++)
+	{
+		vector<Mat> srcImages;
+		if (i == 0)
+			base = 0;
+		else
+			base = scene_cuts.at(i - 1) + 1;
+		cut_size = scene_cuts.at(i) - base + 1;
+
+		if (cut_size % (2 * frameRate) == 0)
+			length = cut_size / (2 * frameRate);
+		else
+			length = cut_size / (2 * frameRate) + 1;
+
+		if (cut_types.at(i) == 1)
+			width = base_width + base_width / 10 * (length - 1);
+		else
+			width = base_width * length;
+
+		for (int j = 0; j < length; j++)
+		{
+			ss << base + 2 * j*frameRate << type;
+			if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test/480/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str()));
+			ss.str("");
+
+			if (cut_types.at(i) == 1) break;
+			//srcImages.push_back(frames.at(base + j*frameRate));
+		}
+
+		cliplabel *clip = new cliplabel(srcImages, base_width, width, height, i, cut_types.at(i), length);
+		vector<int> range;
+		range.push_back(base);
+		range.push_back(scene_cuts.at(i));
+		clip->setRange(range);
+		clips.push_back(clip);
+
+		if (cut_types.at(i) == 1)
+		{
+			cliplabel *empty_clip = new cliplabel();
+			empty_clip->setFixedSize(width, height);
+			empty_clip->setSizeThreshold(width, height);
+
+			if (stableClipsCounter != 0)
+			{
+				/*Mat previousFrame, currentFrame;
+				ss << (clip->getOriginRange().at(0) + clip->getOriginRange().at(1)) / 2 << type;
+				if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
+				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
+				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
+				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
+				ss.str("");
+				ss << (stableClip.at(stableClip.size() - 1)->getOriginRange().at(0) + stableClip.at(stableClip.size() - 1)->getOriginRange().at(1)) / 2 << type;
+				if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
+				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
+				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
+				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
+				ss.str("");
+				cout << vproc.calAvgOpFlow(previousFrame, currentFrame) << endl;*/
+
+				float avgOpFlow;
+				flowfile >> avgOpFlow;
+
+				cliplabel *previousEmptyClip = new cliplabel();
+				int previous_w = previousMovingClip->getWidth();
+				int previous_h = previousMovingClip->getHeight();
+				previousEmptyClip->setFixedSize(previous_w, previous_h);
+				previousEmptyClip->setSizeThreshold(previous_w, previous_h);
+
+				if (avgOpFlow >= 0.005 && avgOpFlow <= 0.9)
+				{
+					previousMovingClip->setEditedMode(isDeleted);
+					ui->gridLayout_3->addWidget(previousMovingClip, 0, i - 1, Qt::AlignLeft);
+					ui->gridLayout_2->addWidget(previousEmptyClip, 0, i - 1, Qt::AlignLeft);
+				}
+				else
+				{
+					ui->gridLayout_2->addWidget(previousMovingClip, 0, i - 1, Qt::AlignLeft);
+					ui->gridLayout_3->addWidget(previousEmptyClip, 0, i - 1, Qt::AlignLeft);
+				}
+			}
+			ui->gridLayout_2->addWidget(clip, 0, i, Qt::AlignLeft);
+			ui->gridLayout_3->addWidget(empty_clip, 0, i, Qt::AlignLeft);
+			stableClipsCounter++;
+		}
+		else
+			previousMovingClip = clip;
+
+		connect(clip, SIGNAL(signalEntered(bool)), this, SLOT(slotEntered(bool)));
+	}
+
+	flowfile.close();
+
+	connect(ui->scrollArea_1->horizontalScrollBar(), SIGNAL(valueChanged(int)), ui->scrollArea_2->horizontalScrollBar(), SLOT(setValue(int)));
+	connect(ui->scrollArea_2->horizontalScrollBar(), SIGNAL(valueChanged(int)), ui->scrollArea_1->horizontalScrollBar(), SLOT(setValue(int)));
+	ui->scrollArea_1->setBackgroundRole(QPalette::Dark);
+	ui->scrollArea_2->setBackgroundRole(QPalette::Dark);
+}
+
+void MainWindow::setCurrentClip(cliplabel *clip)
+{
+	if (ui->editRadioButton->isChecked() == true)
+	{
+		frame_slider->hide();
+		ui->verticalLayout->removeWidget(frame_slider);
+		delete frame_slider;
+		frame_slider = NULL;
+		ui->editRadioButton->setChecked(false);
+	}
+
+	if (current_clip->getEditedMode() == isSelected || current_clip->getEditedMode() == isViewed)
+		current_clip->setEditedMode(NotEdited);
+	else if (current_clip->getEditedMode() == isSelectedDeleted)
+		current_clip->setEditedMode(isDeleted);
+
+	current_clip = clip;
+	current_clip_index = clip->getCutIndex();
+
+	if (current_clip->getEditedMode() == NotEdited || current_clip->getEditedMode() == isViewed)
+	{
+		current_clip->setEditedMode(isSelected);
+		ui->keepRadioButton->setChecked(true);
+	}
+	else if (current_clip->getEditedMode() == isDeleted)
+	{
+		current_clip->setEditedMode(isSelectedDeleted);
+		ui->keepRadioButton->setChecked(false);
+	}
+
+	stringstream ss;
+	string type = ".jpg";
+	Mat frame;
+	ss << current_clip->getRange().at(0) << type;
+	if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/540/" + ss.str());
+	ss.str("");
+
+	refresh(frame);
+	ui->scrollArea_1->horizontalScrollBar()->setSliderPosition(current_clip->pos().x());
+}
+
+void MainWindow::cutVideo()
+{
+	/*progressBar = vproc.getProgressBar();
+	ui->verticalLayout_2->addWidget(progressBar);
+	progressBar->show();*/
+
+	vproc.readBuffers();
+	/*if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
+	vproc.cut2Scenes();
+	vproc.writeBuffers();*/
+	//frame_slider->updateParams(vproc.getSceneCuts(), vproc.getCutTypes());
+	isCut = true;
+	statusBar()->clearMessage();
+
+	/*progressBar->hide();
+	ui->verticalLayout_2->removeWidget(progressBar);
+	delete progressBar;*/
+
+	visualizeClips();
+	current_clip = clips.at(0);
+	current_clip_index = 0;
+	if (current_clip->getEditedMode() == NotEdited)
+	{
+		current_clip->setEditedMode(isSelected);
+		ui->keepRadioButton->setChecked(true);
+	}
+	else
+	{
+		current_clip->setEditedMode(isSelectedDeleted);
+		ui->keepRadioButton->setChecked(false);
+	}
+
+	ui->scrollAreaWidgetContents_1->installEventFilter(this);
+	ui->scrollAreaWidgetContents_2->installEventFilter(this);
+}
+
 /*void MainWindow::resizeEvent(QResizeEvent* ev)
 {
     resize_count++;
@@ -134,6 +367,12 @@ void MainWindow::on_playClipButton_clicked()
     }*/
 }
 
+void MainWindow::on_preButton_clicked()
+{
+	if (current_clip_index > 0)
+		setCurrentClip(clips.at(current_clip_index-1));
+}
+
 void MainWindow::on_nextButton_clicked()
 {
 	if (current_clip_index < clips.size() - 1)
@@ -143,40 +382,6 @@ void MainWindow::on_nextButton_clicked()
 void MainWindow::on_pauseButton_clicked()
 {
     //mediaplayer_1->pause();
-}
-
-void MainWindow::on_cutButton_clicked()
-{
-    /*progressBar = vproc.getProgressBar();
-	ui->verticalLayout_2->addWidget(progressBar);
-    progressBar->show();*/
-
-	vproc.readBuffers();
-	/*if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
-		vproc.cut2Scenes();
-	vproc.writeBuffers();*/
-	//frame_slider->updateParams(vproc.getSceneCuts(), vproc.getCutTypes());
-    isCut = true;
-    statusBar()->clearMessage();
-
-    /*progressBar->hide();
-	ui->verticalLayout_2->removeWidget(progressBar);
-    delete progressBar;*/
-
-	visualizeClips();
-	current_clip = clips.at(0);
-	current_clip_index = 0;
-	if (current_clip->getEditedMode() == NotEdited)
-	{
-		current_clip->setEditedMode(isSelected);
-		ui->keepRadioButton->setChecked(true);
-	}
-	else
-	{
-		current_clip->setEditedMode(isSelectedDeleted);
-		ui->keepRadioButton->setChecked(false);
-	}
-	//vproc.test();
 }
 
 void MainWindow::on_playTrackButton_clicked()
@@ -252,26 +457,20 @@ void MainWindow::on_playTrackButton_clicked()
 	setCurrentClip(item);
 }
 
-void MainWindow::refresh(Mat img)
+void MainWindow::seek(int index)
 {
-    cv::Mat temp;
-    cvtColor(img, temp, CV_BGR2RGB);
-    QImage current_image((const uchar *) temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
-    current_image.bits();
-
-	QPixmap pix(ui->frameLabel->width(), ui->frameLabel->height());
-	pix.fill(Qt::black);
-	QPainter *paint = new QPainter(&pix);
-	paint->drawPixmap((pix.width()-pix.height()*16/9)/2, 0, pix.height()*16/9, pix.height(), QPixmap::fromImage(current_image));
-	paint->end();
-    
-	ui->frameLabel->setStyleSheet("");
-	ui->frameLabel->setPixmap(pix);
-	ui->frameLabel->repaint();
-}
-
-void MainWindow::seek(int seconds)
-{
+	Mat frame;
+	stringstream ss;
+	string type = ".jpg";
+	ss << index << type;
+	if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/540/" + ss.str());
+	ss.str("");
+	refresh(frame);
 	//mediaplayer_1->setPosition(seconds);//mediaplayer_1->setPosition(seconds * 1000);
 }
 
@@ -288,141 +487,8 @@ void MainWindow::on_actionLoad_triggered()
 
     vproc.readVideo(fileName.toStdString());
 	ui->frameLabel->setStyleSheet("background-color: rgb(0, 0, 0); image: url(D:/CCCC/Stop Motion/Videos/preview.png);");
+	cutVideo();
 	//initFrameSlider();
-}
-
-void MainWindow::visualizeClips()
-{
-	vector<int> scene_cuts = vproc.getSceneCuts();
-	vector<int> cut_types = vproc.getCutTypes();
-	//vector<Mat> frames = vproc.getFrames();
-	int frameRate = vproc.getFrameRate();
-	int height = floor(0.8 * ui->scrollArea_1->height());
-	int base_width = ceil(height * vproc.getFrameWidth() / double(vproc.getFrameHeight()));
-	int base, width, cut_size, length;
-	int stableClipsCounter = 0;
-	cliplabel *previousMovingClip = NULL;
-
-	/*myscrollarea *scroll = new myscrollarea();
-	ui->verticalLayout->addWidget(scroll);
-	scroll->getCentralWidget()->installEventFilter(this);
-	addedTrackCount++;
-	addedTrack.push_back(scroll);*/
-
-	stringstream ss;
-	string type = ".jpg";
-
-	ifstream flowfile;
-	if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") flowfile.open("D:/CCCC/Stop Motion/Test6/suggestion_threshold.txt");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") flowfile.open("D:/CCCC/Stop Motion/Test7/suggestion_threshold.txt");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") flowfile.open("D:/CCCC/Stop Motion/Test8/suggestion_threshold.txt");
-
-	for (int i = 0; i < scene_cuts.size(); i++)
-	{
-		vector<Mat> srcImages;
-		if (i == 0)
-			base = 0;
-		else
-			base = scene_cuts.at(i-1) + 1;
-		cut_size = scene_cuts.at(i) - base + 1;
-
-		if (cut_size % (2*frameRate) == 0)
-			length = cut_size / (2*frameRate);
-		else
-			length = cut_size / (2*frameRate) + 1;
-		
-		if (cut_types.at(i) == 1)
-			width = base_width + base_width/10*(length-1);
-		else
-			width = base_width * length;
-
-		for (int j = 0; j < length; j++)
-		{
-			ss << base + 2*j*frameRate << type;
-			if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test/480/" + ss.str()));
-			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str()));
-			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str()));
-			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str()));
-			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str()));
-			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str()));
-			ss.str("");
-
-			if (cut_types.at(i) == 1) break;
-			//srcImages.push_back(frames.at(base + j*frameRate));
-		}
-
-		cliplabel *clip = new cliplabel(srcImages, base_width, width, height, i, cut_types.at(i), length);
-		vector<int> range;
-		range.push_back(base);
-		range.push_back(scene_cuts.at(i));
-		clip->setRange(range);
-		clips.push_back(clip);
-
-		if (cut_types.at(i) == 1)
-		{
-			cliplabel *empty_clip = new cliplabel();
-			empty_clip->setFixedSize(width, height);
-			empty_clip->setSizeThreshold(width, height);
-
-			if (stableClipsCounter != 0)
-			{
-				/*Mat previousFrame, currentFrame;
-				ss << (clip->getOriginRange().at(0) + clip->getOriginRange().at(1)) / 2 << type;
-				if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
-				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
-				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
-				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
-				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
-				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
-				ss.str("");
-				ss << (stableClip.at(stableClip.size() - 1)->getOriginRange().at(0) + stableClip.at(stableClip.size() - 1)->getOriginRange().at(1)) / 2 << type;
-				if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
-				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
-				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
-				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
-				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
-				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
-				ss.str("");
-				cout << vproc.calAvgOpFlow(previousFrame, currentFrame) << endl;*/
-
-				float avgOpFlow;
-				flowfile >> avgOpFlow;
-
-				cliplabel *previousEmptyClip = new cliplabel();
-				int previous_w = previousMovingClip->getWidth();
-				int previous_h = previousMovingClip->getHeight();
-				previousEmptyClip->setFixedSize(previous_w, previous_h);
-				previousEmptyClip->setSizeThreshold(previous_w, previous_h);
-
-				if (avgOpFlow >= 0.005 && avgOpFlow <= 0.9)
-				{
-					previousMovingClip->setEditedMode(isDeleted);
-					ui->gridLayout_3->addWidget(previousMovingClip, 0, i - 1, Qt::AlignLeft);
-					ui->gridLayout_2->addWidget(previousEmptyClip, 0, i - 1, Qt::AlignLeft);
-				}
-				else
-				{
-					ui->gridLayout_2->addWidget(previousMovingClip, 0, i - 1, Qt::AlignLeft);
-					ui->gridLayout_3->addWidget(previousEmptyClip, 0, i - 1, Qt::AlignLeft);
-				}
-			}
-			ui->gridLayout_2->addWidget(clip, 0, i, Qt::AlignLeft);
-			ui->gridLayout_3->addWidget(empty_clip, 0, i, Qt::AlignLeft);
-			stableClipsCounter++;
-		}
-		else
-			previousMovingClip = clip;
-
-		connect(clip, SIGNAL(signalEntered(bool)), this, SLOT(slotEntered(bool)));
-	}
-
-	flowfile.close();
-
-	connect(ui->scrollArea_1->horizontalScrollBar(), SIGNAL(valueChanged(int)), ui->scrollArea_2->horizontalScrollBar(), SLOT(setValue(int)));
-	connect(ui->scrollArea_2->horizontalScrollBar(), SIGNAL(valueChanged(int)), ui->scrollArea_1->horizontalScrollBar(), SLOT(setValue(int)));
-	ui->scrollArea_1->setBackgroundRole(QPalette::Dark);
-	ui->scrollArea_2->setBackgroundRole(QPalette::Dark);
-
 }
 
 /*void MainWindow::on_actionSelect_triggered()
@@ -1134,7 +1200,24 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 
 void MainWindow::on_editRadioButton_clicked()
 {
-    if (isCut)
+	if (ui->editRadioButton->isChecked())
+	{
+		frame_slider = new QSlider(Qt::Horizontal);
+		frame_slider->setRange(current_clip->getRange().at(0), current_clip->getRange().at(1));
+		frame_slider->setValue(0);
+		frame_slider->setTickPosition(QSlider::TicksAbove);
+		frame_slider->setTickInterval(1);
+		connect(frame_slider, SIGNAL(sliderMoved(int)), this, SLOT(seek(int)));
+		ui->verticalLayout->addWidget(frame_slider);
+	}
+	else
+	{
+		frame_slider->hide();
+		ui->verticalLayout->removeWidget(frame_slider);
+		delete frame_slider;
+		frame_slider = NULL;
+	}
+    /*if (isCut)
     {
 		if (ui->editRadioButton->isChecked())
         {
@@ -1182,7 +1265,7 @@ void MainWindow::on_editRadioButton_clicked()
     else
     {
         statusBar()->showMessage("Please cut the video first.");
-    }
+    }*/
 }
 
 void MainWindow::on_keepRadioButton_clicked()
@@ -1212,43 +1295,6 @@ void MainWindow::on_keepRadioButton_clicked()
 	{
 		statusBar()->showMessage("Please cut the video first.");
 	}
-}
-
-void MainWindow::setCurrentClip(cliplabel *clip)
-{
-	if (current_clip->getEditedMode() == isSelected || current_clip->getEditedMode() == isViewed)
-		current_clip->setEditedMode(NotEdited);
-	else if (current_clip->getEditedMode() == isSelectedDeleted)
-		current_clip->setEditedMode(isDeleted);
-	
-	current_clip = clip;
-	current_clip_index = clip->getCutIndex();
-	
-	if (current_clip->getEditedMode() == NotEdited || current_clip->getEditedMode() == isViewed)
-	{
-		current_clip->setEditedMode(isSelected);
-		ui->keepRadioButton->setChecked(true);
-	}
-	else if (current_clip->getEditedMode() == isDeleted)
-	{
-		current_clip->setEditedMode(isSelectedDeleted);
-		ui->keepRadioButton->setChecked(false);
-	}
-
-	stringstream ss;
-	string type = ".jpg";
-	Mat frame;
-	ss << current_clip->getRange().at(0) << type;
-	if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/540/" + ss.str());
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/540/" + ss.str());
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/540/" + ss.str());
-	ss.str("");
-
-	refresh(frame);
-	ui->scrollArea_1->horizontalScrollBar()->setSliderPosition(current_clip->pos().x());
 }
 
 /*void MainWindow::reverse_action()

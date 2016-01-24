@@ -33,31 +33,32 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 	//void setClickRange(std::vector<int> indices);
+	void refresh(cv::Mat img);
+	void visualizeClips();
+	void setCurrentClip(cliplabel *clip);
+	void cutVideo();
 
-//protected:
+protected:
+	bool eventFilter(QObject *widget, QEvent *event);
 	//void resizeEvent(QResizeEvent* ev);
 
 private slots:
 
     void on_playClipButton_clicked();
-
-    void on_nextButton_clicked();
+	
+	void on_preButton_clicked();
+    
+	void on_nextButton_clicked();
 
     void on_pauseButton_clicked();
 
-    void on_cutButton_clicked();
-
 	void on_playTrackButton_clicked();
 
-    void refresh(cv::Mat img);
-
-    void seek(int seconds);
+    void seek(int index);
 
 	void slotEntered(bool isEntered);
 
     void on_actionLoad_triggered();
-
-    void visualizeClips();
 
 	//void on_actionSelect_triggered();
 
@@ -81,16 +82,12 @@ private slots:
 
 	//void on_actionViewTrack_triggered();
 
-    bool eventFilter(QObject *widget, QEvent *event);
-
     //void playRange();
 
 	void on_editRadioButton_clicked();
 
 	void on_keepRadioButton_clicked();
 	
-	void setCurrentClip(cliplabel *clip);
-
     //void reverse_action();
 
     //void show_context_menu();
@@ -107,6 +104,7 @@ private:
     //myslider *frame_slider;
     QProgressBar *progressBar;
 	cliplabel *current_clip = NULL;
+	QSlider *frame_slider = NULL;
 	int current_clip_index;
     bool isCut;
 	bool entered;

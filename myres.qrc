@@ -29,5 +29,6 @@
     <file>icons/ungroup_48.png</file>
     <file>icons/tick.png</file>
     <file>icons/next.png</file>
+    <file>icons/previous.png</file>
   </qresource>
 </RCC>
