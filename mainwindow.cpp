@@ -14,7 +14,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     isCut = false;
 	entered = false;
-	paused = false;
     //resize_count = -1;
     //window_current_width = this->width();
     //window_current_height = this->height() - ui->menuBar->height() - ui->mainToolBar->height();
@@ -59,7 +58,7 @@ MainWindow::~MainWindow()
     window_current_height = this->height() - ui->menuBar->height() - ui->mainToolBar->height();
 }*/
 
-void MainWindow::setClickRange(vector<int> indices)
+/*void MainWindow::setClickRange(vector<int> indices)
 {
 	if (!clickRange.empty()) clickRange.clear();
 	if (!movingRange.empty()) movingRange.clear();
@@ -73,22 +72,16 @@ void MainWindow::setClickRange(vector<int> indices)
 		else clickRange.push_back(scene_cuts.at(index-1) + 1);
 		clickRange.push_back(scene_cuts.at(index));
 	}
-}
+}*/
 
 void MainWindow::on_playClipButton_clicked()
 {
-	if (!clickRange.empty()) clickRange.clear();
-	clickRange = current_clip->getRange();
-
-	int start = -1;
-	int end = -1;
+	int start = current_clip->getRange().at(0);
+	int end = current_clip->getRange().at(1);
+	int frameRate = vproc.getFrameRate();
 	Mat frame;
 	stringstream ss;
 	string type = ".jpg";
-	int frameRate = vproc.getFrameRate();
-
-	start = clickRange.at(0);
-	end = clickRange.at(1);
 
 	if (current_clip->getCutType() == 2)
 	{
@@ -149,7 +142,6 @@ void MainWindow::on_nextButton_clicked()
 
 void MainWindow::on_pauseButton_clicked()
 {
-	paused = true;
     //mediaplayer_1->pause();
 }
 
@@ -190,44 +182,53 @@ void MainWindow::on_cutButton_clicked()
 void MainWindow::on_playTrackButton_clicked()
 {
 	int count = 0;
-	QLayoutItem *child;
-	
-	if (!clickRange.empty()) clickRange.clear();
-	if (!movingRange.empty()) movingRange.clear();
-
-	while ((child = ui->gridLayout_2->itemAt(count)) != 0)
-	{
-		cliplabel* item = static_cast<cliplabel*>(child->widget());
-		if (item->getCutType() != -1 && item->getEditedMode() != isDeleted && item->getEditedMode() != isSelectedDeleted)
-		{
-			clickRange.push_back(item->getRange().at(0));
-			clickRange.push_back(item->getRange().at(1));
-			movingRange.push_back(item->getCutType());
-		}
-		count++;
-	}
-
 	int start = -1;
 	int end = -1;
-	int size = clickRange.size();
-	int delay;
-	bool isBreak = false;
+	int delay = -1;
+	int frameRate = vproc.getFrameRate();
 	Mat frame;
 	stringstream ss;
 	string type = ".jpg";
-	int frameRate = vproc.getFrameRate();
+	QLayoutItem *child;
+	cliplabel *item;
 
-	for (int i = 0; i < size; i += 2)
+	while ((child = ui->gridLayout_2->itemAt(count)) != 0)
 	{
-		start = clickRange.at(i);
-		end = clickRange.at(i + 1);
-
-		if (movingRange.at(i / 2) == 2)
+		item = static_cast<cliplabel*>(child->widget());
+		isEdited orginMode = item->getEditedMode();
+		if (item->getCutType() != -1 && orginMode != isDeleted && orginMode != isSelectedDeleted)
 		{
-			delay = 500 / frameRate;//delay = 1000 / frame_rate;
-			for (int j = start; j <= end; j++)
+			item->setEditedMode(isViewed);
+			ui->scrollArea_1->horizontalScrollBar()->setSliderPosition(item->pos().x());
+			start = item->getRange().at(0);
+			end = item->getRange().at(1);
+			
+			if (item->getCutType() == 2)
 			{
-				ss << j << type;
+				delay = 500 / frameRate;
+				for (int i = start; i <= end; i++)
+				{
+					ss << i << type;
+					if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
+					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/540/" + ss.str());
+					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/540/" + ss.str());
+					else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/540/" + ss.str());
+					refresh(frame);
+					if (GetAsyncKeyState(0x53))
+					{
+						setCurrentClip(item);
+						return;
+					}
+					Sleep(delay);
+					ss.str("");
+				}
+			}
+			else
+			{
+				delay = 500;
+				ss << (start + end) / 2 << type;
 				if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
 				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
 				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
@@ -235,33 +236,20 @@ void MainWindow::on_playTrackButton_clicked()
 				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/540/" + ss.str());
 				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/540/" + ss.str());
 				refresh(frame);
-				if(GetAsyncKeyState(0x53))
+				if (GetAsyncKeyState(0x53))
 				{
-					isBreak = true;
-					break;
+					setCurrentClip(item);
+					return;
 				}
 				Sleep(delay);
 				ss.str("");
 			}
-			if (isBreak) break;
+
+			item->setEditedMode(orginMode);
 		}
-		else
-		{
-			delay = 500;
-			ss << (start + end) / 2 << type;
-			if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
-			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
-			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
-			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/540/" + ss.str());
-			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/540/" + ss.str());
-			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/540/" + ss.str());
-			refresh(frame);
-			if (GetAsyncKeyState(0x53))
-				break;
-			Sleep(delay);
-			ss.str("");
-		}
+		count++;
 	}
+	setCurrentClip(item);
 }
 
 void MainWindow::refresh(Mat img)
@@ -1228,7 +1216,7 @@ void MainWindow::on_keepRadioButton_clicked()
 
 void MainWindow::setCurrentClip(cliplabel *clip)
 {
-	if (current_clip->getEditedMode() == isSelected)
+	if (current_clip->getEditedMode() == isSelected || current_clip->getEditedMode() == isViewed)
 		current_clip->setEditedMode(NotEdited);
 	else if (current_clip->getEditedMode() == isSelectedDeleted)
 		current_clip->setEditedMode(isDeleted);
@@ -1236,7 +1224,7 @@ void MainWindow::setCurrentClip(cliplabel *clip)
 	current_clip = clip;
 	current_clip_index = clip->getCutIndex();
 	
-	if (current_clip->getEditedMode() == NotEdited)
+	if (current_clip->getEditedMode() == NotEdited || current_clip->getEditedMode() == isViewed)
 	{
 		current_clip->setEditedMode(isSelected);
 		ui->keepRadioButton->setChecked(true);
@@ -1260,6 +1248,7 @@ void MainWindow::setCurrentClip(cliplabel *clip)
 	ss.str("");
 
 	refresh(frame);
+	ui->scrollArea_1->horizontalScrollBar()->setSliderPosition(current_clip->pos().x());
 }
 
 /*void MainWindow::reverse_action()

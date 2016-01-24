@@ -32,7 +32,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-	void setClickRange(std::vector<int> indices);
+	//void setClickRange(std::vector<int> indices);
 
 //protected:
 	//void resizeEvent(QResizeEvent* ev);
@@ -110,9 +110,8 @@ private:
 	int current_clip_index;
     bool isCut;
 	bool entered;
-	bool paused;
-    std::vector<int> clickRange;
-	std::vector<int> movingRange;
+    //std::vector<int> clickRange;
+	//std::vector<int> movingRange;
 	//clipOperation action;
     //QMenu *sliderMenu;
 	//std::vector<cliplabel *> selectedClips;

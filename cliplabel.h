@@ -18,7 +18,8 @@ enum isEdited
 	isSelected,
 	isDeleted,
 	isSelectedDeleted,
-	isMoved
+	isMoved,
+	isViewed
 	//isReversed,
 };
 

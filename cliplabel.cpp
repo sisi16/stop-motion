@@ -107,7 +107,7 @@ vector<int> cliplabel::getRange()
 
 void cliplabel::enterEvent(QEvent *)
 {
-	if (edited_mode != isSelected && edited_mode != isSelectedDeleted && edited_mode != isDeleted)
+	if (edited_mode != isSelected && edited_mode != isSelectedDeleted && edited_mode != isDeleted && edited_mode != isViewed)
 	{
 		if (cut_type == 1)
 			this->setStyleSheet("border: 5px outset rgb(85, 170, 255)");
@@ -121,7 +121,7 @@ void cliplabel::enterEvent(QEvent *)
 
 void cliplabel::leaveEvent(QEvent *)
 {
-	if (edited_mode != isSelected && edited_mode != isSelectedDeleted && edited_mode != isDeleted)
+	if (edited_mode != isSelected && edited_mode != isSelectedDeleted && edited_mode != isDeleted && edited_mode != isViewed)
 		this->setStyleSheet("border: none");
 	emit signalEntered(false);
 }
@@ -156,6 +156,10 @@ void cliplabel::setEditedMode(isEdited mode)
 
 	case isMoved:
 		this->setStyleSheet("border: 3px dashed rgb(0, 0, 0)");
+		break;
+
+	case isViewed:
+		this->setStyleSheet("border: 5px inset orange");
 		break;
 
 	default:
