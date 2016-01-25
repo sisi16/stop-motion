@@ -116,7 +116,7 @@
          <string notr="true">font: 75 12pt &quot;Times New Roman&quot;;</string>
         </property>
         <property name="text">
-         <string>Keep</string>
+         <string>Keep / Delete</string>
         </property>
         <property name="autoExclusive">
          <bool>false</bool>

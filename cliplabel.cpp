@@ -46,15 +46,18 @@ cliplabel::cliplabel(vector<Mat> src, int bw, int w, int h, int index, int type,
 			else
 			{
 				QPixmap img = QPixmap::fromImage(image);
-				painter->drawPixmap(bw+bw/10*(i-1), 0, bw / 10, h, img, img.width() / 10 * 9, 0, 0, 0);
+				int x = bw + bw / 10 * (i - 1);
+				painter->drawPixmap(x, 0, bw / 10, h, img, img.width() / 10 * 9, 0, 0, 0);
+				painter->drawLine(x, 0, x, h);
 			}
 		}
 		else
 			painter->drawPixmap(i*bw, 0, bw, h, QPixmap::fromImage(image));
 	}
+	painter->drawRect(0, 0, pm->width()-1, pm->height()-1);
 	painter->end();
 	this->setPixmap(*pm);
-	this->setFixedSize(w, h);
+	//this->setFixedSize(w, h);
 
 	this->setMouseTracking(true);
 	this->setCursor(Qt::PointingHandCursor);

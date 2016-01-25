@@ -33,7 +33,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 	//void setClickRange(std::vector<int> indices);
-	void refresh(cv::Mat img);
+	void refresh(cv::Mat img, bool editModeOn = false);
 	void visualizeClips();
 	void setCurrentClip(cliplabel *clip);
 	void cutVideo();

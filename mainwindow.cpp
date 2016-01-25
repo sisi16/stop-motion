@@ -29,7 +29,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::refresh(Mat img)
+void MainWindow::refresh(Mat img, bool editModeOn)
 {
 	cv::Mat temp;
 	cvtColor(img, temp, CV_BGR2RGB);
@@ -39,7 +39,48 @@ void MainWindow::refresh(Mat img)
 	QPixmap pix(ui->frameLabel->width(), ui->frameLabel->height());
 	pix.fill(Qt::black);
 	QPainter *paint = new QPainter(&pix);
-	paint->drawPixmap((pix.width() - pix.height() * 16 / 9) / 2, 0, pix.height() * 16 / 9, pix.height(), QPixmap::fromImage(current_image));
+	int w = pix.width();
+	int h = pix.height();
+	paint->drawPixmap((w-h*16/9)/2, 0, h*16/9, h, QPixmap::fromImage(current_image));
+	if (editModeOn)
+	{
+		stringstream ss_1, ss_2;
+		string type = ".jpg";
+		Mat frame_1, frame_2;
+		int start = current_clip->getRange().at(0);
+		int end = current_clip->getRange().at(1);
+		ss_1 << (start + end) / 2 << type;
+		ss_2 << end << type;
+		if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/Test6/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/Test6/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/Test7/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/Test7/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/Test8/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/Test8/540/" + ss_2.str());
+		}
+		ss_1.str("");
+		ss_2.str("");
+
+		cvtColor(frame_1, temp, CV_BGR2RGB);
+		QImage image_1((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+		image_1.bits();
+		cvtColor(frame_2, temp, CV_BGR2RGB);
+		QImage image_2((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+		image_2.bits();
+
+		paint->setOpacity(0.75);
+		paint->drawPixmap((w+h*16/9)/2, h/8, (w-h*16/9)/4, h*3/4, QPixmap::fromImage(image_1));
+		paint->setOpacity(0.5);
+		paint->drawPixmap((w*3+h*16/9)/4, h/4, (w-h*16/9)/4, h/2, QPixmap::fromImage(image_2));
+	}
 	paint->end();
 
 	ui->frameLabel->setStyleSheet("");
@@ -1200,6 +1241,15 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 
 void MainWindow::on_editRadioButton_clicked()
 {
+	stringstream ss;
+	string type = ".jpg";
+	Mat frame;
+	ss << current_clip->getRange().at(0) << type;
+	if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/540/" + ss.str());
+	ss.str("");
+
 	if (ui->editRadioButton->isChecked())
 	{
 		frame_slider = new QSlider(Qt::Horizontal);
@@ -1209,6 +1259,7 @@ void MainWindow::on_editRadioButton_clicked()
 		frame_slider->setTickInterval(1);
 		connect(frame_slider, SIGNAL(sliderMoved(int)), this, SLOT(seek(int)));
 		ui->verticalLayout->addWidget(frame_slider);
+		refresh(frame, true);
 	}
 	else
 	{
@@ -1216,6 +1267,7 @@ void MainWindow::on_editRadioButton_clicked()
 		ui->verticalLayout->removeWidget(frame_slider);
 		delete frame_slider;
 		frame_slider = NULL;
+		refresh(frame, false);
 	}
     /*if (isCut)
     {

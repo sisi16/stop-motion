@@ -492,7 +492,7 @@ public:
         frameLabel->setText(QString());
         playClipButton->setText(QString());
         pauseButton->setText(QString());
-        keepRadioButton->setText(QApplication::translate("MainWindow", "Keep", 0));
+        keepRadioButton->setText(QApplication::translate("MainWindow", "Keep / Delete", 0));
         trackLabel->setText(QApplication::translate("MainWindow", "Track:", 0));
         clipLabel->setText(QApplication::translate("MainWindow", "Clip:", 0));
         playTrackButton->setText(QString());
