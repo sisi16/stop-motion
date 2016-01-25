@@ -33,10 +33,11 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 	//void setClickRange(std::vector<int> indices);
-	void refresh(cv::Mat img, bool editModeOn = false);
+	void refresh(int index);
 	void visualizeClips();
 	void setCurrentClip(cliplabel *clip);
 	void cutVideo();
+	void initFrameSlider();
 
 protected:
 	bool eventFilter(QObject *widget, QEvent *event);
@@ -92,8 +93,6 @@ private slots:
 
     //void show_context_menu();
 
-	//void initFrameSlider();
-
 private:
     //int resize_count;
     //int window_current_width;
@@ -104,7 +103,6 @@ private:
     //myslider *frame_slider;
     QProgressBar *progressBar;
 	cliplabel *current_clip = NULL;
-	QSlider *frame_slider = NULL;
 	int current_clip_index;
     bool isCut;
 	bool entered;

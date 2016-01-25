@@ -23,6 +23,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QScrollArea>
+#include <QtWidgets/QSlider>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -58,6 +59,7 @@ public:
     QGridLayout *gridLayout;
     QVBoxLayout *verticalLayout;
     QLabel *frameLabel;
+    QSlider *frame_slider;
     QGridLayout *gridLayout_1;
     QFrame *line_3;
     QPushButton *playClipButton;
@@ -215,6 +217,17 @@ public:
 
         verticalLayout->addWidget(frameLabel);
 
+        frame_slider = new QSlider(centralWidget);
+        frame_slider->setObjectName(QStringLiteral("frame_slider"));
+        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(frame_slider->sizePolicy().hasHeightForWidth());
+        frame_slider->setSizePolicy(sizePolicy1);
+        frame_slider->setOrientation(Qt::Horizontal);
+
+        verticalLayout->addWidget(frame_slider);
+
 
         gridLayout->addLayout(verticalLayout, 0, 0, 2, 3);
 
@@ -223,11 +236,11 @@ public:
         gridLayout_1->setObjectName(QStringLiteral("gridLayout_1"));
         line_3 = new QFrame(centralWidget);
         line_3->setObjectName(QStringLiteral("line_3"));
-        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Fixed);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(line_3->sizePolicy().hasHeightForWidth());
-        line_3->setSizePolicy(sizePolicy1);
+        QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Fixed);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(line_3->sizePolicy().hasHeightForWidth());
+        line_3->setSizePolicy(sizePolicy2);
         line_3->setFrameShape(QFrame::HLine);
         line_3->setFrameShadow(QFrame::Sunken);
 
@@ -235,11 +248,11 @@ public:
 
         playClipButton = new QPushButton(centralWidget);
         playClipButton->setObjectName(QStringLiteral("playClipButton"));
-        QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(playClipButton->sizePolicy().hasHeightForWidth());
-        playClipButton->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy3(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(playClipButton->sizePolicy().hasHeightForWidth());
+        playClipButton->setSizePolicy(sizePolicy3);
         QIcon icon20;
         icon20.addFile(QStringLiteral(":/Images/icons/play_24.png"), QSize(), QIcon::Normal, QIcon::Off);
         playClipButton->setIcon(icon20);
@@ -249,8 +262,8 @@ public:
 
         pauseButton = new QPushButton(centralWidget);
         pauseButton->setObjectName(QStringLiteral("pauseButton"));
-        sizePolicy2.setHeightForWidth(pauseButton->sizePolicy().hasHeightForWidth());
-        pauseButton->setSizePolicy(sizePolicy2);
+        sizePolicy3.setHeightForWidth(pauseButton->sizePolicy().hasHeightForWidth());
+        pauseButton->setSizePolicy(sizePolicy3);
         QIcon icon21;
         icon21.addFile(QStringLiteral(":/Images/icons/pause_24.png"), QSize(), QIcon::Normal, QIcon::Off);
         pauseButton->setIcon(icon21);
@@ -260,8 +273,8 @@ public:
 
         keepRadioButton = new QRadioButton(centralWidget);
         keepRadioButton->setObjectName(QStringLiteral("keepRadioButton"));
-        sizePolicy2.setHeightForWidth(keepRadioButton->sizePolicy().hasHeightForWidth());
-        keepRadioButton->setSizePolicy(sizePolicy2);
+        sizePolicy3.setHeightForWidth(keepRadioButton->sizePolicy().hasHeightForWidth());
+        keepRadioButton->setSizePolicy(sizePolicy3);
         keepRadioButton->setStyleSheet(QStringLiteral("font: 75 12pt \"Times New Roman\";"));
         keepRadioButton->setAutoExclusive(false);
 
@@ -269,8 +282,8 @@ public:
 
         trackLabel = new QLabel(centralWidget);
         trackLabel->setObjectName(QStringLiteral("trackLabel"));
-        sizePolicy2.setHeightForWidth(trackLabel->sizePolicy().hasHeightForWidth());
-        trackLabel->setSizePolicy(sizePolicy2);
+        sizePolicy3.setHeightForWidth(trackLabel->sizePolicy().hasHeightForWidth());
+        trackLabel->setSizePolicy(sizePolicy3);
         trackLabel->setStyleSheet(QLatin1String("font: 75 18pt \"Times New Roman\";\n"
 "color: darkblue;"));
 
@@ -278,8 +291,8 @@ public:
 
         clipLabel = new QLabel(centralWidget);
         clipLabel->setObjectName(QStringLiteral("clipLabel"));
-        sizePolicy2.setHeightForWidth(clipLabel->sizePolicy().hasHeightForWidth());
-        clipLabel->setSizePolicy(sizePolicy2);
+        sizePolicy3.setHeightForWidth(clipLabel->sizePolicy().hasHeightForWidth());
+        clipLabel->setSizePolicy(sizePolicy3);
         clipLabel->setStyleSheet(QLatin1String("font: 75 18pt \"Times New Roman\";\n"
 "color: darkblue;"));
 
@@ -287,16 +300,16 @@ public:
 
         playTrackButton = new QPushButton(centralWidget);
         playTrackButton->setObjectName(QStringLiteral("playTrackButton"));
-        sizePolicy2.setHeightForWidth(playTrackButton->sizePolicy().hasHeightForWidth());
-        playTrackButton->setSizePolicy(sizePolicy2);
+        sizePolicy3.setHeightForWidth(playTrackButton->sizePolicy().hasHeightForWidth());
+        playTrackButton->setSizePolicy(sizePolicy3);
         playTrackButton->setIcon(icon19);
 
         gridLayout_1->addWidget(playTrackButton, 2, 0, 1, 1);
 
         line_4 = new QFrame(centralWidget);
         line_4->setObjectName(QStringLiteral("line_4"));
-        sizePolicy1.setHeightForWidth(line_4->sizePolicy().hasHeightForWidth());
-        line_4->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(line_4->sizePolicy().hasHeightForWidth());
+        line_4->setSizePolicy(sizePolicy2);
         line_4->setFrameShape(QFrame::HLine);
         line_4->setFrameShadow(QFrame::Sunken);
 
@@ -304,8 +317,8 @@ public:
 
         nextButton = new QPushButton(centralWidget);
         nextButton->setObjectName(QStringLiteral("nextButton"));
-        sizePolicy2.setHeightForWidth(nextButton->sizePolicy().hasHeightForWidth());
-        nextButton->setSizePolicy(sizePolicy2);
+        sizePolicy3.setHeightForWidth(nextButton->sizePolicy().hasHeightForWidth());
+        nextButton->setSizePolicy(sizePolicy3);
         QIcon icon22;
         icon22.addFile(QStringLiteral(":/Images/icons/next.png"), QSize(), QIcon::Normal, QIcon::Off);
         nextButton->setIcon(icon22);
@@ -315,8 +328,8 @@ public:
 
         preButton = new QPushButton(centralWidget);
         preButton->setObjectName(QStringLiteral("preButton"));
-        sizePolicy2.setHeightForWidth(preButton->sizePolicy().hasHeightForWidth());
-        preButton->setSizePolicy(sizePolicy2);
+        sizePolicy3.setHeightForWidth(preButton->sizePolicy().hasHeightForWidth());
+        preButton->setSizePolicy(sizePolicy3);
         QIcon icon23;
         icon23.addFile(QStringLiteral(":/Images/icons/previous.png"), QSize(), QIcon::Normal, QIcon::Off);
         preButton->setIcon(icon23);
@@ -326,8 +339,8 @@ public:
 
         editRadioButton = new QRadioButton(centralWidget);
         editRadioButton->setObjectName(QStringLiteral("editRadioButton"));
-        sizePolicy2.setHeightForWidth(editRadioButton->sizePolicy().hasHeightForWidth());
-        editRadioButton->setSizePolicy(sizePolicy2);
+        sizePolicy3.setHeightForWidth(editRadioButton->sizePolicy().hasHeightForWidth());
+        editRadioButton->setSizePolicy(sizePolicy3);
         editRadioButton->setStyleSheet(QStringLiteral("font: 75 12pt \"Times New Roman\";"));
         editRadioButton->setAutoExclusive(false);
 
@@ -345,11 +358,11 @@ public:
 
         scrollArea_1 = new QScrollArea(centralWidget);
         scrollArea_1->setObjectName(QStringLiteral("scrollArea_1"));
-        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Minimum);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(scrollArea_1->sizePolicy().hasHeightForWidth());
-        scrollArea_1->setSizePolicy(sizePolicy3);
+        QSizePolicy sizePolicy4(QSizePolicy::Expanding, QSizePolicy::Minimum);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(scrollArea_1->sizePolicy().hasHeightForWidth());
+        scrollArea_1->setSizePolicy(sizePolicy4);
         scrollArea_1->setFrameShape(QFrame::NoFrame);
         scrollArea_1->setWidgetResizable(true);
         scrollAreaWidgetContents_1 = new QWidget();
@@ -365,8 +378,8 @@ public:
 
         scrollArea_2 = new QScrollArea(centralWidget);
         scrollArea_2->setObjectName(QStringLiteral("scrollArea_2"));
-        sizePolicy3.setHeightForWidth(scrollArea_2->sizePolicy().hasHeightForWidth());
-        scrollArea_2->setSizePolicy(sizePolicy3);
+        sizePolicy4.setHeightForWidth(scrollArea_2->sizePolicy().hasHeightForWidth());
+        scrollArea_2->setSizePolicy(sizePolicy4);
         scrollArea_2->setFrameShape(QFrame::NoFrame);
         scrollArea_2->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
