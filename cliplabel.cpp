@@ -9,6 +9,7 @@ cliplabel::cliplabel(QWidget* parent, Qt::WindowFlags f)
 {
 	cut_index = -1;
 	cut_type = -1;
+	sorted = false;
 	edited_mode = NotEdited;
 	this->setMouseTracking(false);
 	this->setCursor(Qt::ArrowCursor);
@@ -23,6 +24,7 @@ cliplabel::cliplabel(vector<Mat> src, int bw, int w, int h, int index, int type,
 	cut_index = index;
 	cut_type = type;
 	length = l;
+	sorted = false;
 	edited_mode = NotEdited;
 
 	this->setScaledContents(true);
@@ -108,6 +110,21 @@ vector<int> cliplabel::getRange()
 	return range;
 }
 
+vector<int> cliplabel::getCuts()
+{
+	if (!sorted)
+	{
+		sort(cuts.begin(), cuts.end());
+		sorted = true;
+	}
+	return cuts;
+}
+
+bool cliplabel::isSorted()
+{
+	return sorted;
+}
+
 void cliplabel::enterEvent(QEvent *)
 {
 	if (edited_mode != isSelected && edited_mode != isSelectedDeleted && edited_mode != isDeleted && edited_mode != isViewed)
@@ -191,12 +208,14 @@ void cliplabel::cast(cliplabel *castedClip)
 	this->setPixmap(*castedClip->pixmap());
 	cut_type = castedClip->getCutType();
 	cut_index = castedClip->getCutIndex();
+	sorted = castedClip->isSorted();
 	if (castedClip->getEditedMode() == isSelectedDeleted)
 		this->setEditedMode(isSelected);
 	else if (castedClip->getEditedMode() == isSelected)
 		this->setEditedMode(isSelectedDeleted);
 	srcImages = castedClip->getSrcImages();
 	range = castedClip->getRange();
+	cuts = castedClip->getCuts();
 	this->setMouseTracking(true);
 	this->setCursor(Qt::PointingHandCursor);
 }
@@ -208,6 +227,7 @@ void cliplabel::uncast()
 	this->setEditedMode(NotEdited);
 	cut_index = -1;
 	cut_type = -1;
+	sorted = false;
 	srcImages.clear();
 	range.clear();
 	this->setMouseTracking(false);
@@ -223,6 +243,20 @@ void cliplabel::setSizeThreshold(int w, int h)
 void cliplabel::setRange(vector<int> rng)
 {
 	range = rng;
+}
+
+void cliplabel::addCut(int index)
+{
+	cuts.push_back(index);
+	sorted = false;
+}
+
+void cliplabel::deleteCut(int index)
+{
+	for (int i = 0; i < cuts.size(); i++)
+		if (index == cuts.at(i))
+			cuts.erase(cuts.begin()+i);
+	sorted = false;
 }
 
 /*void cliplabel::zoomIn()

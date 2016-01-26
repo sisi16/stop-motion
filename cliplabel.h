@@ -39,14 +39,16 @@ public:
 	std::vector<cv::Mat> getSrcImages();
 	isEdited getEditedMode();
 	std::vector<int> getRange();
-	bool getOriginMoving();
+	std::vector<int> getCuts();
+	bool isSorted();
 	void setEditedMode(isEdited mode);
 	void setCutType(int type);
 	void setCutIndex(int index);
 	void setSrcImages(std::vector<cv::Mat> src);
 	void setSizeThreshold(int w, int h);
 	void setRange(std::vector<int> rng);
-	void setOriginMoving(bool isMoving);
+	void addCut(int index);
+	void deleteCut(int index);
 	void cast(cliplabel *castedClip);
 	void uncast();
 	//void zoomIn();
@@ -65,7 +67,9 @@ private:
 	int cut_index;
 	int cut_type;
 	int length;
+	bool sorted;
 	std::vector<int> range;
+	std::vector<int> cuts;
 	isEdited edited_mode;
 	std::vector<cv::Mat> srcImages;
 };

@@ -6,35 +6,99 @@ using namespace std;
 myslider::myslider(Qt::Orientation orientation, QWidget *parent)
         : QSlider(orientation, parent)
 {
-	highLightIndex = -1;
+	//highLightIndex = -1;
 }
 
-myslider::myslider(Qt::Orientation orientation, vector<int> idc, vector<int> ref, QWidget *parent)
+/*myslider::myslider(Qt::Orientation orientation, vector<int> idc, vector<int> ref, QWidget *parent)
         : QSlider(orientation, parent)
 {
     indices = idc;
     reference = ref;
 	highLightIndex = -1;
-}
+}*/
 
 myslider::~myslider()
 {
+	if (!labels.empty())
+		labels.clear();
 }
 
-void myslider::updateParams(std::vector<int> idc, std::vector<int> ref)
+void myslider::addLabel(int index)
+{
+	labels.push_back(index);
+}
+
+void myslider::deleteLabel(int index)
+{
+	for (int i = 0; i < labels.size(); i++)
+		if (index == labels.at(i))
+			labels.at(i) = -1;
+}
+
+void myslider::setLabels(std::vector<int> l)
+{
+	labels = l;
+}
+
+void myslider::clearLabels()
+{
+	if (!labels.empty())
+		labels.clear();
+}
+
+std::vector<int> *myslider::getLabeledIndices()
+{
+	return &labeledIndices;
+}
+
+
+/*void myslider::updateParams(std::vector<int> idc, std::vector<int> ref)
 {
     indices = idc;
     reference = ref;
-}
+}*/
 
-void myslider::highLight(int value)
+/*void myslider::highLight(int value)
 {
 	highLightIndex = value;
-}
+}*/
 
 void myslider::paintEvent(QPaintEvent *ev)
 {
-    QStyleOptionSlider opt;
+	QSlider::paintEvent(ev);
+	QPainter *painter = new QPainter(this);
+	painter->setOpacity(0.5);
+	if (!labels.empty())
+	{
+		painter->setPen(QPen(Qt::blue, 8));
+		for (int i = 0; i < labels.size(); i++)
+		{
+			if (labels.at(i) != -1)
+			{
+				int x = round((labels.at(i) - this->minimum())*this->width() / double(this->maximum() - this->minimum()));
+				if (x == 0) painter->setPen(QPen(Qt::blue, 16));
+				painter->drawLine(x, 0, x, this->height() / 2);
+				if (x == 0) painter->setPen(QPen(Qt::blue, 8));
+			}
+		}
+	}
+	else
+	{
+		painter->setPen(QPen(Qt::red, 8));
+		for (int i = 0; i < labeledIndices.size(); i++)
+		{
+			if (labeledIndices.at(i) != -1)
+			{
+				int x = round(labeledIndices.at(i)*this->width() / double(this->maximum() - this->minimum()));
+				if (x == 0) painter->setPen(QPen(Qt::red, 16));
+				painter->drawLine(x, 0, x, this->height() / 2);
+				if (x == 0) painter->setPen(QPen(Qt::red, 8));
+			}
+		}
+	}
+	painter->end();
+
+    /*QStyleOptionSlider opt;
     initStyleOption(&opt);
 
     opt.subControls = QStyle::SC_SliderGroove | QStyle::SC_SliderHandle;
@@ -85,15 +149,14 @@ void myslider::paintEvent(QPaintEvent *ev)
 						painter.fillRect(rect, QBrush(Qt::green));
 					break;
 				}
-                /*case 3:
+                case 3:
                     painter.fillRect(rect, QBrush(Qt::blue));
                     break;
                 case 4:
                     painter.fillRect(rect, QBrush(Qt::green));
-                    break;*/
+                    break;
             }
         }
     }
-
-    painter.fillRect(handle_rect, QBrush(Qt::gray));
+    painter.fillRect(handle_rect, QBrush(Qt::gray));*/
 }

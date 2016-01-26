@@ -13,9 +13,9 @@
 #include <QGridLayout>
 #include <QMimeData>
 #include <QDrag>
-#include <QTimer>
 #include <windows.h>
 #include <stdio.h>
+#include <math.h>
 #include "videoprocessor.h"
 #include "myslider.h"
 #include "cliplabel.h"
@@ -38,6 +38,7 @@ public:
 	void setCurrentClip(cliplabel *clip);
 	void cutVideo();
 	void initFrameSlider();
+	int round(double r);
 
 protected:
 	bool eventFilter(QObject *widget, QEvent *event);
@@ -88,10 +89,14 @@ private slots:
 	void on_editRadioButton_clicked();
 
 	void on_keepRadioButton_clicked();
-	
+
     //void reverse_action();
 
-    //void show_context_menu();
+	void label_action();
+
+	void delete_action();
+
+	void show_context_menu();
 
 private:
     //int resize_count;
@@ -100,22 +105,23 @@ private:
 	QString fileName;
     Ui::MainWindow *ui;
     videoprocessor vproc;
-    //myslider *frame_slider;
+    myslider *frame_slider;
     QProgressBar *progressBar;
 	cliplabel *current_clip = NULL;
-	int current_clip_index;
+	int current_clip_index = -1;
+	int labelIndex = -1;
     bool isCut;
 	bool entered;
     //std::vector<int> clickRange;
 	//std::vector<int> movingRange;
 	//clipOperation action;
-    //QMenu *sliderMenu;
+    QMenu *sliderMenu = NULL;
 	//std::vector<cliplabel *> selectedClips;
 	std::vector<cliplabel *> clips;
 	//int addedTrackCount;
 	//std::vector<myscrollarea *> addedTrack;
-	std::vector<QScrollArea *> selectedTrack;
-	std::vector<QPoint> seletedPos;
+	//std::vector<QScrollArea *> selectedTrack;
+	//std::vector<QPoint> seletedPos;
 };
 
 #endif // MAINWINDOW_H

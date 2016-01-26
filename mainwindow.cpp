@@ -12,15 +12,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    isCut = false;
-	entered = false;
     //resize_count = -1;
     //window_current_width = this->width();
     //window_current_height = this->height() - ui->menuBar->height() - ui->mainToolBar->height();
+	isCut = false;
+	entered = false;
 	ui->frameLabel->setScaledContents(true);
 	//ui->scrollArea->setBackgroundRole(QPalette::Midlight);
 	ui->scrollArea_1->setBackgroundRole(QPalette::Midlight);
 	ui->scrollArea_2->setBackgroundRole(QPalette::Midlight);
+	frame_slider = new myslider(Qt::Horizontal);
+	ui->verticalLayout->addWidget(frame_slider);
 	//addedTrackCount = 0;
 }
 
@@ -309,11 +311,37 @@ void MainWindow::cutVideo()
 
 void MainWindow::initFrameSlider()
 {
-	ui->frame_slider->setRange(0, clips.size() - 1);
-	ui->frame_slider->setValue(0);
-	ui->frame_slider->setTickPosition(QSlider::TicksAbove);
-	ui->frame_slider->setTickInterval(1);
-	connect(ui->frame_slider, SIGNAL(sliderMoved(int)), this, SLOT(seek(int)));
+	frame_slider->clearLabels();
+	frame_slider->setRange(0, clips.size() - 1);
+	frame_slider->setValue(current_clip->getCutIndex());
+	frame_slider->setTickPosition(QSlider::TicksAbove);
+	frame_slider->setTickInterval(1);
+	connect(frame_slider, SIGNAL(sliderMoved(int)), this, SLOT(seek(int)));
+
+	vector<int> *labeledValues = frame_slider->getLabeledIndices();
+	bool empty = current_clip->getCuts().empty();
+	if (labeledValues->empty() && !empty)
+		labeledValues->push_back(current_clip_index);
+	else if (!labeledValues->empty())
+	{
+		for (int i = 0; i < labeledValues->size(); i++)
+		{
+			if (labeledValues->at(i) == current_clip_index && empty)
+			{
+				labeledValues->at(i) = -1;
+				return;
+			}
+			else if (labeledValues->at(i) == current_clip_index && !empty)
+				return;
+		}
+		if (!empty)
+			labeledValues->push_back(current_clip_index);
+	}
+}
+
+int MainWindow::round(double r)
+{
+	return (r > 0.0) ? int(floor(r + 0.5)) : int(ceil(r - 0.5));
 }
 
 /*void MainWindow::resizeEvent(QResizeEvent* ev)
@@ -363,22 +391,41 @@ void MainWindow::initFrameSlider()
 
 void MainWindow::on_playClipButton_clicked()
 {
-	int start = current_clip->getRange().at(0);
-	int end = current_clip->getRange().at(1);
-	int frameRate = vproc.getFrameRate();
-
-	if (current_clip->getCutType() == 2)
+	vector<int> cutRanges = current_clip->getCuts();
+	if (cutRanges.empty())
 	{
-		int delay = 500 / frameRate;//delay = 1000 / frame_rate;
-		for (int j = start; j <= end; j++)
+		int start = current_clip->getRange().at(0);
+		int end = current_clip->getRange().at(1);
+
+		if (current_clip->getCutType() == 2)
 		{
-			refresh(j);
-			Sleep(delay);
+			int delay = 500 / vproc.getFrameRate();//delay = 1000 / frame_rate;
+			for (int j = start; j <= end; j++)
+			{
+				refresh(j);
+				Sleep(delay);
+			}
 		}
+		else
+			refresh((start + end) / 2);
 	}
 	else
-		refresh((start + end) / 2);
+	{
+		int start, end;
+		int size = cutRanges.size();
+		int delay = 500 / vproc.getFrameRate();
 
+		for (int i = 0; i < size; i += 2)
+		{
+			start = cutRanges.at(i);
+			end = cutRanges.at(i + 1);
+			for (int j = start; j <= end; j++)
+			{
+				refresh(j);
+				Sleep(delay);
+			}
+		}
+	}
 	/*if (frame_slider->parent() == 0)
     {
 		child = ui->verticalLayout_2->takeAt(0);
@@ -426,7 +473,7 @@ void MainWindow::on_playTrackButton_clicked()
 	int size = clips.size();
 	cliplabel *item;
 
-	for (int i = ui->frame_slider->value()%(size-1); i < size; i++)
+	for (int i = frame_slider->value()%(size-1); i < size; i++)
 	{
 		item = clips.at(i);
 		isEdited orginMode = item->getEditedMode();
@@ -434,11 +481,27 @@ void MainWindow::on_playTrackButton_clicked()
 		{
 			item->setEditedMode(isViewed);
 			ui->scrollArea_1->horizontalScrollBar()->setSliderPosition(item->pos().x());
-			ui->frame_slider->setValue(i);
+			frame_slider->setValue(i);
 			start = item->getRange().at(0);
 			end = item->getRange().at(1);
-			
-			if (item->getCutType() == 2)
+			vector<int> cutRanges = item->getCuts();
+
+			if (!cutRanges.empty())
+			{
+				int size = cutRanges.size();
+				delay = 500 / vproc.getFrameRate();
+				for (int j = 0; j < size; j += 2)
+				{
+					start = cutRanges.at(j);
+					end = cutRanges.at(j + 1);
+					for (int k = start; k <= end; k++)
+					{
+						refresh(k);
+						Sleep(delay);
+					}
+				}
+			}
+			else if (item->getCutType() == 2)
 			{
 				delay = 500 / frameRate;
 				for (int j = start; j <= end; j++)
@@ -840,43 +903,38 @@ void MainWindow::on_actionLoad_triggered()
 
 bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 {
-    /*if (widget == frame_slider)
+    if (widget == frame_slider)
 	{
-		if (event->type() == QEvent::MouseMove)
+		/*if (event->type() == QEvent::MouseMove)
 		{
 			QMouseEvent *m = (QMouseEvent*)event;
 			QString tip = "position: (" + QString::number(m->x()) + ", " + QString::number(m->y()) + ")";
 			statusBar()->showMessage(tip);
 			return true;
-		}
-		else if (event->type() == QEvent::MouseButtonPress)
+		}*/
+		if (event->type() == QEvent::MouseButtonPress)
 		{
 			QMouseEvent *m = (QMouseEvent*)event;
-			clickRange = vproc.getRange(m->x(), frame_slider->width());
-
-			if (m->button() == Qt::LeftButton)
+			//clickRange = vproc.getRange(m->x(), frame_slider->width());
+			if (m->button() == Qt::RightButton)
 			{
-				action = ViewClip;
-				playRange();
-			}
-			else if (m->button() == Qt::RightButton)
-			{
+				labelIndex = round(m->x() * (frame_slider->maximum() - frame_slider->minimum()) / double(frame_slider->width()) + frame_slider->minimum());
 				frame_slider->setContextMenuPolicy(Qt::CustomContextMenu);
 				connect(frame_slider, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(show_context_menu()));
+				return true;
 			}
-
-			return true;
+			else
+				return false;
 		}
-		else if (event->type() == QEvent::Leave)
+		/*else if (event->type() == QEvent::Leave)
 		{
 			statusBar()->clearMessage();
 			return true;
-		}
-
-		return true;
-	}*/
-
-	if ((widget == ui->scrollAreaWidgetContents_1 || widget == ui->scrollAreaWidgetContents_2) && entered == true) //|| addedTrackCount != 0)
+		}*/
+		else 
+			return false;
+	}
+	else if ((widget == ui->scrollAreaWidgetContents_1 || widget == ui->scrollAreaWidgetContents_2) && entered == true) //|| addedTrackCount != 0)
 	{
 		if (event->type() == QEvent::MouseButtonPress)
 		{
@@ -930,6 +988,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 					}
 				}*/
 				setCurrentClip(item);
+				return true;
 				//selectedClips.push_back(item);
 				
 				/*else if (action == MoveClip)
@@ -1132,8 +1191,8 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 						item->show();
 				}*/
 			}
-
-			return true;
+			else 
+				return false;
 		}
 
 		else if (event->type() == QEvent::DragEnter)
@@ -1169,7 +1228,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 				/*else if (cut_type > 2)
 					origin = static_cast<cliplabel*>(addedTrack.at(cut_type-3)->getCentralWidget()->childAt(origin_pos));*/
 				origin->setEditedMode(isMoved);
-
+				return true;
 				/*if (addedTrackCount != 0)
 				{
 					for (int i = 0; i < addedTrackCount; i++)
@@ -1188,12 +1247,12 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 					}
 				}*/
 			}
-			return true;
+			else
+				return false;
 		}
-
-		return true;
+		else
+			return false;
 	}
-
     else 
 		return false;
 }
@@ -1207,14 +1266,22 @@ void MainWindow::on_editRadioButton_clicked()
 {
 	if (ui->editRadioButton->isChecked())
 	{
-		ui->frame_slider->setRange(current_clip->getRange().at(0), current_clip->getRange().at(1));
-		ui->frame_slider->setValue(0);
-		ui->frame_slider->setTickPosition(QSlider::TicksAbove);
-		ui->frame_slider->setTickInterval(1);
+		frame_slider->setRange(current_clip->getRange().at(0), current_clip->getRange().at(1));
+		frame_slider->setValue(current_clip->getRange().at(0));
+		frame_slider->setTickPosition(QSlider::TicksAbove);
+		frame_slider->setTickInterval(1);
+		frame_slider->setMouseTracking(true);
+		frame_slider->setLabels(current_clip->getCuts());
+		//ui->frame_slider->setCursor(Qt::PointingHandCursor);
+		frame_slider->installEventFilter(this);
 	}
 	else
+	{	
 		initFrameSlider();
-	
+		frame_slider->setMouseTracking(false);
+		frame_slider->removeEventFilter(this);
+	}
+
 	refresh(current_clip->getRange().at(0));
 
     /*if (isCut)
@@ -1308,24 +1375,43 @@ void MainWindow::on_keepRadioButton_clicked()
     statusBar()->showMessage(tip);
 }*/
 
-/*void MainWindow::show_context_menu()
+void MainWindow::label_action()
 {
-    if (sliderMenu)
+	frame_slider->addLabel(labelIndex);
+	current_clip->addCut(labelIndex);
+	QString tip = "Labeling " + QString::number(labelIndex);
+	statusBar()->showMessage(tip);
+	disconnect(frame_slider, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(show_context_menu()));
+}
+
+void MainWindow::delete_action()
+{
+	frame_slider->deleteLabel(labelIndex);
+	current_clip->deleteCut(labelIndex);
+	QString tip = "Deleting " + QString::number(labelIndex);
+	statusBar()->showMessage(tip);
+	disconnect(frame_slider, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(show_context_menu()));
+}
+
+void MainWindow::show_context_menu()
+{
+    if (sliderMenu != NULL)
     {
+		sliderMenu->hide();
         delete sliderMenu;
         sliderMenu = NULL;
     }
 
-    sliderMenu =new QMenu;
+    sliderMenu = new QMenu;
 
+    QAction *labelAction = new QAction(tr("Start/End"),this);
     QAction *deleteAction = new QAction(tr("Delete"),this);
-    QAction *reverseAction = new QAction(tr("Reverse"),this);
 
+    sliderMenu->addAction(labelAction);
     sliderMenu->addAction(deleteAction);
-    sliderMenu->addAction(reverseAction);
 
+    connect(labelAction, SIGNAL(triggered(bool)), this, SLOT(label_action()));
     connect(deleteAction, SIGNAL(triggered(bool)), this, SLOT(delete_action()));
-    connect(reverseAction, SIGNAL(triggered(bool)), this, SLOT(reverse_action()));
 
-    sliderMenu->exec(QCursor::pos());
-}*/
+	sliderMenu->exec(QCursor::pos());
+}
