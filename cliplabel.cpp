@@ -253,9 +253,12 @@ void cliplabel::addCut(int index)
 
 void cliplabel::deleteCut(int index)
 {
-	for (int i = 0; i < cuts.size(); i++)
-		if (index == cuts.at(i))
-			cuts.erase(cuts.begin()+i);
+	if (cuts.size() == 1) cuts.pop_back();
+	else
+	{
+		for (int i = 0; i < cuts.size(); i++)
+			if (index == cuts.at(i)) cuts.erase(cuts.begin() + i);
+	}
 	sorted = false;
 }
 

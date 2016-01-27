@@ -26,13 +26,17 @@ myslider::~myslider()
 void myslider::addLabel(int index)
 {
 	labels.push_back(index);
+	if (labels.size() > 1) sort(labels.begin(), labels.end());
 }
 
 void myslider::deleteLabel(int index)
 {
-	for (int i = 0; i < labels.size(); i++)
-		if (index == labels.at(i))
-			labels.at(i) = -1;
+	if (labels.size() == 1) labels.pop_back();
+	else
+	{
+		for (int i = 0; i < labels.size(); i++)
+			if (index == labels.at(i)) labels.erase(labels.begin() + i);//labels.at(i) = -1;
+	}
 }
 
 void myslider::setLabels(std::vector<int> l)
@@ -70,15 +74,24 @@ void myslider::paintEvent(QPaintEvent *ev)
 	painter->setOpacity(0.5);
 	if (!labels.empty())
 	{
-		painter->setPen(QPen(Qt::blue, 8));
-		for (int i = 0; i < labels.size(); i++)
+		if (labels.size() % 2 != 0)
 		{
-			if (labels.at(i) != -1)
+			painter->setPen(QPen(Qt::blue, 8));
+			for (int i = 0; i < labels.size(); i++)
 			{
 				int x = round((labels.at(i) - this->minimum())*this->width() / double(this->maximum() - this->minimum()));
 				if (x == 0) painter->setPen(QPen(Qt::blue, 16));
 				painter->drawLine(x, 0, x, this->height() / 2);
 				if (x == 0) painter->setPen(QPen(Qt::blue, 8));
+			}
+		}
+		else
+		{
+			for (int i = 0; i < labels.size(); i += 2)
+			{
+				int x_1 = round((labels.at(i) - this->minimum())*this->width() / double(this->maximum() - this->minimum()));
+				int x_2 = round((labels.at(i+1) - this->minimum())*this->width() / double(this->maximum() - this->minimum()));
+				painter->fillRect(x_1, 0, x_2 - x_1, this->height() / 2, Qt::blue);
 			}
 		}
 	}

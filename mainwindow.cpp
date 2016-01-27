@@ -1404,8 +1404,8 @@ void MainWindow::show_context_menu()
 
     sliderMenu = new QMenu;
 
-    QAction *labelAction = new QAction(tr("Start/End"),this);
-    QAction *deleteAction = new QAction(tr("Delete"),this);
+    QAction *labelAction = new QAction(QIcon(":/Images/icons/label.png"), tr("Start/End"), this);
+	QAction *deleteAction = new QAction(QIcon(":/Images/icons/delete_32.png"), tr("Delete"), this);
 
     sliderMenu->addAction(labelAction);
     sliderMenu->addAction(deleteAction);
