@@ -137,6 +137,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="blobtrack.cpp" />
     <ClCompile Include="cliplabel.cpp" />
     <ClCompile Include="handdetection.cpp" />
     <ClCompile Include="main.cpp" />
@@ -165,6 +166,7 @@ endlocal</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC cliplabel.h</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debug\moc_cliplabel.cpp;%(Outputs)</Outputs>
     </CustomBuild>
+    <ClInclude Include="blobtrack.h" />
     <ClInclude Include="handdetection.h" />
     <CustomBuild Include="mainwindow.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">mainwindow.h;%(AdditionalInputs)</AdditionalInputs>

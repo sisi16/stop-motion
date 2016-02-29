@@ -10,7 +10,8 @@ class handdetection
 public:
     handdetection();
     ~handdetection();
-    bool isHand(cv::Mat frame);
+    void isHand(cv::Mat frame, cv::Mat &hand_mask);
+	bool isHand(cv::Mat frame, std::vector<cv::Point> blob);
 
 private:
     int hue_min;

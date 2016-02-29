@@ -11,6 +11,7 @@ cliplabel::cliplabel(QWidget* parent, Qt::WindowFlags f)
 	cut_type = -1;
 	sorted = false;
 	edited_mode = NotEdited;
+	this->setScaledContents(true);
 	this->setMouseTracking(false);
 	this->setCursor(Qt::ArrowCursor);
 }
@@ -59,7 +60,7 @@ cliplabel::cliplabel(vector<Mat> src, int bw, int w, int h, int index, int type,
 	painter->drawRect(0, 0, pm->width()-1, pm->height()-1);
 	painter->end();
 	this->setPixmap(*pm);
-	//this->setFixedSize(w, h);
+	this->setFixedSize(w, h);
 
 	this->setMouseTracking(true);
 	this->setCursor(Qt::PointingHandCursor);
@@ -163,8 +164,8 @@ void cliplabel::setEditedMode(isEdited mode)
 			this->setStyleSheet("border: 5px inset green");
 		break;
 
-	case isDeleted:
-		this->setStyleSheet("border: 3px dashed rgb(0, 0, 0)");
+	case isDeleted: //3px
+		this->setStyleSheet("border: 5px dashed rgb(0, 0, 0)");
 		break;
 
 	case isSelectedDeleted:
@@ -204,7 +205,7 @@ void cliplabel::setSrcImages(vector<Mat> src)
 
 void cliplabel::cast(cliplabel *castedClip)
 {
-	this->setScaledContents(true);
+	//this->setScaledContents(true);
 	this->setPixmap(*castedClip->pixmap());
 	cut_type = castedClip->getCutType();
 	cut_index = castedClip->getCutIndex();
@@ -223,7 +224,7 @@ void cliplabel::cast(cliplabel *castedClip)
 void cliplabel::uncast()
 {
 	this->setPixmap(QPixmap(""));
-	this->setScaledContents(false);
+	//this->setScaledContents(false);
 	this->setEditedMode(NotEdited);
 	cut_index = -1;
 	cut_type = -1;

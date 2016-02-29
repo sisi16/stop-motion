@@ -271,6 +271,7 @@ void MainWindow::setCurrentClip(cliplabel *clip)
 
 	refresh(current_clip->getRange().at(0));
 	ui->scrollArea_1->horizontalScrollBar()->setSliderPosition(current_clip->pos().x());
+	frame_slider->setValue(current_clip_index);
 }
 
 void MainWindow::cutVideo()
@@ -316,6 +317,7 @@ void MainWindow::initFrameSlider()
 	frame_slider->setValue(current_clip->getCutIndex());
 	frame_slider->setTickPosition(QSlider::TicksAbove);
 	frame_slider->setTickInterval(1);
+	frame_slider->setEditMode(false);
 	connect(frame_slider, SIGNAL(sliderMoved(int)), this, SLOT(seek(int)));
 
 	vector<int> *labeledValues = frame_slider->getLabeledIndices();
@@ -1271,6 +1273,7 @@ void MainWindow::on_editRadioButton_clicked()
 		frame_slider->setTickPosition(QSlider::TicksAbove);
 		frame_slider->setTickInterval(1);
 		frame_slider->setMouseTracking(true);
+		frame_slider->setEditMode(true);
 		frame_slider->setLabels(current_clip->getCuts());
 		//ui->frame_slider->setCursor(Qt::PointingHandCursor);
 		frame_slider->installEventFilter(this);

@@ -15,6 +15,7 @@ public:
     //myslider(Qt::Orientation orientation, std::vector<int> idc, std::vector<int> ref, QWidget *parent = 0);
     //void updateParams(std::vector<int> idc, std::vector<int> ref);
     ~myslider();
+	void setEditMode(bool onOrOff);
 	void addLabel(int index);
 	void deleteLabel(int index);
 	void setLabels(std::vector<int> l);
@@ -28,6 +29,7 @@ protected:
     void paintEvent(QPaintEvent *ev);
 
 private:
+	bool editModeOn = false;
 	std::vector<int> labels;
 	std::vector<int> labeledIndices;
 	//int highLightIndex;

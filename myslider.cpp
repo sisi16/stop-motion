@@ -23,6 +23,11 @@ myslider::~myslider()
 		labels.clear();
 }
 
+void myslider::setEditMode(bool onOrOff)
+{
+	editModeOn = onOrOff;
+}
+
 void myslider::addLabel(int index)
 {
 	labels.push_back(index);
@@ -95,7 +100,7 @@ void myslider::paintEvent(QPaintEvent *ev)
 			}
 		}
 	}
-	else
+	else if (!editModeOn)
 	{
 		painter->setPen(QPen(Qt::red, 8));
 		for (int i = 0; i < labeledIndices.size(); i++)

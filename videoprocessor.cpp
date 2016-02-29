@@ -74,7 +74,7 @@ void videoprocessor::readVideo(const string file)
 	progressBar->setRange(0, num_of_frames - 1);//progressBar->setRange(0, frames.size()-1);
     progressBar->setValue(0);*/
 
-	//test();
+	test();
 }
 
 vector<Mat> videoprocessor::getFrames()
@@ -547,147 +547,9 @@ int videoprocessor::getFrameRate()
 }*/
 
 void videoprocessor::test()
-{
-	if (out.isOpened())
-		cout << "Open." << endl;
-
-	Mat frame;
-	out.open("D:/CCCC/Stop Motion/Videos/UserTestOutput_2.avi", CV_FOURCC('M', 'J', 'P', 'G'), 10, Size(960, 540));
-	
-	if (!out.isOpened())
-		throw "Error! Unable to open video file for output.";
-	
-	stringstream ss;
-	string type = ".jpg";
-	
-	frame = imread("D:/CCCC/Stop Motion/UserTest_2/540/30.jpg");
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	for (int i = 55; i <= 84; i++)
-	{
-		ss << i << type;
-		frame = imread("D:/CCCC/Stop Motion/UserTest_2/540/" + ss.str());
-		out << frame;
-		ss.str("");
-	}
-	frame = imread("D:/CCCC/Stop Motion/UserTest_2/540/270.jpg");
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	frame = imread("D:/CCCC/Stop Motion/UserTest_2/540/470.jpg");
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	frame = imread("D:/CCCC/Stop Motion/UserTest_2/540/580.jpg");
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	frame = imread("D:/CCCC/Stop Motion/UserTest_2/540/680.jpg");
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	for (int i = 707; i <= 718; i++)
-	{
-		ss << i << type;
-		frame = imread("D:/CCCC/Stop Motion/UserTest_2/540/" + ss.str());
-		out << frame;
-		ss.str("");
-	}
-	frame = imread("D:/CCCC/Stop Motion/UserTest_2/540/850.jpg");
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	frame = imread("D:/CCCC/Stop Motion/UserTest_2/540/970.jpg");
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	frame = imread("D:/CCCC/Stop Motion/UserTest_2/540/1120.jpg");
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	frame = imread("D:/CCCC/Stop Motion/UserTest_2/540/1250.jpg");
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	frame = imread("D:/CCCC/Stop Motion/UserTest_2/540/1430.jpg");
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	for (int i = 1468; i <= 1538; i++)
-	{
-		ss << i << type;
-		frame = imread("D:/CCCC/Stop Motion/UserTest_2/540/" + ss.str());
-		out << frame;
-		ss.str("");
-	}
-	frame = imread("D:/CCCC/Stop Motion/UserTest_2/540/1680.jpg");
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	for (int i = 1719; i <= 1804; i++)
-	{
-		ss << i << type;
-		frame = imread("D:/CCCC/Stop Motion/UserTest_2/540/" + ss.str());
-		out << frame;
-		ss.str("");
-	}
-	frame = imread("D:/CCCC/Stop Motion/UserTest_2/540/1830.jpg");
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	for (int i = 1880; i <= 1892; i++)
-	{
-		ss << i << type;
-		frame = imread("D:/CCCC/Stop Motion/UserTest_2/540/" + ss.str());
-		out << frame;
-		ss.str("");
-	}
-	frame = imread("D:/CCCC/Stop Motion/UserTest_2/540/1980.jpg");
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	for (int i = 2039; i <= 2164; i++)
-	{
-		ss << i << type;
-		frame = imread("D:/CCCC/Stop Motion/UserTest_2/540/" + ss.str());
-		out << frame;
-		ss.str("");
-	}
-	frame = imread("D:/CCCC/Stop Motion/UserTest_2/540/2200.jpg");
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-	out << frame;
-
-	out.release();
+{	
+	blobtrack bTrack(fileName, num_of_frames);
+	bTrack.process();
 }
 
 void videoprocessor::writeBuffers()

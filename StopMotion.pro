@@ -22,7 +22,8 @@ SOURCES += main.cpp\
            handdetection.cpp \
            myslider.cpp \
            cliplabel.cpp \
-           myscrollarea.cpp
+           myscrollarea.cpp \
+           blobtrack.cpp
 
 HEADERS  += mainwindow.h \
             videoprocessor.h \
@@ -30,7 +31,8 @@ HEADERS  += mainwindow.h \
             handdetection.h \
             myslider.h \
             cliplabel.h \
-            myscrollarea.h
+            myscrollarea.h \
+            blobtrack.h
 
 FORMS    += mainwindow.ui
 

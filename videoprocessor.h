@@ -7,11 +7,13 @@
 #include <opencv2/nonfree/nonfree.hpp>
 #include <opencv2/nonfree/features2d.hpp>
 #include <opencv2/features2d/features2d.hpp>
+#include <opencv2/video/background_segm.hpp>
 #include <QProgressBar>
 #include <string>
 #include <sstream>
 #include "opflow.h"
 #include "handdetection.h"
+#include "blobtrack.h"
 
 /*enum clipOperation
 {
