@@ -38,6 +38,7 @@ public:
 	void setCurrentClip(cliplabel *clip);
 	void cutVideo();
 	void initFrameSlider();
+	void drawScatterPlot();
 	int round(double r);
 
 protected:

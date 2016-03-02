@@ -43,6 +43,7 @@ public:
 	{
 		return contourArea(c1) > contourArea(c2);
 	}
+	bool isFlowCorrect(float u);
 	void klt(const std::string filename, int numOfFrames);
 
 private:

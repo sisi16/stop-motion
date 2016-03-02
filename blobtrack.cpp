@@ -1,4 +1,5 @@
 #include "blobtrack.h"
+#include <fstream>
 
 using namespace std;
 using namespace cv;
@@ -137,6 +138,11 @@ void blobDetector::process(const string filename, int numOfFrames)
 	}
 }
 
+bool blobDetector::isFlowCorrect(float u)
+{
+	return !cvIsNaN(u) && (fabs(u) < 1e9);
+}
+
 void blobDetector::klt(const string filename, int numOfFrames)
 {
 	TermCriteria termcrit(CV_TERMCRIT_ITER | CV_TERMCRIT_EPS, 20, 0.03);
@@ -153,6 +159,7 @@ void blobDetector::klt(const string filename, int numOfFrames)
 
 	//cv::initModule_nonfree();//if use SIFT or SURF
 	//Ptr<FeatureDetector> detector = FeatureDetector::create("SIFT");
+	ofstream centerfile("D:/CCCC/Stop Motion/Test8/points1.txt");
 
 	for (int i = 0; i < numOfFrames; i++)//for (int i = 70; i < 120; i++)//for (int i = 1020; i < 1055; i++)//
 	{
@@ -180,10 +187,12 @@ void blobDetector::klt(const string filename, int numOfFrames)
 		{
 			vector<uchar> status;
 			vector<float> err;
+			int num_drift_pts = 0;
+
 			if (prevGray.empty())
 				gray.copyTo(prevGray);
-			calcOpticalFlowPyrLK(prevGray, gray, points[0], points[1], status, err, winSize,
-				3, termcrit, 0, 0.001);
+			calcOpticalFlowPyrLK(prevGray, gray, points[0], points[1], status, err, winSize, 3, termcrit, 0, 0.001);
+			
 			size_t i, k;
 			for (i = k = 0; i < points[1].size(); i++)
 			{
@@ -191,19 +200,45 @@ void blobDetector::klt(const string filename, int numOfFrames)
 					continue;
 
 				points[1][k++] = points[1][i];
-				circle(image, points[1][i], 3, Scalar(0, 255, 0), -1, 8);
+				float flowx = abs(points[0][i].x - points[1][i].x);
+				float flowy = abs(points[0][i].y - points[1][i].y);
+				if (flowx > 30 || flowy > 30)
+				{
+					//circle(image, points[1][i], 3, Scalar(255, 255, 0), -1, 8);
+					num_drift_pts++;
+				}
+				/*else if (flowx > 1 || flowy > 1)
+				{
+					line(image, points[0][i], points[1][i], Scalar(255, 255, 255));
+					circle(image, points[1][i], 3, Scalar(255, 0, 255), -1, 8);
+				}
+				else
+					circle(image, points[1][i], 3, Scalar(0, 255, 0), -1, 8);*/
 			}
 			points[1].resize(k);
+			if (num_drift_pts >= 5)
+			{
+				goodFeaturesToTrack(gray, points[1], MAX_COUNT, 0.01, 10, Mat(), 3, 1, 0.04);//detector->detect(image, keypoints);
+				cornerSubPix(gray, points[1], subPixWinSize, Size(-1, -1), termcrit);
+			}
 		}
 
-		if ((i+1) % 5 == 0) needToInit = true;
+		Scalar mean = cv::mean(points[1]);
+		centerfile << mean[0] << " " << mean[1] << endl; //circle(image, Point2f(mean[0], mean[1]), 3, Scalar(0, 0, 255), -1, 8);
+
+		if ((i+1) % 5 == 0) 
+			needToInit = true;
 		else needToInit = false;
-		imshow("LK", image);
+
+		/*imshow("LK", image);
 		if (waitKey(delay) == 27) break;
-		if (waitKey(delay) == 32) waitKey(0);
+		if (waitKey(delay) == 32) waitKey(0);*/
+
 		std::swap(points[1], points[0]);
 		cv::swap(prevGray, gray);
 	}
+
+	centerfile.close();
 }
 
 //////////////// blobtrack ////////////////

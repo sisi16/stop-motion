@@ -74,7 +74,7 @@ void videoprocessor::readVideo(const string file)
 	progressBar->setRange(0, num_of_frames - 1);//progressBar->setRange(0, frames.size()-1);
     progressBar->setValue(0);*/
 
-	test();
+	//test();
 }
 
 vector<Mat> videoprocessor::getFrames()

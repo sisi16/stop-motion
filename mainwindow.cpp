@@ -269,6 +269,9 @@ void MainWindow::setCurrentClip(cliplabel *clip)
 		ui->keepRadioButton->setChecked(false);
 	}
 
+	if (current_clip->getCutType() == 2)
+		drawScatterPlot();
+
 	refresh(current_clip->getRange().at(0));
 	ui->scrollArea_1->horizontalScrollBar()->setSliderPosition(current_clip->pos().x());
 	frame_slider->setValue(current_clip_index);
@@ -339,6 +342,56 @@ void MainWindow::initFrameSlider()
 		if (!empty)
 			labeledValues->push_back(current_clip_index);
 	}
+}
+
+void MainWindow::drawScatterPlot()
+{
+	
+	ifstream centerfile;
+	if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") centerfile.open("D:/CCCC/Stop Motion/Test7/points1.txt");
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") centerfile.open("D:/CCCC/Stop Motion/Test8/points1.txt");
+
+	if (centerfile.is_open())
+	{
+		vector<int> range = current_clip->getRange();
+		cout << range[0] << " " << range[1] << endl;
+
+		float x, y;
+		float xmin = 500;
+		//float ymin = 300;
+		float xmax = -1;
+		//float ymax = -1;
+		int i = 0;
+		vector<Point2f> points;
+		
+		while (centerfile >> x >> y)
+		{
+			if (i >= range[0] && i <= range[1])
+			{
+				if (x != 0 || y != 0)
+				{
+					if (x < xmin) xmin = x;
+					if (x > xmax) xmax = x;
+					//if (y < ymin) ymin = y;
+					//if (y > ymax) ymax = y;
+					points.push_back(Point2f(x, y));
+				}
+			}
+			i++;
+		}
+
+		Mat plot(270, (xmax - xmin) * 15 / 2, CV_8UC3, Scalar(255, 255, 255));
+		//Mat plot((ymax-ymin)*15/2, (xmax-xmin)*15/2, CV_8UC3, Scalar(255, 255, 255));
+		for (size_t i = 0; i < points.size(); i++)
+		{
+			circle(plot, Point2f((points[i].x - xmin + (xmax - xmin) / 4) * 5, points[i].y), 1, Scalar(0, 0, 255), -1, 8);
+				//(points[i].y-ymin+(ymax-ymin)/4)*5), 1, Scalar(0, 0, 255), -1, 8);
+		}
+
+		centerfile.close();
+		imshow("Plot", plot);
+	}
+	else cout << "Unable to open file" << endl;
 }
 
 int MainWindow::round(double r)
