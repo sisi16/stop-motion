@@ -269,9 +269,12 @@ void MainWindow::setCurrentClip(cliplabel *clip)
 		ui->keepRadioButton->setChecked(false);
 	}
 
-	if (current_clip->getCutType() == 2)
-		drawScatterPlot();
-
+	/*if (current_clip->getCutType() == 2)
+	{
+		vector<Point2f> centers = klt();
+		drawScatterPlot(centers);
+		
+	}*/
 	refresh(current_clip->getRange().at(0));
 	ui->scrollArea_1->horizontalScrollBar()->setSliderPosition(current_clip->pos().x());
 	frame_slider->setValue(current_clip_index);
@@ -284,6 +287,7 @@ void MainWindow::cutVideo()
 	progressBar->show();*/
 
 	vproc.readBuffers();
+	vproc.test();
 	/*if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
 	vproc.cut2Scenes();
 	vproc.writeBuffers();*/
@@ -392,6 +396,137 @@ void MainWindow::drawScatterPlot()
 		imshow("Plot", plot);
 	}
 	else cout << "Unable to open file" << endl;
+}
+
+void MainWindow::drawScatterPlot(vector<Point2f> points)
+{
+	float x, y;
+	float xmin = 500;
+	//float ymin = 300;
+	float xmax = -1;
+	//float ymax = -1;
+	for (size_t i = 0; i < points.size(); i++)
+	{
+		x = points[i].x;
+		y = points[i].y;
+		if (x != 0 || y != 0)
+		{
+			if (x < xmin) xmin = x;
+			if (x > xmax) xmax = x;
+			//if (y < ymin) ymin = y;
+			//if (y > ymax) ymax = y;
+		}
+	}
+
+	Mat plot(270, (xmax - xmin) * 15 / 2, CV_8UC3, Scalar(255, 255, 255));
+	//Mat plot((ymax-ymin)*15/2, (xmax-xmin)*15/2, CV_8UC3, Scalar(255, 255, 255));
+	for (size_t i = 0; i < points.size(); i++)
+	{
+		circle(plot, Point2f((points[i].x - xmin + (xmax - xmin) / 4) * 5, points[i].y), 1, Scalar(0, 0, 255), -1, 8);
+		//(points[i].y-ymin+(ymax-ymin)/4)*5), 1, Scalar(0, 0, 255), -1, 8);
+	}
+	imshow("Plot", plot);
+}
+
+vector<Point2f> MainWindow::klt()
+{
+	TermCriteria termcrit(CV_TERMCRIT_ITER | CV_TERMCRIT_EPS, 20, 0.03);
+	Size subPixWinSize(10, 10), winSize(31, 31);
+	const int MAX_COUNT = 500;
+	bool needToInit = true;
+	int delay = 100;
+
+	Mat gray, prevGray, image;
+	//vector<KeyPoint> keypoints;
+	vector<Point2f> points[2];
+	stringstream ss;
+	string type = ".jpg";
+	vector<Point2f> centers;
+	//cv::initModule_nonfree();//if use SIFT or SURF
+	//Ptr<FeatureDetector> detector = FeatureDetector::create("SIFT");
+
+	int start = current_clip->getRange().at(0);
+	int end = current_clip->getRange().at(1);
+	bool drifted = false;
+	for (int i = start; i <= end; i++)
+	{
+		Mat frame;
+		ss << i << type;
+		if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
+		ss.str("");
+
+		frame.copyTo(image);
+		cvtColor(image, gray, COLOR_BGR2GRAY);
+
+		if (needToInit && !drifted)
+		{
+			// automatic initialization
+			goodFeaturesToTrack(gray, points[1], MAX_COUNT, 0.01, 10, Mat(), 3, 1, 0.04);//detector->detect(image, keypoints);
+			//KeyPoint::convert(keypoints, points[1]);
+			cornerSubPix(gray, points[1], subPixWinSize, Size(-1, -1), termcrit);
+			for (size_t i = 0; i < points[1].size(); i++)
+				circle(image, points[1][i], 3, Scalar(0, 255, 255), -1, 8);
+		}
+		else if (!points[0].empty())
+		{
+			vector<uchar> status;
+			vector<float> err;
+			drifted = false;//int num_drift_pts = 0;
+
+			if (prevGray.empty())
+				gray.copyTo(prevGray);
+			calcOpticalFlowPyrLK(prevGray, gray, points[0], points[1], status, err, winSize, 3, termcrit, 0, 0.001);
+
+			size_t i, k;
+			for (i = k = 0; i < points[1].size(); i++)
+			{
+				if (!status[i])
+					continue;
+
+				drifted = false;
+				points[1][k++] = points[1][i];
+				float flowx = abs(points[0][i].x - points[1][i].x);
+				float flowy = abs(points[0][i].y - points[1][i].y);
+				if (flowx > 20 || flowy > 20)
+				{
+					drifted = true;//circle(image, points[1][i], 3, Scalar(255, 255, 0), -1, 8);
+					break;//num_drift_pts++;
+				}
+				else if ((flowx < 5 && flowx > 1) || (flowy < 9 && flowy > 5))
+				{
+					line(image, points[0][i], points[1][i], Scalar(255, 255, 255));
+					circle(image, points[1][i], 3, Scalar(255, 0, 255), -1, 8);
+				}
+				else
+					circle(image, points[1][i], 3, Scalar(0, 255, 0), -1, 8);
+			}
+			points[1].resize(k);
+			if (drifted)//if (num_drift_pts >= 5)
+			{
+				goodFeaturesToTrack(gray, points[1], MAX_COUNT, 0.01, 10, Mat(), 3, 1, 0.04);//detector->detect(image, keypoints);
+				cornerSubPix(gray, points[1], subPixWinSize, Size(-1, -1), termcrit);
+				for (size_t i = 0; i < points[1].size(); i++)
+					circle(image, points[1][i], 3, Scalar(0, 255, 255), -1, 8);
+			}
+		}
+
+		Scalar mean = cv::mean(points[1]);
+		centers.push_back(Point2f(mean[0], mean[1]));
+		circle(image, Point2f(mean[0], mean[1]), 3, Scalar(0, 0, 255), -1, 8);
+
+		if ((i + 1) % 5 == 0)
+			needToInit = true;
+		else needToInit = false;
+
+		imshow("LK", image);
+		if (waitKey(delay) == 27) break;
+		if (waitKey(delay) == 32) waitKey(0);
+
+		std::swap(points[1], points[0]);
+		cv::swap(prevGray, gray);
+	}
+	return centers;
 }
 
 int MainWindow::round(double r)

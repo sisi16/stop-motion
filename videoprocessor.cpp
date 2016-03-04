@@ -548,8 +548,39 @@ int videoprocessor::getFrameRate()
 
 void videoprocessor::test()
 {	
-	blobtrack bTrack(fileName, num_of_frames);
-	bTrack.process();
+	//blobtrack bTrack(fileName, num_of_frames);
+	//bTrack.process();
+
+	stringstream ss;
+	string type = ".jpg";
+	Mat frame, prevframe;
+	int index;
+
+	ofstream matchfile;
+	if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") matchfile.open("D:/CCCC/Stop Motion/Test6/matches.txt");
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") matchfile.open("D:/CCCC/Stop Motion/Test7/matches.txt");
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") matchfile.open("D:/CCCC/Stop Motion/Test8/matches.txt");
+	
+	for (int i = 0; i < scene_cuts.size(); i+=2)
+	{
+		if (i == 0) index = scene_cuts[0] / 2;
+		else index = (scene_cuts[i] + scene_cuts[i - 1] + 1) / 2;
+		ss << index << type;
+	
+		if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
+		ss.str("");
+
+		if (i != 0)
+			matchfile << matchFeatures(prevframe, frame) << endl;
+		prevframe = frame;
+
+		if (waitKey(2000) == 27) break;
+		if (waitKey(2000) == 32) waitKey(0);
+	}
+
+	matchfile.close();
 }
 
 void videoprocessor::writeBuffers()
@@ -618,13 +649,26 @@ void videoprocessor::readBuffers()
 
 int videoprocessor::matchFeatures(Mat image_1, Mat image_2)
 {
+	//TermCriteria termcrit(CV_TERMCRIT_ITER | CV_TERMCRIT_EPS, 20, 0.03);
+	//Size subPixWinSize(10, 10), winSize(31, 31);
+
 	initModule_nonfree();
 	vector<KeyPoint> keypoints_1, keypoints_2;
+	//vector<Point2f> points_1, points_2;
 	Mat descriptor_1, descriptor_2;
 
-	Ptr<FeatureDetector> detector = FeatureDetector::create("HARRIS");
-	detector->detect(image_1, keypoints_1);
-	detector->detect(image_2, keypoints_2);
+	cv::GoodFeaturesToTrackDetector detector(
+		500,    // maximum number of corners to be returned  
+		0.01,   // quality level  
+		10);    // minimum allowed distance between points
+	//Ptr<FeatureDetector> detector = FeatureDetector::create("SIFT");
+	detector.detect(image_1, keypoints_1);
+	detector.detect(image_2, keypoints_2);
+	/*KeyPoint::convert(keypoints_1, points_1);
+	KeyPoint::convert(keypoints_2, points_2);
+	cornerSubPix(image_1, points_1, subPixWinSize, Size(-1, -1), termcrit);
+	cornerSubPix(image_2, points_2, subPixWinSize, Size(-1, -1), termcrit);*/
+
 	/*Mat display_1, display_2;
 	drawKeypoints(image_1, keypoints_1, display_1, Scalar::all(-1), 0);
 	drawKeypoints(image_2, keypoints_2, display_2, Scalar::all(-1), 0);
@@ -633,7 +677,7 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2)
 	//cout << keypoints_1.size() << endl;
 	//cout << keypoints_2.size() << endl;
 
-	int x_1 = 0;
+	/*int x_1 = 0;
 	int y_1 = 0;
 	for (int i = 0; i < keypoints_1.size(); i++)
 	{
@@ -646,19 +690,19 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2)
 	{
 		x_2 += keypoints_2.at(j).pt.x;
 		y_2 += keypoints_2.at(j).pt.y;
-	}
+	}*/
 
-	cout << keypoints_1.size() << " " << keypoints_2.size() << endl;
+	//cout << keypoints_1.size() << " " << keypoints_2.size() << endl;
 	//cout << double(x_1) / keypoints_1.size() << " " << double(y_1) / keypoints_1.size() << " " << double(x_2) / keypoints_2.size() << " " << double(y_2) / keypoints_2.size() << endl;
 	//if (abs(double(x_1) / keypoints_1.size() - double(x_2) / keypoints_2.size()) < 2 && abs(double(y_1) / keypoints_1.size() - double(y_2) / keypoints_2.size()) < 2) // 4 for test
-	if (abs(double(x_1) / keypoints_1.size() - double(x_2) / keypoints_2.size()) < 2 && abs(double(y_1) / keypoints_1.size() - double(y_2) / keypoints_2.size()) < 2)
-		return -1;
+	//if (abs(double(x_1) / keypoints_1.size() - double(x_2) / keypoints_2.size()) < 2 && abs(double(y_1) / keypoints_1.size() - double(y_2) / keypoints_2.size()) < 2)
+		//return -1;
 	//cout << "Here" << endl;
 	Ptr<DescriptorExtractor> descriptor_extractor = DescriptorExtractor::create("SIFT");
 	descriptor_extractor->compute(image_1, keypoints_1, descriptor_1);
 	descriptor_extractor->compute(image_2, keypoints_2, descriptor_2);
 
-	BFMatcher matcher(NORM_L2);
+	FlannBasedMatcher matcher; // BFMatcher matcher(NORM_L2);
 	vector<vector<DMatch>> allMatches;
 	matcher.knnMatch(descriptor_1, descriptor_2, allMatches, 1);
 	vector<DMatch> matches;
@@ -668,44 +712,43 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2)
 
 	for (int i = 0; i < allMatches.size(); i++)
 	{
-		for (int j = 0; j < allMatches[i].size(); j++)
-		{
-			if (allMatches[i][j].distance < min)
-				min = allMatches[i][j].distance;
-			if (allMatches[i][j].distance > max)
-				max = allMatches[i][j].distance;
-		}
+		if (allMatches[i][0].distance < min)
+			min = allMatches[i][0].distance;
+		if (allMatches[i][0].distance > max)
+			max = allMatches[i][0].distance;
 	}
 
 	min = min < 0.01f ? 0.01f : min;
 	//cout << min << " " << max << endl;
-	int not_moving_count = 0;
+	//int not_moving_count = 0;
 	for (int i = 0; i < allMatches.size(); i++)
 	{
 		for (int j = 0; j < allMatches[i].size(); j++)
 		{
-			if (allMatches[i][j].distance < 15 * min) // 7 for test, 6
+			if (allMatches[i][j].distance * 3 < max * 2) // 15
 			{
 				Point2f point1 = keypoints_1[allMatches[i][j].queryIdx].pt;
 				Point2f point2 = keypoints_2[allMatches[i][j].trainIdx].pt;
 				//cout << point1.x << " " << point1.y << " " << point2.x << " " << point2.y << endl;
-				if (abs(point1.x - point2.x) < 50 && abs(point1.y - point2.y) < 50) // for test4 could be 40 I think.
+				float flowx = abs(point1.x - point2.x);
+				float flowy = abs(point1.y - point2.y);
+				if (flowx > 2.7 && flowx < 40.5 && flowy > 4.8 && flowy < 72) // 50
 				{
 					//cout << point1.x << " " << point1.y << " " << point2.x << " " << point2.y << endl;
 					matches.push_back(allMatches[i][j]);
 				}
 				//matches.push_back(allMatches[i][j]);
-				if (abs(point1.x - point2.x) <= 5 && abs(point1.y - point2.y) <= 5) not_moving_count++;
+				//if (abs(point1.x - point2.x) < 5.4 && abs(point1.y - point2.y) < 9.6) not_moving_count++;
 			}
 		}
 	}
 	cout << matches.size() << endl;
 	//cout << not_moving_count << endl << endl;
 
-	/*Mat image_matches;
+	Mat image_matches;
 	drawMatches(image_1, keypoints_1, image_2, keypoints_2, matches, image_matches, Scalar::all(-1), Scalar::all(-1),
 				vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-	imshow("Matches", image_matches);*/
+	imshow("Matches", image_matches);
 	
-	return (matches.size() - not_moving_count);
+	return matches.size();
 }

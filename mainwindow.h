@@ -39,6 +39,8 @@ public:
 	void cutVideo();
 	void initFrameSlider();
 	void drawScatterPlot();
+	void drawScatterPlot(std::vector<cv::Point2f> points);
+	std::vector<cv::Point2f> klt();
 	int round(double r);
 
 protected:
