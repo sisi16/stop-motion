@@ -118,8 +118,6 @@ void MainWindow::visualizeClips()
 	int height = floor(0.8 * ui->scrollArea_1->height());
 	int base_width = ceil(height * vproc.getFrameWidth() / double(vproc.getFrameHeight()));
 	int base, width, cut_size, length;
-	int stableClipsCounter = 0;
-	cliplabel *previousMovingClip = NULL;
 
 	/*myscrollarea *scroll = new myscrollarea();
 	ui->verticalLayout->addWidget(scroll);
@@ -130,10 +128,11 @@ void MainWindow::visualizeClips()
 	stringstream ss;
 	string type = ".jpg";
 
-	ifstream flowfile;
+	vector<bool> isDeleted = vproc.test();
+	/*ifstream flowfile;
 	if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") flowfile.open("D:/CCCC/Stop Motion/Test6/suggestion_threshold.txt");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") flowfile.open("D:/CCCC/Stop Motion/Test7/suggestion_threshold.txt");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") flowfile.open("D:/CCCC/Stop Motion/Test8/suggestion_threshold.txt");
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") flowfile.open("D:/CCCC/Stop Motion/Test8/suggestion_threshold.txt");*/
 
 	for (int i = 0; i < scene_cuts.size(); i++)
 	{
@@ -175,66 +174,25 @@ void MainWindow::visualizeClips()
 		range.push_back(scene_cuts.at(i));
 		clip->setRange(range);
 		clips.push_back(clip);
-
-		if (cut_types.at(i) == 1)
+		
+		cliplabel *empty_clip = new cliplabel();
+		empty_clip->setFixedSize(width, height);
+		empty_clip->setSizeThreshold(width, height);
+		if (cut_types[i] == 1 || isDeleted.empty() || !isDeleted[i/2])
 		{
-			cliplabel *empty_clip = new cliplabel();
-			empty_clip->setFixedSize(width, height);
-			empty_clip->setSizeThreshold(width, height);
-
-			if (stableClipsCounter != 0)
-			{
-				/*Mat previousFrame, currentFrame;
-				ss << (clip->getOriginRange().at(0) + clip->getOriginRange().at(1)) / 2 << type;
-				if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
-				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
-				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
-				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
-				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
-				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") currentFrame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
-				ss.str("");
-				ss << (stableClip.at(stableClip.size() - 1)->getOriginRange().at(0) + stableClip.at(stableClip.size() - 1)->getOriginRange().at(1)) / 2 << type;
-				if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
-				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
-				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
-				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
-				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
-				else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") previousFrame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
-				ss.str("");
-				cout << vproc.calAvgOpFlow(previousFrame, currentFrame) << endl;*/
-
-				float avgOpFlow;
-				flowfile >> avgOpFlow;
-
-				cliplabel *previousEmptyClip = new cliplabel();
-				int previous_w = previousMovingClip->getWidth();
-				int previous_h = previousMovingClip->getHeight();
-				previousEmptyClip->setFixedSize(previous_w, previous_h);
-				previousEmptyClip->setSizeThreshold(previous_w, previous_h);
-
-				if (avgOpFlow >= 0.005 && avgOpFlow <= 0.9)
-				{
-					previousMovingClip->setEditedMode(isDeleted);
-					ui->gridLayout_3->addWidget(previousMovingClip, 0, i - 1, Qt::AlignLeft);
-					ui->gridLayout_2->addWidget(previousEmptyClip, 0, i - 1, Qt::AlignLeft);
-				}
-				else
-				{
-					ui->gridLayout_2->addWidget(previousMovingClip, 0, i - 1, Qt::AlignLeft);
-					ui->gridLayout_3->addWidget(previousEmptyClip, 0, i - 1, Qt::AlignLeft);
-				}
-			}
 			ui->gridLayout_2->addWidget(clip, 0, i, Qt::AlignLeft);
 			ui->gridLayout_3->addWidget(empty_clip, 0, i, Qt::AlignLeft);
-			stableClipsCounter++;
 		}
 		else
-			previousMovingClip = clip;
+		{
+			ui->gridLayout_3->addWidget(clip, 0, i, Qt::AlignLeft);
+			ui->gridLayout_2->addWidget(empty_clip, 0, i, Qt::AlignLeft);
+		}
 
 		connect(clip, SIGNAL(signalEntered(bool)), this, SLOT(slotEntered(bool)));
 	}
 
-	flowfile.close();
+	//flowfile.close();
 
 	connect(ui->scrollArea_1->horizontalScrollBar(), SIGNAL(valueChanged(int)), ui->scrollArea_2->horizontalScrollBar(), SLOT(setValue(int)));
 	connect(ui->scrollArea_2->horizontalScrollBar(), SIGNAL(valueChanged(int)), ui->scrollArea_1->horizontalScrollBar(), SLOT(setValue(int)));
@@ -287,7 +245,7 @@ void MainWindow::cutVideo()
 	progressBar->show();*/
 
 	vproc.readBuffers();
-	vproc.test();
+	//vproc.test();
 	/*if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
 	vproc.cut2Scenes();
 	vproc.writeBuffers();*/

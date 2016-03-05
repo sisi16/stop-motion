@@ -546,12 +546,12 @@ int videoprocessor::getFrameRate()
     //out.release();
 }*/
 
-void videoprocessor::test()
+vector<bool> videoprocessor::test()
 {	
 	//blobtrack bTrack(fileName, num_of_frames);
 	//bTrack.process();
 
-	stringstream ss;
+	/*stringstream ss;
 	string type = ".jpg";
 	Mat frame, prevframe;
 	int index;
@@ -573,14 +573,56 @@ void videoprocessor::test()
 		ss.str("");
 
 		if (i != 0)
-			matchfile << matchFeatures(prevframe, frame) << endl;
+			matchFeatures(prevframe, frame);//matchfile << matchFeatures(prevframe, frame) << endl;
 		prevframe = frame;
 
 		if (waitKey(2000) == 27) break;
 		if (waitKey(2000) == 32) waitKey(0);
 	}
 
-	matchfile.close();
+	matchfile.close();*/
+
+	ifstream matchfile;
+	if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") matchfile.open("D:/CCCC/Stop Motion/Test7/matches.txt");
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") matchfile.open("D:/CCCC/Stop Motion/Test8/matches.txt");
+	
+	vector<bool> checkMovingClips;
+
+	if (matchfile.is_open())
+	{
+		int num;
+		int idx = 1;
+		while (matchfile >> num)
+		{
+			int time = scene_cuts[idx] - scene_cuts[idx - 1];
+			if (time < 180 && (time <= 60 || num > 0))
+				checkMovingClips.push_back(true);
+			else
+				checkMovingClips.push_back(false);
+			//cout << checkMovingClips[idx / 2] << endl;
+			idx += 2;
+		}
+		matchfile.close();
+
+
+		for (int i = 0; i < checkMovingClips.size(); i++)
+		{
+			if (i < (checkMovingClips.size()-2) && checkMovingClips[i] && checkMovingClips[i+1] && checkMovingClips[i+2])
+			{
+				i += 3;
+				while (i < checkMovingClips.size() && checkMovingClips[i])
+					i++;
+			}
+			else
+				checkMovingClips[i] = false;
+		}
+
+		//for (int j = 0; j < checkMovingClips.size(); j++)
+			//cout << checkMovingClips[j] << endl;
+	}
+	else cout << "Unable to open file" << endl;
+
+	return checkMovingClips;
 }
 
 void videoprocessor::writeBuffers()

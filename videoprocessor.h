@@ -49,7 +49,7 @@ public:
     int getNumOfFrames();
 	int getFrameRate();
 	//void writeVideo(std::vector<int> range, std::vector<int> moving_range, clipOperation operation);
-    void test();
+    std::vector<bool> test();
 	void writeBuffers();
 	void readBuffers();
 	int matchFeatures(cv::Mat image_1, cv::Mat image_2);
