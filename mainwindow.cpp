@@ -128,7 +128,7 @@ void MainWindow::visualizeClips()
 	stringstream ss;
 	string type = ".jpg";
 
-	vector<bool> isDeleted = vproc.test();
+	vector<bool> isDropped = vproc.test();
 	/*ifstream flowfile;
 	if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") flowfile.open("D:/CCCC/Stop Motion/Test6/suggestion_threshold.txt");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") flowfile.open("D:/CCCC/Stop Motion/Test7/suggestion_threshold.txt");
@@ -178,13 +178,14 @@ void MainWindow::visualizeClips()
 		cliplabel *empty_clip = new cliplabel();
 		empty_clip->setFixedSize(width, height);
 		empty_clip->setSizeThreshold(width, height);
-		if (cut_types[i] == 1 || isDeleted.empty() || !isDeleted[i/2])
+		if (cut_types[i] == 1 || isDropped.empty() || !isDropped[i/2])
 		{
 			ui->gridLayout_2->addWidget(clip, 0, i, Qt::AlignLeft);
 			ui->gridLayout_3->addWidget(empty_clip, 0, i, Qt::AlignLeft);
 		}
 		else
 		{
+			clip->setEditedMode(isDeleted);
 			ui->gridLayout_3->addWidget(clip, 0, i, Qt::AlignLeft);
 			ui->gridLayout_2->addWidget(empty_clip, 0, i, Qt::AlignLeft);
 		}
