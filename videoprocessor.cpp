@@ -584,8 +584,8 @@ vector<bool> videoprocessor::test()
 	matchfile.close();*/
 
 	ifstream matchfile;
-	if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") matchfile.open("D:/CCCC/Stop Motion/Test7/matches_1.txt");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") matchfile.open("D:/CCCC/Stop Motion/Test8/matches_1.txt");
+	if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") matchfile.open("D:/CCCC/Stop Motion/Test7/matches_2.txt");
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") matchfile.open("D:/CCCC/Stop Motion/Test8/matches_2.txt");
 	
 	vector<bool> checkMovingClips;
 
@@ -794,9 +794,15 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2)
 				vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 	imshow("Matches", image_matches);*/
 	
-	cout << small_or_no_move << " " << total << endl;
-	if (matches.size() > 0 && small_or_no_move * 2 < total)
+	//cout << matches.size() << " " << total-small_or_no_move << endl;
+	//cout << keypoints_1.size() - total << " " << keypoints_2.size() - total << endl;
+	int small_move = matches.size();
+	int size_1 = keypoints_1.size() - total;
+	int size_2 = keypoints_2.size() - total;
+	if (small_move > 0 && small_move < total - small_or_no_move)
 		return 0;
+	else if (small_move == 0 && size_2 > 2 * size_1 && size_2 - size_1 > 5)
+		return size_2;
 	else
-		return matches.size();
+		return small_move;
 }
