@@ -20,6 +20,8 @@ public:
 	void deleteLabel(int index);
 	void setLabels(std::vector<int> l);
 	void clearLabels();
+	void setCuts(std::vector<int> c);
+	void clearCuts();
 	std::vector<int> *getLabeledIndices();
 
 public slots:
@@ -32,6 +34,7 @@ private:
 	bool editModeOn = false;
 	std::vector<int> labels;
 	std::vector<int> labeledIndices;
+	std::vector<int> cuts;
 	//int highLightIndex;
     //std::vector<int> indices;
     //std::vector<int> reference;

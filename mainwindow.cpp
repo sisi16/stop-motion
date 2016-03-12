@@ -182,6 +182,11 @@ void MainWindow::visualizeClips()
 		{
 			ui->gridLayout_2->addWidget(clip, 0, i, Qt::AlignLeft);
 			ui->gridLayout_3->addWidget(empty_clip, 0, i, Qt::AlignLeft);
+			if (cut_types[i] == 2 && !isDropped[i / 2])
+			{
+				clip->setAutoCuts(vproc.checkCuts(range));
+				cout << i / 2 << endl << endl;;
+			}
 		}
 		else
 		{
@@ -279,6 +284,7 @@ void MainWindow::cutVideo()
 void MainWindow::initFrameSlider()
 {
 	frame_slider->clearLabels();
+	frame_slider->clearCuts();
 	frame_slider->setRange(0, clips.size() - 1);
 	frame_slider->setValue(current_clip->getCutIndex());
 	frame_slider->setTickPosition(QSlider::TicksAbove);
@@ -1422,6 +1428,7 @@ void MainWindow::on_editRadioButton_clicked()
 		frame_slider->setMouseTracking(true);
 		frame_slider->setEditMode(true);
 		frame_slider->setLabels(current_clip->getCuts());
+		frame_slider->setCuts(current_clip->getAutoCuts());
 		//ui->frame_slider->setCursor(Qt::PointingHandCursor);
 		frame_slider->installEventFilter(this);
 	}

@@ -806,3 +806,60 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2)
 	else
 		return small_move;
 }
+
+vector<int> videoprocessor::checkCuts(vector<int> checkRange)
+{
+	ifstream flowfile;
+	if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") flowfile.open("D:/CCCC/Stop Motion/Test7/flows.txt");
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") flowfile.open("D:/CCCC/Stop Motion/Test8/flows.txt");
+
+	if (flowfile.is_open())
+	{  
+		float num;
+		int count = 0;
+		int begin = checkRange[0];
+		int end = checkRange[1];
+		bool processing = false;
+		vector<int> cutRanges;
+		while (flowfile >> num)
+		{
+			if (count >= begin && count <= end)
+			{
+				int size = cutRanges.size();
+				if (num <= 0.1)
+				{	
+					if (!processing)
+					{
+						cutRanges.push_back(count);
+						cutRanges.push_back(count + 1);
+						processing = true;
+					}
+					else
+						cutRanges[size-1]++;
+					
+					size = cutRanges.size();
+					if (count == end && cutRanges[size-1] - cutRanges[size-2] < 4)
+					{
+						cutRanges.pop_back();
+						cutRanges.pop_back();
+					}
+				}
+				else if (processing)
+				{
+					if (cutRanges[size-1] - cutRanges[size-2] < 4)
+					{
+						cutRanges.pop_back();
+						cutRanges.pop_back();
+					}
+					processing = false;
+				}
+			}
+			count++;
+		}
+		flowfile.close();
+		for (size_t i = 0; i < cutRanges.size(); i++)
+			cout << cutRanges[i] << endl;
+		return cutRanges;
+	}
+	else cout << "Unable to open file" << endl;
+}

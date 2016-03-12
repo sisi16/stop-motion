@@ -40,6 +40,7 @@ public:
 	isEdited getEditedMode();
 	std::vector<int> getRange();
 	std::vector<int> getCuts();
+	std::vector<int> getAutoCuts();
 	bool isSorted();
 	void setEditedMode(isEdited mode);
 	void setCutType(int type);
@@ -49,6 +50,7 @@ public:
 	void setRange(std::vector<int> rng);
 	void addCut(int index);
 	void deleteCut(int index);
+	void setAutoCuts(std::vector<int> acs);
 	void cast(cliplabel *castedClip);
 	void uncast();
 	//void zoomIn();
@@ -70,6 +72,7 @@ private:
 	bool sorted;
 	std::vector<int> range;
 	std::vector<int> cuts;
+	std::vector<int> autoCuts;
 	isEdited edited_mode;
 	std::vector<cv::Mat> srcImages;
 };

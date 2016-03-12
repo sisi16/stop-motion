@@ -55,6 +55,17 @@ void myslider::clearLabels()
 		labels.clear();
 }
 
+void myslider::setCuts(std::vector<int> c)
+{
+	cuts = c;
+}
+
+void myslider::clearCuts()
+{
+	if (!cuts.empty())
+		cuts.clear();
+}
+
 std::vector<int> *myslider::getLabeledIndices()
 {
 	return &labeledIndices;
@@ -77,30 +88,44 @@ void myslider::paintEvent(QPaintEvent *ev)
 	QSlider::paintEvent(ev);
 	QPainter *painter = new QPainter(this);
 	painter->setOpacity(0.5);
-	if (!labels.empty())
+	if (editModeOn)
 	{
-		if (labels.size() % 2 != 0)
+		if (!labels.empty())
 		{
-			painter->setPen(QPen(Qt::blue, 8));
-			for (int i = 0; i < labels.size(); i++)
+			if (labels.size() % 2 != 0)
 			{
-				int x = round((labels.at(i) - this->minimum())*this->width() / double(this->maximum() - this->minimum()));
-				if (x == 0) painter->setPen(QPen(Qt::blue, 16));
-				painter->drawLine(x, 0, x, this->height() / 2);
-				if (x == 0) painter->setPen(QPen(Qt::blue, 8));
+				painter->setPen(QPen(Qt::blue, 8));
+				for (int i = 0; i < labels.size(); i++)
+				{
+					int x = round((labels.at(i) - this->minimum())*this->width() / double(this->maximum() - this->minimum()));
+					if (x == 0) painter->setPen(QPen(Qt::blue, 16));
+					painter->drawLine(x, 0, x, this->height() / 2);
+					if (x == 0) painter->setPen(QPen(Qt::blue, 8));
+				}
+			}
+			else
+			{
+				for (int i = 0; i < labels.size(); i += 2)
+				{
+					int x_1 = round((labels.at(i) - this->minimum())*this->width() / double(this->maximum() - this->minimum()));
+					int x_2 = round((labels.at(i + 1) - this->minimum())*this->width() / double(this->maximum() - this->minimum()));
+					painter->fillRect(x_1, 0, x_2 - x_1, this->height() / 2, Qt::blue);
+				}
 			}
 		}
-		else
+
+		if (!cuts.empty())
 		{
-			for (int i = 0; i < labels.size(); i += 2)
+			for (int i = 0; i < cuts.size(); i += 2)
 			{
-				int x_1 = round((labels.at(i) - this->minimum())*this->width() / double(this->maximum() - this->minimum()));
-				int x_2 = round((labels.at(i+1) - this->minimum())*this->width() / double(this->maximum() - this->minimum()));
-				painter->fillRect(x_1, 0, x_2 - x_1, this->height() / 2, Qt::blue);
+				int x_1 = round((cuts.at(i) - this->minimum())*this->width() / double(this->maximum() - this->minimum()));
+				int x_2 = round((cuts.at(i + 1) - this->minimum())*this->width() / double(this->maximum() - this->minimum()));
+				painter->fillRect(x_1, 0, x_2 - x_1, this->height() / 2, Qt::yellow);
 			}
+
 		}
 	}
-	else if (!editModeOn)
+	else
 	{
 		painter->setPen(QPen(Qt::red, 8));
 		for (int i = 0; i < labeledIndices.size(); i++)

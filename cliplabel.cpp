@@ -121,6 +121,11 @@ vector<int> cliplabel::getCuts()
 	return cuts;
 }
 
+vector<int> cliplabel::getAutoCuts()
+{
+	return autoCuts;
+}
+
 bool cliplabel::isSorted()
 {
 	return sorted;
@@ -261,6 +266,11 @@ void cliplabel::deleteCut(int index)
 			if (index == cuts.at(i)) cuts.erase(cuts.begin() + i);
 	}
 	sorted = false;
+}
+
+void cliplabel::setAutoCuts(vector<int> acs)
+{
+	autoCuts = acs;
 }
 
 /*void cliplabel::zoomIn()
