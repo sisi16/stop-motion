@@ -53,6 +53,8 @@ public:
 	void setAutoCuts(std::vector<int> acs);
 	void cast(cliplabel *castedClip);
 	void uncast();
+	void updatePixmap(QString file);
+	void paintPixmap();
 	//void zoomIn();
 	//void zoomOut();
 
@@ -64,6 +66,7 @@ signals:
 	void signalEntered(bool entered);
 
 private:
+	int w_base;
 	int w_threshold;
 	int h_threshold;
 	int cut_index;

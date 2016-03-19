@@ -551,18 +551,19 @@ vector<bool> videoprocessor::test()
 	//blobtrack bTrack(fileName, num_of_frames);
 	//bTrack.process();
 
-	/*vector<bool> checkMovingClips;
+	/*//vector<bool> checkMovingClips;
 	stringstream ss;
 	string type = ".jpg";
-	Mat frame, prevframe;
+	Mat frame, prevframe, gray, prevgray;
 	int index;
 
 	ofstream matchfile;
 	if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") matchfile.open("D:/CCCC/Stop Motion/Test6/matches.txt");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") matchfile.open("D:/CCCC/Stop Motion/Test7/matches_2.txt");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") matchfile.open("D:/CCCC/Stop Motion/Test8/matches_2.txt");
-	
-	for (int i = 0; i < scene_cuts.size(); i+=2)
+
+	Mat opf, copf;
+	for (int i = 0; i < scene_cuts.size(); i += 2)
 	{
 		if (i == 0) index = scene_cuts[0] / 2;
 		else index = (scene_cuts[i] + scene_cuts[i - 1] + 1) / 2;
@@ -573,15 +574,22 @@ vector<bool> videoprocessor::test()
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
 		ss.str("");
 
+		cvtColor(frame, gray, CV_BGR2GRAY);
 		if (i != 0)
-			matchfile << matchFeatures(prevframe, frame) << endl;
+		{
+			//matchfile << matchFeatures(prevframe, frame) << endl;
+			opf = of.calOpFlow(prevframe, frame);
+			of.motionToColor(opf, copf);
+			imshow("Flow", copf);
+		}
 		prevframe = frame;
+		prevgray = gray;
 
-		//if (waitKey(3000) == 27) break;
-		//if (waitKey(3000) == 32) waitKey(0);
+		if (waitKey(3000) == 27) break;
+		if (waitKey(3000) == 32) waitKey(0);
 	}
 
-	matchfile.close();*/
+	//matchfile.close();*/
 
 	ifstream matchfile;
 	if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") matchfile.open("D:/CCCC/Stop Motion/Test7/matches_2.txt");
@@ -596,6 +604,7 @@ vector<bool> videoprocessor::test()
 		while (matchfile >> num)
 		{
 			int time = scene_cuts[idx] - scene_cuts[idx - 1];
+			//cout << time << endl;
 			if (time <= 150 && (time <= 75 || num > 0)) // 180 60
 				checkMovingClips.push_back(true);
 			else
@@ -781,8 +790,9 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2)
 				{
 					small_or_no_move++;
 					if (flowx >= 2.7 || flowy >= 4.8)
+					{
 						matches.push_back(allMatches[i][0]);
-					//else if ((flowx >= 2.7 && flowx <= 40.5 && flowy < 4.8) || (flowy >= 4.8 && flowy <= 72 && flowx < 2.7)) 
+					}//else if ((flowx >= 2.7 && flowx <= 40.5 && flowy < 4.8) || (flowy >= 4.8 && flowy <= 72 && flowx < 2.7)) 
 				}
 				//matches.push_back(allMatches[i][j]);
 			}

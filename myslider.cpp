@@ -30,18 +30,31 @@ void myslider::setEditMode(bool onOrOff)
 
 void myslider::addLabel(int index)
 {
-	labels.push_back(index);
-	if (labels.size() > 1) sort(labels.begin(), labels.end());
+	int size = labels.size();
+	if (size == 0 || (size != 0 && labels[size - 1] != labels[size - 2]))
+	{
+		labels.push_back(index);
+		labels.push_back(index);
+		sort(labels.begin(), labels.end());
+	}
+	else
+		labels[size-1] = index;
 }
 
 void myslider::deleteLabel(int index)
 {
-	if (labels.size() == 1) labels.pop_back();
+	for (int i = 0; i < labels.size(); i+=2)
+		if (index >= labels[i] && index <= labels[i + 1])
+		{
+			labels.erase(labels.begin() + i);
+			labels.erase(labels.begin() + i);
+		}
+	/*if (labels.size() == 1) labels.pop_back();
 	else
 	{
 		for (int i = 0; i < labels.size(); i++)
 			if (index == labels.at(i)) labels.erase(labels.begin() + i);//labels.at(i) = -1;
-	}
+	}*/
 }
 
 void myslider::setLabels(std::vector<int> l)
@@ -92,7 +105,7 @@ void myslider::paintEvent(QPaintEvent *ev)
 	{
 		if (!labels.empty())
 		{
-			if (labels.size() % 2 != 0)
+			/*if (labels.size() % 2 != 0)
 			{
 				painter->setPen(QPen(Qt::blue, 8));
 				for (int i = 0; i < labels.size(); i++)
@@ -102,16 +115,18 @@ void myslider::paintEvent(QPaintEvent *ev)
 					painter->drawLine(x, 0, x, this->height() / 2);
 					if (x == 0) painter->setPen(QPen(Qt::blue, 8));
 				}
-			}
-			else
-			{
+			}*/
+			//else
+			//{
+				painter->setPen(QPen(Qt::blue, 8));
 				for (int i = 0; i < labels.size(); i += 2)
 				{
 					int x_1 = round((labels.at(i) - this->minimum())*this->width() / double(this->maximum() - this->minimum()));
 					int x_2 = round((labels.at(i + 1) - this->minimum())*this->width() / double(this->maximum() - this->minimum()));
-					painter->fillRect(x_1, 0, x_2 - x_1, this->height() / 2, Qt::blue);
+					if (x_1 == x_2) painter->drawLine(x_1, 0, x_1, this->height() / 2);
+					else painter->fillRect(x_1, 0, x_2 - x_1, this->height() / 2, Qt::blue);
 				}
-			}
+			//}
 		}
 
 		if (!cuts.empty())
@@ -120,7 +135,7 @@ void myslider::paintEvent(QPaintEvent *ev)
 			{
 				int x_1 = round((cuts.at(i) - this->minimum())*this->width() / double(this->maximum() - this->minimum()));
 				int x_2 = round((cuts.at(i + 1) - this->minimum())*this->width() / double(this->maximum() - this->minimum()));
-				painter->fillRect(x_1, 0, x_2 - x_1, this->height() / 2, Qt::yellow);
+				painter->fillRect(x_1, 0, x_2 - x_1, this->height() / 2, QColor(255, 165, 0));
 			}
 
 		}

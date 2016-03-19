@@ -19,6 +19,7 @@ cliplabel::cliplabel(QWidget* parent, Qt::WindowFlags f)
 cliplabel::cliplabel(vector<Mat> src, int bw, int w, int h, int index, int type, int l, QWidget* parent, Qt::WindowFlags f)
 		 : QLabel(parent, f)
 {
+	w_base = bw;
 	w_threshold = w;
 	h_threshold = h;
 	srcImages = src;
@@ -142,14 +143,14 @@ void cliplabel::enterEvent(QEvent *)
 		else if (cut_type > 2)
 			this->setStyleSheet("border: 5px outset rgb(255, 255, 127)");
 	}
-	emit signalEntered(true);
+	//emit signalEntered(true);
 }
 
 void cliplabel::leaveEvent(QEvent *)
 {
 	if (edited_mode != isSelected && edited_mode != isSelectedDeleted && edited_mode != isDeleted && edited_mode != isViewed)
 		this->setStyleSheet("border: none");
-	emit signalEntered(false);
+	//emit signalEntered(false);
 }
 
 void cliplabel::setEditedMode(isEdited mode)
@@ -240,6 +241,54 @@ void cliplabel::uncast()
 	this->setCursor(Qt::ArrowCursor);
 }
 
+void cliplabel::updatePixmap(QString file)
+{
+	if (!cuts.empty() && !sorted)
+	{
+		srcImages.clear();
+
+		stringstream ss;
+		string type = ".jpg";
+		Mat frame;
+		for (size_t i = 0; i < cuts.size(); i++)
+		{
+			if (i % 2 == 1 && cuts[i-1] == cuts[i])
+				continue;
+			else
+				ss << cuts[i] << type;
+			if (file == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
+			else if (file == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
+			ss.str("");
+
+			srcImages.push_back(frame);
+		}
+
+		paintPixmap();
+	}
+}
+
+void cliplabel::paintPixmap()
+{
+	length = srcImages.size();
+	w_threshold = length * w_base;
+	QPixmap *pm = new QPixmap(w_threshold, h_threshold);
+	QPainter *painter = new QPainter(pm);
+	Mat temp;
+
+	for (int i = 0; i < length; i++)
+	{
+		cv::cvtColor(srcImages[i], temp, CV_BGR2RGB);
+		QImage image((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+		image.bits();
+		painter->drawPixmap(i*w_base, 0, w_base, h_threshold, QPixmap::fromImage(image));
+	}
+	painter->drawRect(0, 0, w_threshold - 1, h_threshold - 1);
+	painter->end();
+	this->setPixmap(*pm);
+	this->setFixedSize(w_threshold, h_threshold);
+	this->repaint();
+}
+
 void cliplabel::setSizeThreshold(int w, int h)
 {
 	w_threshold = w;
@@ -253,18 +302,31 @@ void cliplabel::setRange(vector<int> rng)
 
 void cliplabel::addCut(int index)
 {
-	cuts.push_back(index);
+	int size = cuts.size();
+	if (size == 0 || (size != 0 && cuts[size - 1] != cuts[size - 2]))
+	{
+		cuts.push_back(index);
+		cuts.push_back(index);
+	}
+	else
+		cuts[size - 1] = index;
 	sorted = false;
 }
 
 void cliplabel::deleteCut(int index)
 {
-	if (cuts.size() == 1) cuts.pop_back();
+	for (int i = 0; i < cuts.size(); i+=2)
+		if (index >= cuts[i] && index <= cuts[i + 1])
+		{
+			cuts.erase(cuts.begin() + i);
+			cuts.erase(cuts.begin() + i);
+		}
+	/*if (cuts.size() == 1) cuts.pop_back();
 	else
 	{
 		for (int i = 0; i < cuts.size(); i++)
 			if (index == cuts.at(i)) cuts.erase(cuts.begin() + i);
-	}
+	}*/
 	sorted = false;
 }
 

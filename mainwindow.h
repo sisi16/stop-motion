@@ -111,6 +111,7 @@ private:
     myslider *frame_slider;
     QProgressBar *progressBar;
 	cliplabel *current_clip = NULL;
+	cliplabel *current_empty_clip = NULL;
 	int current_clip_index = -1;
 	int labelIndex = -1;
     bool isCut;
