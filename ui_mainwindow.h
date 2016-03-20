@@ -62,7 +62,6 @@ public:
     QFrame *line_3;
     QPushButton *playClipButton;
     QPushButton *pauseButton;
-    QRadioButton *keepRadioButton;
     QLabel *trackLabel;
     QLabel *clipLabel;
     QPushButton *playTrackButton;
@@ -245,7 +244,7 @@ public:
         playClipButton->setIcon(icon20);
         playClipButton->setIconSize(QSize(20, 20));
 
-        gridLayout_1->addWidget(playClipButton, 7, 0, 1, 1);
+        gridLayout_1->addWidget(playClipButton, 6, 0, 1, 1);
 
         pauseButton = new QPushButton(centralWidget);
         pauseButton->setObjectName(QStringLiteral("pauseButton"));
@@ -256,16 +255,7 @@ public:
         pauseButton->setIcon(icon21);
         pauseButton->setIconSize(QSize(20, 20));
 
-        gridLayout_1->addWidget(pauseButton, 7, 1, 1, 1);
-
-        keepRadioButton = new QRadioButton(centralWidget);
-        keepRadioButton->setObjectName(QStringLiteral("keepRadioButton"));
-        sizePolicy2.setHeightForWidth(keepRadioButton->sizePolicy().hasHeightForWidth());
-        keepRadioButton->setSizePolicy(sizePolicy2);
-        keepRadioButton->setStyleSheet(QStringLiteral("font: 75 12pt \"Times New Roman\";"));
-        keepRadioButton->setAutoExclusive(false);
-
-        gridLayout_1->addWidget(keepRadioButton, 5, 0, 1, 4);
+        gridLayout_1->addWidget(pauseButton, 6, 1, 1, 1);
 
         trackLabel = new QLabel(centralWidget);
         trackLabel->setObjectName(QStringLiteral("trackLabel"));
@@ -311,7 +301,7 @@ public:
         nextButton->setIcon(icon22);
         nextButton->setIconSize(QSize(20, 20));
 
-        gridLayout_1->addWidget(nextButton, 7, 3, 1, 1);
+        gridLayout_1->addWidget(nextButton, 6, 3, 1, 1);
 
         preButton = new QPushButton(centralWidget);
         preButton->setObjectName(QStringLiteral("preButton"));
@@ -322,7 +312,7 @@ public:
         preButton->setIcon(icon23);
         preButton->setIconSize(QSize(20, 20));
 
-        gridLayout_1->addWidget(preButton, 7, 2, 1, 1);
+        gridLayout_1->addWidget(preButton, 6, 2, 1, 1);
 
         editRadioButton = new QRadioButton(centralWidget);
         editRadioButton->setObjectName(QStringLiteral("editRadioButton"));
@@ -331,7 +321,7 @@ public:
         editRadioButton->setStyleSheet(QStringLiteral("font: 75 12pt \"Times New Roman\";"));
         editRadioButton->setAutoExclusive(false);
 
-        gridLayout_1->addWidget(editRadioButton, 6, 0, 1, 2);
+        gridLayout_1->addWidget(editRadioButton, 5, 0, 1, 2);
 
 
         gridLayout->addLayout(gridLayout_1, 1, 4, 1, 1);
@@ -354,7 +344,7 @@ public:
         scrollArea_1->setWidgetResizable(true);
         scrollAreaWidgetContents_1 = new QWidget();
         scrollAreaWidgetContents_1->setObjectName(QStringLiteral("scrollAreaWidgetContents_1"));
-        scrollAreaWidgetContents_1->setGeometry(QRect(0, 0, 1262, 142));
+        scrollAreaWidgetContents_1->setGeometry(QRect(0, 0, 1262, 153));
         gridLayout_2 = new QGridLayout(scrollAreaWidgetContents_1);
         gridLayout_2->setSpacing(6);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);
@@ -371,7 +361,7 @@ public:
         scrollArea_2->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QStringLiteral("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 1262, 143));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 1262, 152));
         gridLayout_3 = new QGridLayout(scrollAreaWidgetContents_2);
         gridLayout_3->setSpacing(6);
         gridLayout_3->setContentsMargins(11, 11, 11, 11);
@@ -492,7 +482,6 @@ public:
         frameLabel->setText(QString());
         playClipButton->setText(QString());
         pauseButton->setText(QString());
-        keepRadioButton->setText(QApplication::translate("MainWindow", "Keep / Delete", 0));
         trackLabel->setText(QApplication::translate("MainWindow", "Track:", 0));
         clipLabel->setText(QApplication::translate("MainWindow", "Clip:", 0));
         playTrackButton->setText(QString());

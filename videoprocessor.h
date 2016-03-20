@@ -52,7 +52,7 @@ public:
     std::vector<bool> test();
 	void writeBuffers();
 	void readBuffers();
-	int matchFeatures(cv::Mat image_1, cv::Mat image_2);
+	int matchFeatures(cv::Mat image_1, cv::Mat image_2, bool &largeScale);
 	std::vector<int> checkCuts(std::vector<int> checkRange);
 
 private:

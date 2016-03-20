@@ -551,18 +551,18 @@ vector<bool> videoprocessor::test()
 	//blobtrack bTrack(fileName, num_of_frames);
 	//bTrack.process();
 
-	/*//vector<bool> checkMovingClips;
+	vector<bool> checkMovingClips;
 	stringstream ss;
 	string type = ".jpg";
-	Mat frame, prevframe, gray, prevgray;
-	int index;
+	Mat frame, prevframe; //, gray, prevgray;
+	bool large_scale;
+	int index, time, num_small_move;
 
-	ofstream matchfile;
-	if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") matchfile.open("D:/CCCC/Stop Motion/Test6/matches.txt");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") matchfile.open("D:/CCCC/Stop Motion/Test7/matches_2.txt");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") matchfile.open("D:/CCCC/Stop Motion/Test8/matches_2.txt");
+	//ofstream matchfile;
+	//if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") matchfile.open("D:/CCCC/Stop Motion/Test6/matches.txt");
+	//else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") matchfile.open("D:/CCCC/Stop Motion/Test7/matches_2.txt");
+	//else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") matchfile.open("D:/CCCC/Stop Motion/Test8/matches_2.txt");
 
-	Mat opf, copf;
 	for (int i = 0; i < scene_cuts.size(); i += 2)
 	{
 		if (i == 0) index = scene_cuts[0] / 2;
@@ -574,24 +574,34 @@ vector<bool> videoprocessor::test()
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
 		ss.str("");
 
-		cvtColor(frame, gray, CV_BGR2GRAY);
 		if (i != 0)
 		{
-			//matchfile << matchFeatures(prevframe, frame) << endl;
-			opf = of.calOpFlow(prevframe, frame);
-			of.motionToColor(opf, copf);
-			imshow("Flow", copf);
+			num_small_move = matchFeatures(prevframe, frame, large_scale); //matchfile << matchFeatures(prevframe, frame) << endl;
+			time = scene_cuts[i-1] - scene_cuts[i-2];
+			//cout << time << " " << num_small_move << " " << large_scale << endl << endl;
+			if (large_scale)
+			{
+				if (time <= 300 && (time <= 150 || num_small_move > 0)) // 180 60
+					checkMovingClips.push_back(true);
+				else
+					checkMovingClips.push_back(false);
+			}
+			else
+			{
+				if (time <= 150 && (time <= 75 || num_small_move > 0)) // 180 60
+					checkMovingClips.push_back(true);
+				else
+					checkMovingClips.push_back(false);
+			}
 		}
 		prevframe = frame;
-		prevgray = gray;
-
-		if (waitKey(3000) == 27) break;
-		if (waitKey(3000) == 32) waitKey(0);
+		//if (waitKey(3000) == 27) break;
+		//if (waitKey(3000) == 32) waitKey(0);
 	}
 
-	//matchfile.close();*/
+	//matchfile.close();
 
-	ifstream matchfile;
+	/*ifstream matchfile;
 	if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") matchfile.open("D:/CCCC/Stop Motion/Test7/matches_2.txt");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") matchfile.open("D:/CCCC/Stop Motion/Test8/matches_2.txt");
 	
@@ -630,7 +640,7 @@ vector<bool> videoprocessor::test()
 		//for (int j = 0; j < checkMovingClips.size(); j++)
 			//cout << checkMovingClips[j] << endl;
 	}
-	else cout << "Unable to open file" << endl;
+	else cout << "Unable to open file" << endl;*/
 
 	return checkMovingClips;
 }
@@ -699,7 +709,7 @@ void videoprocessor::readBuffers()
 	}
 }
 
-int videoprocessor::matchFeatures(Mat image_1, Mat image_2)
+int videoprocessor::matchFeatures(Mat image_1, Mat image_2, bool &largeScale)
 {
 	//TermCriteria termcrit(CV_TERMCRIT_ITER | CV_TERMCRIT_EPS, 20, 0.03);
 	//Size subPixWinSize(10, 10), winSize(31, 31);
@@ -774,6 +784,9 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2)
 	//cout << min << " " << max << endl;
 	int total = 0;
 	int small_or_no_move = 0;
+	float min_distance = 1000;
+	float max_distance = -1;
+	Point2f nearest, farthest;
 	for (int i = 0; i < allMatches.size(); i++)
 	{
 		//for (int j = 0; j < allMatches[i].size(); j++)
@@ -786,13 +799,25 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2)
 				float flowx = abs(point1.x - point2.x);
 				float flowy = abs(point1.y - point2.y);
 				//cout << flowx << " " << flowy << endl;
-				if (flowx <= 54 && flowy <= 96) // 40.5, 72
+				if (flowx <= 96 && flowy <= 54) // 40.5, 72
 				{
 					small_or_no_move++;
-					if (flowx >= 2.7 || flowy >= 4.8)
+					if (flowx >= 4.8 || flowy >= 2.7)
 					{
 						matches.push_back(allMatches[i][0]);
-					}//else if ((flowx >= 2.7 && flowx <= 40.5 && flowy < 4.8) || (flowy >= 4.8 && flowy <= 72 && flowx < 2.7)) 
+						float distance = sqrt(point1.x*point1.x + point1.y*point1.y);
+						if (distance < min_distance)
+						{
+							min_distance = distance;
+							nearest = point1;
+						}
+						if (distance > max_distance)
+						{
+							max_distance = distance;
+							farthest = point1;
+						}
+					}
+					//else if ((flowx >= 2.7 && flowx <= 40.5 && flowy < 4.8) || (flowy >= 4.8 && flowy <= 72 && flowx < 2.7)) 
 				}
 				//matches.push_back(allMatches[i][j]);
 			}
@@ -804,11 +829,17 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2)
 				vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 	imshow("Matches", image_matches);*/
 	
-	//cout << matches.size() << " " << total-small_or_no_move << endl;
-	//cout << keypoints_1.size() - total << " " << keypoints_2.size() - total << endl;
 	int small_move = matches.size();
 	int size_1 = keypoints_1.size() - total;
 	int size_2 = keypoints_2.size() - total;
+	//cout << small_move << " " << total - small_or_no_move << endl;
+	//cout << size_1 << " " << size_2 << endl;
+	//cout << nearest.x << " " << nearest.y << " " << farthest.x << " " << farthest.y << endl;
+	if (abs(farthest.x - nearest.x) > 240 || abs(farthest.y - nearest.y) > 135)
+		largeScale = true;
+	else
+		largeScale = false;
+	
 	if (small_move > 0 && small_move < total - small_or_no_move)
 		return 0;
 	else if (small_move == 0 && size_2 > 2 * size_1 && size_2 - size_1 > 5)

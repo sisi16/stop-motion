@@ -91,7 +91,7 @@ private slots:
 
 	void on_editRadioButton_clicked();
 
-	void on_keepRadioButton_clicked();
+	//void on_keepRadioButton_clicked();
 
     //void reverse_action();
 

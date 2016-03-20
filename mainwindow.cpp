@@ -232,12 +232,12 @@ void MainWindow::setCurrentClip(cliplabel *clip)
 	if (current_clip->getEditedMode() == NotEdited || current_clip->getEditedMode() == isViewed)
 	{
 		current_clip->setEditedMode(isSelected);
-		ui->keepRadioButton->setChecked(true);
+		//ui->keepRadioButton->setChecked(true);
 	}
 	else if (current_clip->getEditedMode() == isDeleted)
 	{
 		current_clip->setEditedMode(isSelectedDeleted);
-		ui->keepRadioButton->setChecked(false);
+		//ui->keepRadioButton->setChecked(false);
 	}
 
 	/*if (current_clip->getCutType() == 2)
@@ -276,12 +276,12 @@ void MainWindow::cutVideo()
 	if (current_clip->getEditedMode() == NotEdited)
 	{
 		current_clip->setEditedMode(isSelected);
-		ui->keepRadioButton->setChecked(true);
+		//ui->keepRadioButton->setChecked(true);
 	}
 	else
 	{
 		current_clip->setEditedMode(isSelectedDeleted);
-		ui->keepRadioButton->setChecked(false);
+		//ui->keepRadioButton->setChecked(false);
 	}
 
 	ui->scrollAreaWidgetContents_1->installEventFilter(this);
@@ -1135,13 +1135,9 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 
 				cliplabel *item;
 				if (widget == ui->scrollAreaWidgetContents_1)
-				{
 					item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(m->pos()));
-				}
 				else if (widget == ui->scrollAreaWidgetContents_2)
-				{
 					item = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(m->pos()));
-				}
 				/*else
 				{
 				QWidget *contents;
@@ -1155,8 +1151,44 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 				}
 				}
 				}*/
-				setCurrentClip(item);
-				return true;
+				if (item->getCutType() == -1)
+					return false;
+				else 
+				{
+					setCurrentClip(item);
+					QPixmap pixmap = *item->pixmap();
+					QMimeData *mimeData = new QMimeData;
+					QByteArray exData;
+					QDataStream dataStream(&exData, QIODevice::WriteOnly);
+					dataStream << pixmap;
+					mimeData->setData("application/x-dnditemdata", exData);
+					mimeData->setText(tr("Drag and Drop"));
+					QDrag *drag;
+					if (widget == ui->scrollAreaWidgetContents_1)
+					{
+						drag = new QDrag(ui->scrollAreaWidgetContents_1);
+						current_empty_clip = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(current_clip->pos()));
+						current_empty_clip->setAcceptDrops(true);
+						current_empty_clip->installEventFilter(this);
+					}
+					else if (widget == ui->scrollAreaWidgetContents_2)
+					{
+						drag = new QDrag(ui->scrollAreaWidgetContents_2);
+						current_empty_clip = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_1->childAt(current_clip->pos()));
+						current_empty_clip->setAcceptDrops(true);
+						current_empty_clip->installEventFilter(this);
+					}
+					//else drag = new QDrag(addedTrack.at(track_index)->getCentralWidget());
+					drag->setMimeData(mimeData);
+					drag->setPixmap(pixmap.scaledToHeight(50));
+					//drag->setHotSpot(m->pos() - item->pos());
+					//item->hide();
+					if (drag->exec(Qt::MoveAction) == Qt::MoveAction)
+						item->show();
+					else
+						event->ignore();
+					return true;
+				}
 
 				//selectedClips.push_back(item);
 
@@ -1363,7 +1395,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 			else
 				return false;
 		}
-		else if (event->type() == QEvent::MouseMove)
+		/*else if (event->type() == QEvent::MouseMove)
 		{
 			cliplabel *item = current_clip;
 			QPixmap pixmap = *item->pixmap();
@@ -1402,7 +1434,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 			else
 				event->ignore();
 			return true;
-		}
+		}*/
 		else
 			return false;
 	}
@@ -1603,7 +1635,7 @@ void MainWindow::on_editRadioButton_clicked()
     }*/
 }
 
-void MainWindow::on_keepRadioButton_clicked()
+/*void MainWindow::on_keepRadioButton_clicked()
 {
 	if (current_clip != NULL)
 	{
@@ -1630,7 +1662,7 @@ void MainWindow::on_keepRadioButton_clicked()
 	{
 		statusBar()->showMessage("Please cut the video first.");
 	}
-}
+}*/
 
 /*void MainWindow::reverse_action()
 {
