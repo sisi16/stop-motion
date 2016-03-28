@@ -555,8 +555,7 @@ vector<bool> videoprocessor::test()
 	stringstream ss;
 	string type = ".jpg";
 	Mat frame, prevframe; //, gray, prevgray;
-	bool large_scale;
-	int index, time, num_small_move;
+	int index, time, num_small_move, num_move_object;
 
 	//ofstream matchfile;
 	//if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") matchfile.open("D:/CCCC/Stop Motion/Test6/matches.txt");
@@ -576,10 +575,11 @@ vector<bool> videoprocessor::test()
 
 		if (i != 0)
 		{
-			num_small_move = matchFeatures(prevframe, frame, large_scale); //matchfile << matchFeatures(prevframe, frame) << endl;
+			int obj = 0;
+			num_small_move = matchFeatures(prevframe, frame, obj); //matchfile << matchFeatures(prevframe, frame) << endl;
 			time = scene_cuts[i-1] - scene_cuts[i-2];
 			//cout << time << " " << num_small_move << " " << large_scale << endl << endl;
-			if (large_scale)
+			if (obj >= 3)
 			{
 				if (time <= 300 && (time <= 150 || num_small_move > 0)) // 180 60
 					checkMovingClips.push_back(true);
@@ -709,7 +709,7 @@ void videoprocessor::readBuffers()
 	}
 }
 
-int videoprocessor::matchFeatures(Mat image_1, Mat image_2, bool &largeScale)
+int videoprocessor::matchFeatures(Mat image_1, Mat image_2, int &object)
 {
 	//TermCriteria termcrit(CV_TERMCRIT_ITER | CV_TERMCRIT_EPS, 20, 0.03);
 	//Size subPixWinSize(10, 10), winSize(31, 31);
@@ -787,6 +787,14 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2, bool &largeScale)
 	float min_distance = 1000;
 	float max_distance = -1;
 	Point2f nearest, farthest;
+	vector<vector<Point>> contours = of.patchMatch(image_1, image_2);
+	int size = contours.size();
+	//vector<vector<Point>> filterContours;
+	vector<Point2f>center(size);
+	vector<float>radius(size);
+	for (int i = 0; i < size; i++)
+		minEnclosingCircle((Mat)contours[i], center[i], radius[i]);
+	
 	for (int i = 0; i < allMatches.size(); i++)
 	{
 		//for (int j = 0; j < allMatches[i].size(); j++)
@@ -799,6 +807,22 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2, bool &largeScale)
 				float flowx = abs(point1.x - point2.x);
 				float flowy = abs(point1.y - point2.y);
 				//cout << flowx << " " << flowy << endl;
+				
+				for (int i = 0; i < contours.size(); i++)
+				{
+					float dx1 = point1.x - center[i].x; float dy1 = point1.y - center[i].y;
+					float dx2 = point2.x - center[i].x; float dy2 = point2.y - center[i].y;
+					if (sqrt(dx1*dx1 + dy1*dy1) <= radius[i] + 5
+						|| sqrt(dx2*dx2 + dy2*dy2) <= radius[i] + 5)
+					{
+						object++;
+						//filterContours.push_back(contours[i]);
+						contours.erase(contours.begin() + i);
+						break;
+					}
+				}
+				
+
 				if (flowx <= 96 && flowy <= 54) // 40.5, 72
 				{
 					small_or_no_move++;
@@ -827,7 +851,10 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2, bool &largeScale)
 	/*Mat image_matches;
 	drawMatches(image_1, keypoints_1, image_2, keypoints_2, matches, image_matches, Scalar::all(-1), Scalar::all(-1),
 				vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-	imshow("Matches", image_matches);*/
+	imshow("Matches", image_matches);
+	Mat temp = image_1;
+	drawContours(temp, filterContours, -1, Scalar(0, 0, 0), 1);
+	imshow("Flow", temp);*/
 	
 	int small_move = matches.size();
 	int size_1 = keypoints_1.size() - total;
@@ -835,10 +862,8 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2, bool &largeScale)
 	//cout << small_move << " " << total - small_or_no_move << endl;
 	//cout << size_1 << " " << size_2 << endl;
 	//cout << nearest.x << " " << nearest.y << " " << farthest.x << " " << farthest.y << endl;
-	if (abs(farthest.x - nearest.x) > 240 || abs(farthest.y - nearest.y) > 135)
-		largeScale = true;
-	else
-		largeScale = false;
+	
+	if (object == 0) object = size;
 	
 	if (small_move > 0 && small_move < total - small_or_no_move)
 		return 0;

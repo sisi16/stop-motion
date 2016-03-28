@@ -4,6 +4,7 @@ using namespace std;
 using namespace cv;
 using namespace cv::gpu;
 
+
 opflow::opflow()
 {
 }
@@ -183,4 +184,173 @@ float opflow::calAvgOpFlow(Mat flow)
 	//float avgflow = accrad / (flow.rows * flow.cols - overflow_count);
 	float avgflow = movingpixel_count / float(flow.rows * flow.cols - overflow_count);
 	return avgflow;
+}
+
+/* -------------------------------------------------------------------------
+PatchMatch, using L2 distance between upright patches that translate only
+------------------------------------------------------------------------- */
+BITMAP3* opflow::toBITMAP(const uchar *img, int width, int height, int istep)
+{
+	BITMAP3 *bmp = new BITMAP3(width, height);
+	int bi = 0;
+	for (int yi = 0; yi < height; ++yi, img += istep)
+	{
+		const uchar *px = img;
+		for (int xi = 0; xi < width; ++xi, px += 3, ++bi)
+		{
+			bmp->data[bi] = (px[0] << 16) | (px[1] << 8) | px[2];
+		}
+	}
+
+	return bmp;
+}
+
+int patch_w = 5;//7;
+int pm_iters = 9;//5;
+int rs_max = INT_MAX;
+
+int opflow::dist(BITMAP3 *a, BITMAP3 *b, int ax, int ay, int bx, int by, int diagonalDis, int cutoff) {
+	float alpha = 5, beta = 8;
+	double ansColor = 0, ansDis = 0, ans = 0;
+	double dxx = ax - bx, dyy = ay - by;
+	double dis = sqrt(dxx*dxx + dyy*dyy) / diagonalDis*100.0;
+	ansDis = dis*patch_w*patch_w;
+
+	for (int dy = 0; dy < patch_w; dy++) {
+		int *arow = &(*a)[ay + dy][ax];
+		int *brow = &(*b)[by + dy][bx];
+		for (int dx = 0; dx < patch_w; dx++) {
+			int ac = arow[dx];
+			int bc = brow[dx];
+			int dr = (ac & 255) - (bc & 255);
+			int dg = ((ac >> 8) & 255) - ((bc >> 8) & 255);
+			int db = (ac >> 16) - (bc >> 16);
+			ansColor += sqrt((double)(dr*dr + dg*dg + db*db));//ans += dr*dr + dg*dg + db*db;
+		}
+		//if (ans >= cutoff) { return cutoff; }
+	}
+
+	ansColor = ansColor / 255.0*100.0;
+	ans = ansColor*alpha + ansDis*beta;
+	return ans;
+}
+
+void opflow::improve_guess(BITMAP3 *a, BITMAP3 *b, int ax, int ay, int &xbest, int &ybest, int &dbest, int bx, int by) {
+	int d = dist(a, b, ax, ay, bx, by, dbest);
+	if (d < dbest) {
+		dbest = d;
+		xbest = bx;
+		ybest = by;
+	}
+}
+
+vector<vector<Point>> opflow::patchMatch(Mat currentframe, Mat nextframe)
+{
+	/* Initialize with random nearest neighbor field (NNF). */
+	BITMAP3 *a = toBITMAP(currentframe.data, currentframe.cols, currentframe.rows, currentframe.step);
+	BITMAP3 *b = toBITMAP(nextframe.data, nextframe.cols, nextframe.rows, nextframe.step);
+
+	BITMAP3 *ann = new BITMAP3(a->w, a->h);
+	BITMAP3 *annd = new BITMAP3(a->w, a->h);
+	Mat annMat = Mat(Size(a->w, a->h), CV_32FC2, Scalar(0, 0));
+
+	int aew = a->w - patch_w + 1, aeh = a->h - patch_w + 1;       /* Effective width and height (possible upper left corners of patches). */
+	int bew = b->w - patch_w + 1, beh = b->h - patch_w + 1;
+	int diagonalDis = sqrt((double)(a->w*a->w + a->h*a->h));
+	memset(ann->data, 0, sizeof(int)*a->w*a->h);
+	memset(annd->data, 0, sizeof(int)*a->w*a->h);
+	for (int ay = 0; ay < aeh; ay++) {
+		for (int ax = 0; ax < aew; ax++) {
+			int bx = rand() % bew;
+			int by = rand() % beh;
+			(*ann)[ay][ax] = XY_TO_INT(bx, by);
+			(*annd)[ay][ax] = dist(a, b, ax, ay, bx, by, diagonalDis);
+		}
+	}
+	for (int iter = 0; iter < pm_iters; iter++) {
+		/* In each iteration, improve the NNF, by looping in scanline or reverse-scanline order. */
+		int ystart = 0, yend = aeh, ychange = 1;
+		int xstart = 0, xend = aew, xchange = 1;
+		if (iter % 2 == 1) {
+			xstart = xend - 1; xend = -1; xchange = -1;
+			ystart = yend - 1; yend = -1; ychange = -1;
+		}
+		for (int ay = ystart; ay != yend; ay += ychange) {
+			for (int ax = xstart; ax != xend; ax += xchange) {
+				/* Current (best) guess. */
+				int v = (*ann)[ay][ax];
+				int xbest = INT_TO_X(v), ybest = INT_TO_Y(v);
+				int dbest = (*annd)[ay][ax];
+
+				/* Propagation: Improve current guess by trying instead correspondences from left and above (below and right on odd iterations). */
+				if ((unsigned)(ax - xchange) < (unsigned)aew) {
+					int vp = (*ann)[ay][ax - xchange];
+					int xp = INT_TO_X(vp) + xchange, yp = INT_TO_Y(vp);
+					if ((unsigned)xp < (unsigned)bew) {
+						improve_guess(a, b, ax, ay, xbest, ybest, dbest, xp, yp);
+					}
+				}
+
+				if ((unsigned)(ay - ychange) < (unsigned)aeh) {
+					int vp = (*ann)[ay - ychange][ax];
+					int xp = INT_TO_X(vp), yp = INT_TO_Y(vp) + ychange;
+					if ((unsigned)yp < (unsigned)beh) {
+						improve_guess(a, b, ax, ay, xbest, ybest, dbest, xp, yp);
+					}
+				}
+
+				/* Random search: Improve current guess by searching in boxes of exponentially decreasing size around the current best guess. */
+				int rs_start = rs_max;
+				if (rs_start > MAX(b->w, b->h)) { rs_start = MAX(b->w, b->h); }
+				for (int mag = rs_start; mag >= 1; mag /= 2) {
+					/* Sampling window */
+					int xmin = MAX(xbest - mag, 0), xmax = MIN(xbest + mag + 1, bew);
+					int ymin = MAX(ybest - mag, 0), ymax = MIN(ybest + mag + 1, beh);
+					int xp = xmin + rand() % (xmax - xmin);
+					int yp = ymin + rand() % (ymax - ymin);
+					improve_guess(a, b, ax, ay, xbest, ybest, dbest, xp, yp);
+				}
+
+				(*ann)[ay][ax] = XY_TO_INT(xbest, ybest);
+				(*annd)[ay][ax] = dbest;
+				int flowx = xbest - ax; int flowy = ybest - ay;
+				annMat.at<Vec2f>(ay, ax) = Vec2f(flowx, flowy);
+			}
+		}
+	}
+
+	Mat maskSrc = Mat(Size(a->w, a->h), CV_8UC1, Scalar(0));
+	Mat maskDst = Mat(Size(a->w, a->h), CV_8UC1, Scalar(0));
+	inRange(annMat, Scalar(0, 0), Scalar(5, 3), maskSrc); //4.8, 2.7
+	bitwise_not(maskSrc, maskDst);
+
+	//Mat coloredMat;
+	vector<vector<Point>> contours;
+	vector<vector<Point>> filterContours;
+	//vector<Vec4i> hierarchy;
+
+	//motionToColor(annMat, coloredMat);
+	//Mat temp = coloredMat;
+	findContours(maskDst, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
+	for (int contourIdx = 0; contourIdx < contours.size(); contourIdx++)
+	{
+		if (contourArea(contours[contourIdx]) > 648) //(0.005*270*480)
+			filterContours.push_back(contours[contourIdx]);
+	}
+
+	/*if (contours.size() > 2)
+	{
+		sort(contours.begin(), contours.end(), more_area);
+		filterContours.push_back(contours[0]);
+		filterContours.push_back(contours[1]);
+		cout << contourArea(contours[0]) << " " << contourArea(contours[1]) << endl;
+		//if (contourArea(contours[0])>1000) filterContours.push_back(contours[0]);
+		//f (contourArea(contours[0])>1000) filterContours.push_back(contours[1]);
+		//drawContours(frame, filterContours, -1, Scalar(0, 0, 255), 2);
+	}*/
+	//drawContours(coloredMat, filterContours, -1, Scalar(0, 0, 0), 1);
+	//imshow("Mask", maskDst);
+	//imshow("Color", coloredMat);
+
+	return filterContours;
 }
