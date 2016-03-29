@@ -548,21 +548,18 @@ int videoprocessor::getFrameRate()
 
 vector<bool> videoprocessor::test()
 {	
-	//blobtrack bTrack(fileName, num_of_frames);
-	//bTrack.process();
-
-	vector<bool> checkMovingClips;
+	//vector<bool> checkMovingClips;
 	stringstream ss;
 	string type = ".jpg";
 	Mat frame, prevframe; //, gray, prevgray;
-	int index, time, num_small_move, num_move_object;
+	//int index, time, num_small_move, num_move_object;
 
 	//ofstream matchfile;
 	//if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") matchfile.open("D:/CCCC/Stop Motion/Test6/matches.txt");
 	//else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") matchfile.open("D:/CCCC/Stop Motion/Test7/matches_2.txt");
 	//else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") matchfile.open("D:/CCCC/Stop Motion/Test8/matches_2.txt");
 
-	for (int i = 0; i < scene_cuts.size(); i += 2)
+	/*for (int i = 0; i < scene_cuts.size(); i += 2)
 	{
 		if (i == 0) index = scene_cuts[0] / 2;
 		else index = (scene_cuts[i] + scene_cuts[i - 1] + 1) / 2;
@@ -575,33 +572,23 @@ vector<bool> videoprocessor::test()
 
 		if (i != 0)
 		{
-			int obj = 0;
-			num_small_move = matchFeatures(prevframe, frame, obj); //matchfile << matchFeatures(prevframe, frame) << endl;
+			vector<vector<Point>> contours = of.patchMatch(prevframe, frame);
+			int size = contours.size();
+			int area_sum = 0;
+			for (int i = 0; i < size; i++)
+				area_sum += contourArea(contours[i]);
+			num_small_move = matchFeatures(prevframe, frame); //matchfile << matchFeatures(prevframe, frame) << endl;
 			time = scene_cuts[i-1] - scene_cuts[i-2];
 			//cout << time << " " << num_small_move << " " << large_scale << endl << endl;
-			if (obj >= 3)
-			{
-				if (time <= 300 && (time <= 150 || num_small_move > 0)) // 180 60
-					checkMovingClips.push_back(true);
-				else
-					checkMovingClips.push_back(false);
-			}
-			else
-			{
-				if (time <= 150 && (time <= 75 || num_small_move > 0)) // 180 60
-					checkMovingClips.push_back(true);
-				else
-					checkMovingClips.push_back(false);
-			}
 		}
 		prevframe = frame;
 		//if (waitKey(3000) == 27) break;
 		//if (waitKey(3000) == 32) waitKey(0);
-	}
+	}*/
 
 	//matchfile.close();
 
-	/*ifstream matchfile;
+	ifstream matchfile;
 	if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") matchfile.open("D:/CCCC/Stop Motion/Test7/matches_2.txt");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") matchfile.open("D:/CCCC/Stop Motion/Test8/matches_2.txt");
 	
@@ -609,17 +596,43 @@ vector<bool> videoprocessor::test()
 
 	if (matchfile.is_open())
 	{
-		int num;
+		int num, index;
 		int idx = 1;
+
+		index = scene_cuts[0] / 2;
+		ss << index << type;
+		if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") prevframe = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") prevframe = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
+		ss.str("");
+
 		while (matchfile >> num)
 		{
+			index = (scene_cuts[idx+1] + scene_cuts[idx] + 1) / 2;
+			ss << index << type;
+			if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi")	frame = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
+			
+			vector<vector<Point>> contours = of.patchMatch(prevframe, frame);
+			int size = contours.size();
+			int area_sum = 0;
+			if (size != 0)
+			{
+				for (int i = 0; i < size; i++)
+					area_sum += contourArea(contours[i]);
+			}
+			else size = 1;
+			ss.str("");
+			
+			//int num_small_move = matchFeatures(prevframe, frame);
 			int time = scene_cuts[idx] - scene_cuts[idx - 1];
-			//cout << time << endl;
-			if (time <= 150 && (time <= 75 || num > 0)) // 180 60
-				checkMovingClips.push_back(true);
-			else
+			//cout << size << " " << time << " " << area_sum << " " << num_small_move << endl;
+			
+			if (time > 150 * size || area_sum > 116640 || num == 0) // 0.9*480*270
 				checkMovingClips.push_back(false);
-			//cout << checkMovingClips[idx / 2] << endl;
+			else
+				checkMovingClips.push_back(true);
+			
+			prevframe = frame;
 			idx += 2;
 		}
 		matchfile.close();
@@ -627,9 +640,9 @@ vector<bool> videoprocessor::test()
 
 		for (int i = 0; i < checkMovingClips.size(); i++)
 		{
-			if (i < (checkMovingClips.size()-2) && checkMovingClips[i] && checkMovingClips[i+1] && checkMovingClips[i+2])
+			if (i < (checkMovingClips.size()-1) && checkMovingClips[i] && checkMovingClips[i+1]) //&& checkMovingClips[i+2])
 			{
-				i += 3;
+				i += 2;
 				while (i < checkMovingClips.size() && checkMovingClips[i])
 					i++;
 			}
@@ -640,7 +653,7 @@ vector<bool> videoprocessor::test()
 		//for (int j = 0; j < checkMovingClips.size(); j++)
 			//cout << checkMovingClips[j] << endl;
 	}
-	else cout << "Unable to open file" << endl;*/
+	else cout << "Unable to open file" << endl;
 
 	return checkMovingClips;
 }
@@ -709,7 +722,7 @@ void videoprocessor::readBuffers()
 	}
 }
 
-int videoprocessor::matchFeatures(Mat image_1, Mat image_2, int &object)
+int videoprocessor::matchFeatures(Mat image_1, Mat image_2)
 {
 	//TermCriteria termcrit(CV_TERMCRIT_ITER | CV_TERMCRIT_EPS, 20, 0.03);
 	//Size subPixWinSize(10, 10), winSize(31, 31);
@@ -786,14 +799,12 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2, int &object)
 	int small_or_no_move = 0;
 	float min_distance = 1000;
 	float max_distance = -1;
-	Point2f nearest, farthest;
-	vector<vector<Point>> contours = of.patchMatch(image_1, image_2);
-	int size = contours.size();
-	//vector<vector<Point>> filterContours;
+	
+	/*vector<vector<Point>> filterContours;
 	vector<Point2f>center(size);
 	vector<float>radius(size);
 	for (int i = 0; i < size; i++)
-		minEnclosingCircle((Mat)contours[i], center[i], radius[i]);
+		minEnclosingCircle((Mat)contours[i], center[i], radius[i]);*/
 	
 	for (int i = 0; i < allMatches.size(); i++)
 	{
@@ -808,38 +819,26 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2, int &object)
 				float flowy = abs(point1.y - point2.y);
 				//cout << flowx << " " << flowy << endl;
 				
-				for (int i = 0; i < contours.size(); i++)
+				/*for (int i = 0; i < contours.size(); i++)
 				{
 					float dx1 = point1.x - center[i].x; float dy1 = point1.y - center[i].y;
 					float dx2 = point2.x - center[i].x; float dy2 = point2.y - center[i].y;
-					if (sqrt(dx1*dx1 + dy1*dy1) <= radius[i] + 5
-						|| sqrt(dx2*dx2 + dy2*dy2) <= radius[i] + 5)
+					if (sqrt(dx1*dx1 + dy1*dy1) <= radius[i] + 15
+						|| sqrt(dx2*dx2 + dy2*dy2) <= radius[i] + 15)
 					{
 						object++;
 						//filterContours.push_back(contours[i]);
 						contours.erase(contours.begin() + i);
 						break;
 					}
-				}
+				}*/
 				
-
 				if (flowx <= 96 && flowy <= 54) // 40.5, 72
 				{
 					small_or_no_move++;
 					if (flowx >= 4.8 || flowy >= 2.7)
 					{
 						matches.push_back(allMatches[i][0]);
-						float distance = sqrt(point1.x*point1.x + point1.y*point1.y);
-						if (distance < min_distance)
-						{
-							min_distance = distance;
-							nearest = point1;
-						}
-						if (distance > max_distance)
-						{
-							max_distance = distance;
-							farthest = point1;
-						}
 					}
 					//else if ((flowx >= 2.7 && flowx <= 40.5 && flowy < 4.8) || (flowy >= 4.8 && flowy <= 72 && flowx < 2.7)) 
 				}
@@ -862,9 +861,7 @@ int videoprocessor::matchFeatures(Mat image_1, Mat image_2, int &object)
 	//cout << small_move << " " << total - small_or_no_move << endl;
 	//cout << size_1 << " " << size_2 << endl;
 	//cout << nearest.x << " " << nearest.y << " " << farthest.x << " " << farthest.y << endl;
-	
-	if (object == 0) object = size;
-	
+		
 	if (small_move > 0 && small_move < total - small_or_no_move)
 		return 0;
 	else if (small_move == 0 && size_2 > 2 * size_1 && size_2 - size_1 > 5)

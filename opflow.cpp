@@ -325,12 +325,11 @@ vector<vector<Point>> opflow::patchMatch(Mat currentframe, Mat nextframe)
 	bitwise_not(maskSrc, maskDst);
 
 	//Mat coloredMat;
+	//motionToColor(annMat, coloredMat);
+
 	vector<vector<Point>> contours;
 	vector<vector<Point>> filterContours;
-	//vector<Vec4i> hierarchy;
-
-	//motionToColor(annMat, coloredMat);
-	//Mat temp = coloredMat;
+	
 	findContours(maskDst, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
 	for (int contourIdx = 0; contourIdx < contours.size(); contourIdx++)
 	{
@@ -338,18 +337,7 @@ vector<vector<Point>> opflow::patchMatch(Mat currentframe, Mat nextframe)
 			filterContours.push_back(contours[contourIdx]);
 	}
 
-	/*if (contours.size() > 2)
-	{
-		sort(contours.begin(), contours.end(), more_area);
-		filterContours.push_back(contours[0]);
-		filterContours.push_back(contours[1]);
-		cout << contourArea(contours[0]) << " " << contourArea(contours[1]) << endl;
-		//if (contourArea(contours[0])>1000) filterContours.push_back(contours[0]);
-		//f (contourArea(contours[0])>1000) filterContours.push_back(contours[1]);
-		//drawContours(frame, filterContours, -1, Scalar(0, 0, 255), 2);
-	}*/
-	//drawContours(coloredMat, filterContours, -1, Scalar(0, 0, 0), 1);
-	//imshow("Mask", maskDst);
+	//drawContours(coloredMat, filterContours, -1, Scalar(255, 0, 0), 2);
 	//imshow("Color", coloredMat);
 
 	return filterContours;
