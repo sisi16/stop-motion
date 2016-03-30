@@ -549,9 +549,9 @@ int videoprocessor::getFrameRate()
 vector<bool> videoprocessor::test()
 {	
 	//vector<bool> checkMovingClips;
-	stringstream ss;
-	string type = ".jpg";
-	Mat frame, prevframe; //, gray, prevgray;
+	//stringstream ss;
+	//string type = ".jpg";
+	//Mat frame, prevframe; //, gray, prevgray;
 	//int index, time, num_small_move, num_move_object;
 
 	//ofstream matchfile;
@@ -596,18 +596,18 @@ vector<bool> videoprocessor::test()
 
 	if (matchfile.is_open())
 	{
-		int num, index;
+		int num, contour_size, contour_area; //, index;
 		int idx = 1;
 
-		index = scene_cuts[0] / 2;
+		/*index = scene_cuts[0] / 2;
 		ss << index << type;
 		if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") prevframe = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") prevframe = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
-		ss.str("");
+		ss.str("");*/
 
-		while (matchfile >> num)
+		while (matchfile >> num >> contour_size >> contour_area)
 		{
-			index = (scene_cuts[idx+1] + scene_cuts[idx] + 1) / 2;
+			/*index = (scene_cuts[idx+1] + scene_cuts[idx] + 1) / 2;
 			ss << index << type;
 			if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi")	frame = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
 			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
@@ -615,24 +615,26 @@ vector<bool> videoprocessor::test()
 			vector<vector<Point>> contours = of.patchMatch(prevframe, frame);
 			int size = contours.size();
 			int area_sum = 0;
+			cout << size << " ";
 			if (size != 0)
 			{
 				for (int i = 0; i < size; i++)
 					area_sum += contourArea(contours[i]);
 			}
 			else size = 1;
-			ss.str("");
-			
+			ss.str("");*/
 			//int num_small_move = matchFeatures(prevframe, frame);
-			int time = scene_cuts[idx] - scene_cuts[idx - 1];
-			//cout << size << " " << time << " " << area_sum << " " << num_small_move << endl;
 			
-			if (time > 150 * size || area_sum > 116640 || num == 0) // 0.9*480*270
+			if (contour_size == 0) contour_size = 1;
+			int time = scene_cuts[idx] - scene_cuts[idx - 1];
+			//cout << area_sum << " " << num << endl;
+			
+			if (contour_area > 116640 || time > 150 * contour_size || num == 0) // 0.9*480*270
 				checkMovingClips.push_back(false);
 			else
 				checkMovingClips.push_back(true);
 			
-			prevframe = frame;
+			//prevframe = frame;
 			idx += 2;
 		}
 		matchfile.close();
