@@ -20,6 +20,7 @@
 #include "myslider.h"
 #include "cliplabel.h"
 #include "myscrollarea.h"
+#include "player.h"
 
 namespace Ui {
 class MainWindow;
@@ -101,6 +102,8 @@ private slots:
 
 	void show_context_menu();
 
+	void updatePlayer(int frameIndex);
+
 private:
     //int resize_count;
     //int window_current_width;
@@ -126,6 +129,7 @@ private:
 	//std::vector<myscrollarea *> addedTrack;
 	//std::vector<QScrollArea *> selectedTrack;
 	//std::vector<QPoint> seletedPos;
+	player *myPlayer;
 };
 
 #endif // MAINWINDOW_H

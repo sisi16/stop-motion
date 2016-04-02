@@ -74,6 +74,12 @@
     <ClCompile Include="blobtrack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="release\moc_player.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="cliplabel.h">
@@ -97,6 +103,9 @@
     <ClInclude Include="videoprocessor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <CustomBuild Include="player.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug\moc_cliplabel.cpp">

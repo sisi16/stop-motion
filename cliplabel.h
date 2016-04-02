@@ -36,6 +36,7 @@ public:
 	int getCutType();
 	int getWidth();
 	int getHeight();
+	int getBaseWidth();
 	std::vector<cv::Mat> getSrcImages();
 	isEdited getEditedMode();
 	std::vector<int> getRange();

@@ -23,7 +23,8 @@ SOURCES += main.cpp\
            myslider.cpp \
            cliplabel.cpp \
            myscrollarea.cpp \
-           blobtrack.cpp
+           blobtrack.cpp \
+           player.cpp
 
 HEADERS  += mainwindow.h \
             videoprocessor.h \
@@ -32,7 +33,8 @@ HEADERS  += mainwindow.h \
             myslider.h \
             cliplabel.h \
             myscrollarea.h \
-            blobtrack.h
+            blobtrack.h \
+            player.h
 
 FORMS    += mainwindow.ui
 

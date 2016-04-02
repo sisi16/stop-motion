@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+	delete myPlayer;
     delete ui;
 }
 
@@ -247,7 +248,8 @@ void MainWindow::setCurrentClip(cliplabel *clip)
 		
 	}*/
 	refresh(current_clip->getRange().at(0));
-	ui->scrollArea_1->horizontalScrollBar()->setSliderPosition(current_clip->pos().x());
+	if (current_clip->pos().x() + current_clip->width() > ui->scrollArea_1->horizontalScrollBar()->sliderPosition() + ui->scrollArea_1->width())
+		ui->scrollArea_1->horizontalScrollBar()->setSliderPosition(current_clip->pos().x());
 	frame_slider->setValue(current_clip_index);
 }
 
@@ -555,7 +557,9 @@ int MainWindow::round(double r)
 
 void MainWindow::on_playClipButton_clicked()
 {
-	vector<int> cutRanges = current_clip->getCuts();
+	if (myPlayer->isStopped())
+		myPlayer->playVideo(current_clip_index);
+	/*vector<int> cutRanges = current_clip->getCuts();
 	if (cutRanges.empty())
 	{
 		int start = current_clip->getRange().at(0);
@@ -589,7 +593,8 @@ void MainWindow::on_playClipButton_clicked()
 				Sleep(delay);
 			}
 		}
-	}
+	}*/
+
 	/*if (frame_slider->parent() == 0)
     {
 		child = ui->verticalLayout_2->takeAt(0);
@@ -626,6 +631,8 @@ void MainWindow::on_nextButton_clicked()
 void MainWindow::on_pauseButton_clicked()
 {
     //mediaplayer_1->pause();
+	if (!myPlayer->isStopped())
+		myPlayer->stopVideo();
 }
 
 void MainWindow::on_playTrackButton_clicked()
@@ -644,11 +651,12 @@ void MainWindow::on_playTrackButton_clicked()
 		if (item->getCutType() != -1 && orginMode != isDeleted && orginMode != isSelectedDeleted)
 		{
 			item->setEditedMode(isViewed);
-			ui->scrollArea_1->horizontalScrollBar()->setSliderPosition(item->pos().x());
-			frame_slider->setValue(i);
+			//ui->scrollArea_1->horizontalScrollBar()->setSliderPosition(item->pos().x());
+			//frame_slider->setValue(i);
 			start = item->getRange().at(0);
 			end = item->getRange().at(1);
 			vector<int> cutRanges = item->getCuts();
+			setCurrentClip(item);
 
 			if (!cutRanges.empty())
 			{
@@ -668,8 +676,19 @@ void MainWindow::on_playTrackButton_clicked()
 			else if (item->getCutType() == 2)
 			{
 				delay = 500 / frameRate;
+				int current_position = ui->scrollArea_1->horizontalScrollBar()->sliderPosition();
+				int base_width = current_clip->getBaseWidth();
+				int clip_width = current_clip->width();
+				int scroll_width = ui->scrollArea_1->width();
 				for (int j = start; j <= end; j++)
 				{
+					if (clip_width > scroll_width && current_position + scroll_width <= ui->scrollAreaWidgetContents_1->width()
+						&& j > 0 && j % (2 * frameRate) == 0)
+					{
+						cout << j << endl;
+						ui->scrollArea_1->horizontalScrollBar()->setSliderPosition(current_position + base_width);
+						current_position += base_width;
+					}
 					refresh(j);
 					if (GetAsyncKeyState(0x53))
 					{
@@ -693,7 +712,6 @@ void MainWindow::on_playTrackButton_clicked()
 			item->setEditedMode(orginMode);
 		}
 	}
-	setCurrentClip(item);
 }
 
 void MainWindow::seek(int index)
@@ -716,11 +734,15 @@ void MainWindow::on_actionLoad_triggered()
     fileName = QFileDialog::getOpenFileName(this, tr("Open File"), ".", tr("Video Files(*.mp4 *.avi *.mov);;All files (*.*)" ));
     if (fileName.isEmpty())
         return;
-
-    vproc.readVideo(fileName.toStdString());
+	
+	string stdFileName = fileName.toStdString();
+	vproc.readVideo(stdFileName);
 	ui->frameLabel->setStyleSheet("background-color: rgb(0, 0, 0); image: url(D:/CCCC/Stop Motion/Videos/preview.png);");
 	cutVideo();
 	initFrameSlider();
+	myPlayer = new player();
+	myPlayer->loadVideo(stdFileName, vproc.getFrameRate(), clips);
+	QObject::connect(myPlayer, SIGNAL(display(int)), this, SLOT(updatePlayer(int)));
 }
 
 /*void MainWindow::on_actionSelect_triggered()
@@ -1714,4 +1736,82 @@ void MainWindow::show_context_menu()
     connect(deleteAction, SIGNAL(triggered(bool)), this, SLOT(delete_action()));
 
 	sliderMenu->exec(QCursor::pos());
+}
+
+void MainWindow::updatePlayer(int frameIndex)
+{
+	stringstream ss;
+	string type = ".jpg";
+	Mat frame;
+	ss << frameIndex << type;
+	if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") frame = imread("D:/CCCC/Stop Motion/Test/480/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") frame = imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") frame = imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/540/" + ss.str());
+	ss.str("");
+
+	cv::Mat temp;
+	cvtColor(frame, temp, CV_BGR2RGB);
+	QImage current_image((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+	current_image.bits();
+
+	QPixmap pix(ui->frameLabel->width(), ui->frameLabel->height());
+	pix.fill(Qt::black);
+	QPainter *paint = new QPainter(&pix);
+	int w = pix.width();
+	int h = pix.height();
+	paint->drawPixmap((w - h * 16 / 9) / 2, 0, h * 16 / 9, h, QPixmap::fromImage(current_image));
+	if (ui->editRadioButton->isChecked() && frameIndex == current_clip->getRange().at(0))
+	{
+		stringstream ss_1, ss_2;
+		string type = ".jpg";
+		Mat frame_1, frame_2;
+		int start = current_clip->getRange().at(0);
+		int end = current_clip->getRange().at(1);
+		ss_1 << (start + end) / 2 << type;
+		ss_2 << end << type;
+		if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/Test6/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/Test6/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/Test7/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/Test7/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/Test8/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/Test8/540/" + ss_2.str());
+		}
+		ss_1.str("");
+		ss_2.str("");
+
+		cvtColor(frame_1, temp, CV_BGR2RGB);
+		QImage image_1((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+		image_1.bits();
+		cvtColor(frame_2, temp, CV_BGR2RGB);
+		QImage image_2((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+		image_2.bits();
+
+		QPixmap pix_1((w - h * 16 / 9) / 3, h * 3 / 5);
+		QPixmap pix_2((w - h * 16 / 9) / 6, h / 3);
+		QPainter *paint_1 = new QPainter(&pix_1);
+		QPainter *paint_2 = new QPainter(&pix_2);
+		pix_1.fill(Qt::darkGray);
+		pix_2.fill(Qt::darkGray);
+		paint_1->drawPixmap(0, (pix_1.height() - pix_1.width() * 9 / 16) / 2, pix_1.width(), pix_1.width() * 9 / 16, QPixmap::fromImage(image_1));
+		paint_1->end();
+		paint_2->drawPixmap(0, (pix_2.height() - pix_2.width() * 9 / 16) / 2, pix_2.width(), pix_2.width() * 9 / 16, QPixmap::fromImage(image_2));
+		paint_2->end();
+		paint->drawPixmap((w + h * 16 / 9) / 2, h / 5, pix_1.width(), pix_1.height(), pix_1);
+		paint->drawPixmap((w * 5 + h * 16 / 9) / 6, h / 3, pix_2.width(), pix_2.height(), pix_2);
+	}
+	paint->end();
+	ui->frameLabel->setStyleSheet("");
+	ui->frameLabel->setPixmap(pix);
+	ui->frameLabel->repaint();
 }

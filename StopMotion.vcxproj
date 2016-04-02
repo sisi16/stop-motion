@@ -145,6 +145,8 @@
     <ClCompile Include="myscrollarea.cpp" />
     <ClCompile Include="myslider.cpp" />
     <ClCompile Include="opflow.cpp" />
+    <ClCompile Include="player.cpp" />
+    <ClCompile Include="release\moc_player.cpp" />
     <ClCompile Include="videoprocessor.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +225,16 @@ endlocal</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debug\moc_myslider.cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <ClInclude Include="opflow.h" />
+    <CustomBuild Include="player.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+if errorlevel 1 goto VCEnd
+D:\Software\OtProject\5.4\msvc2013_64\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DQT_MULTIMEDIAWIDGETS_LIB -DQT_WIDGETS_LIB -DQT_MULTIMEDIA_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -D_MSC_VER=1800 -D_WIN32 -D_WIN64 -ID:/Software/OtProject/5.4/msvc2013_64/mkspecs/win32-msvc2013 -I"D:/CCCC/Stop Motion/StopMotion" -ID:/Software/OtProject/5.4/msvc2013_64/include -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimediaWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtWidgets -ID:/Software/OtProject/5.4/msvc2013_64/include/QtMultimedia -ID:/Software/OtProject/5.4/msvc2013_64/include/QtGui -ID:/Software/OtProject/5.4/msvc2013_64/include/QtANGLE -ID:/Software/OtProject/5.4/msvc2013_64/include/QtNetwork -ID:/Software/OtProject/5.4/msvc2013_64/include/QtCore player.h -o release\moc_player.cpp
+if errorlevel 1 goto VCEnd
+endlocal</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MOC player.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\moc_player.cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">player.h;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
     <ClInclude Include="videoprocessor.h" />
   </ItemGroup>
   <ItemGroup>

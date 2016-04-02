@@ -97,6 +97,11 @@ int cliplabel::getHeight()
 	return h_threshold;
 }
 
+int cliplabel::getBaseWidth()
+{
+	return w_base;
+}
+
 vector<Mat> cliplabel::getSrcImages()
 {
 	return srcImages;
