@@ -636,12 +636,12 @@ void MainWindow::on_nextButton_clicked()
 		setCurrentClip(clips.at(current_clip_index+1));
 }
 
-void MainWindow::on_pauseButton_clicked()
+/*void MainWindow::on_pauseButton_clicked()
 {
     //mediaplayer_1->pause();
 	if (!myPlayer->isStopped())
 		myPlayer->stopVideo();
-}
+}*/
 
 void MainWindow::on_playTrackButton_clicked()
 {
@@ -1619,6 +1619,7 @@ void MainWindow::on_editRadioButton_clicked()
 	}
 	else
 	{	
+		current_clip->updatePixmap(fileName);
 		initFrameSlider();
 		frame_slider->setMouseTracking(false);
 		frame_slider->removeEventFilter(this);

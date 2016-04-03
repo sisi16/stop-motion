@@ -60,15 +60,15 @@ public:
     QLabel *frameLabel;
     QGridLayout *gridLayout_1;
     QFrame *line_3;
-    QPushButton *playClipButton;
-    QPushButton *pauseButton;
     QLabel *trackLabel;
     QLabel *clipLabel;
     QPushButton *playTrackButton;
     QFrame *line_4;
+    QRadioButton *editRadioButton;
+    QPushButton *playClipButton;
     QPushButton *nextButton;
     QPushButton *preButton;
-    QRadioButton *editRadioButton;
+    QPushButton *pauseButton;
     QFrame *line;
     QScrollArea *scrollArea_1;
     QWidget *scrollAreaWidgetContents_1;
@@ -232,33 +232,11 @@ public:
 
         gridLayout_1->addWidget(line_3, 3, 0, 1, 4);
 
-        playClipButton = new QPushButton(centralWidget);
-        playClipButton->setObjectName(QStringLiteral("playClipButton"));
+        trackLabel = new QLabel(centralWidget);
+        trackLabel->setObjectName(QStringLiteral("trackLabel"));
         QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy2.setHorizontalStretch(0);
         sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(playClipButton->sizePolicy().hasHeightForWidth());
-        playClipButton->setSizePolicy(sizePolicy2);
-        QIcon icon20;
-        icon20.addFile(QStringLiteral(":/Images/icons/play_24.png"), QSize(), QIcon::Normal, QIcon::Off);
-        playClipButton->setIcon(icon20);
-        playClipButton->setIconSize(QSize(20, 20));
-
-        gridLayout_1->addWidget(playClipButton, 6, 0, 1, 1);
-
-        pauseButton = new QPushButton(centralWidget);
-        pauseButton->setObjectName(QStringLiteral("pauseButton"));
-        sizePolicy2.setHeightForWidth(pauseButton->sizePolicy().hasHeightForWidth());
-        pauseButton->setSizePolicy(sizePolicy2);
-        QIcon icon21;
-        icon21.addFile(QStringLiteral(":/Images/icons/pause_24.png"), QSize(), QIcon::Normal, QIcon::Off);
-        pauseButton->setIcon(icon21);
-        pauseButton->setIconSize(QSize(20, 20));
-
-        gridLayout_1->addWidget(pauseButton, 6, 1, 1, 1);
-
-        trackLabel = new QLabel(centralWidget);
-        trackLabel->setObjectName(QStringLiteral("trackLabel"));
         sizePolicy2.setHeightForWidth(trackLabel->sizePolicy().hasHeightForWidth());
         trackLabel->setSizePolicy(sizePolicy2);
         trackLabel->setStyleSheet(QLatin1String("font: 75 18pt \"Times New Roman\";\n"
@@ -292,28 +270,6 @@ public:
 
         gridLayout_1->addWidget(line_4, 0, 0, 1, 4);
 
-        nextButton = new QPushButton(centralWidget);
-        nextButton->setObjectName(QStringLiteral("nextButton"));
-        sizePolicy2.setHeightForWidth(nextButton->sizePolicy().hasHeightForWidth());
-        nextButton->setSizePolicy(sizePolicy2);
-        QIcon icon22;
-        icon22.addFile(QStringLiteral(":/Images/icons/next.png"), QSize(), QIcon::Normal, QIcon::Off);
-        nextButton->setIcon(icon22);
-        nextButton->setIconSize(QSize(20, 20));
-
-        gridLayout_1->addWidget(nextButton, 6, 3, 1, 1);
-
-        preButton = new QPushButton(centralWidget);
-        preButton->setObjectName(QStringLiteral("preButton"));
-        sizePolicy2.setHeightForWidth(preButton->sizePolicy().hasHeightForWidth());
-        preButton->setSizePolicy(sizePolicy2);
-        QIcon icon23;
-        icon23.addFile(QStringLiteral(":/Images/icons/previous.png"), QSize(), QIcon::Normal, QIcon::Off);
-        preButton->setIcon(icon23);
-        preButton->setIconSize(QSize(20, 20));
-
-        gridLayout_1->addWidget(preButton, 6, 2, 1, 1);
-
         editRadioButton = new QRadioButton(centralWidget);
         editRadioButton->setObjectName(QStringLiteral("editRadioButton"));
         sizePolicy2.setHeightForWidth(editRadioButton->sizePolicy().hasHeightForWidth());
@@ -322,6 +278,48 @@ public:
         editRadioButton->setAutoExclusive(false);
 
         gridLayout_1->addWidget(editRadioButton, 5, 0, 1, 2);
+
+        playClipButton = new QPushButton(centralWidget);
+        playClipButton->setObjectName(QStringLiteral("playClipButton"));
+        sizePolicy2.setHeightForWidth(playClipButton->sizePolicy().hasHeightForWidth());
+        playClipButton->setSizePolicy(sizePolicy2);
+        QIcon icon20;
+        icon20.addFile(QStringLiteral(":/Images/icons/play_24.png"), QSize(), QIcon::Normal, QIcon::Off);
+        playClipButton->setIcon(icon20);
+        playClipButton->setIconSize(QSize(20, 20));
+
+        gridLayout_1->addWidget(playClipButton, 6, 0, 1, 1);
+
+        nextButton = new QPushButton(centralWidget);
+        nextButton->setObjectName(QStringLiteral("nextButton"));
+        sizePolicy2.setHeightForWidth(nextButton->sizePolicy().hasHeightForWidth());
+        nextButton->setSizePolicy(sizePolicy2);
+        QIcon icon21;
+        icon21.addFile(QStringLiteral(":/Images/icons/next.png"), QSize(), QIcon::Normal, QIcon::Off);
+        nextButton->setIcon(icon21);
+        nextButton->setIconSize(QSize(20, 20));
+
+        gridLayout_1->addWidget(nextButton, 6, 3, 1, 1);
+
+        preButton = new QPushButton(centralWidget);
+        preButton->setObjectName(QStringLiteral("preButton"));
+        sizePolicy2.setHeightForWidth(preButton->sizePolicy().hasHeightForWidth());
+        preButton->setSizePolicy(sizePolicy2);
+        QIcon icon22;
+        icon22.addFile(QStringLiteral(":/Images/icons/previous.png"), QSize(), QIcon::Normal, QIcon::Off);
+        preButton->setIcon(icon22);
+        preButton->setIconSize(QSize(20, 20));
+
+        gridLayout_1->addWidget(preButton, 6, 2, 1, 1);
+
+        pauseButton = new QPushButton(centralWidget);
+        pauseButton->setObjectName(QStringLiteral("pauseButton"));
+        sizePolicy2.setHeightForWidth(pauseButton->sizePolicy().hasHeightForWidth());
+        pauseButton->setSizePolicy(sizePolicy2);
+        pauseButton->setIcon(icon4);
+        pauseButton->setIconSize(QSize(20, 20));
+
+        gridLayout_1->addWidget(pauseButton, 6, 1, 1, 1);
 
 
         gridLayout->addLayout(gridLayout_1, 1, 4, 1, 1);
@@ -480,14 +478,14 @@ public:
         actionViewTrack->setToolTip(QApplication::translate("MainWindow", "View track", 0));
 #endif // QT_NO_TOOLTIP
         frameLabel->setText(QString());
-        playClipButton->setText(QString());
-        pauseButton->setText(QString());
         trackLabel->setText(QApplication::translate("MainWindow", "Track:", 0));
         clipLabel->setText(QApplication::translate("MainWindow", "Clip:", 0));
         playTrackButton->setText(QString());
+        editRadioButton->setText(QApplication::translate("MainWindow", "Edit", 0));
+        playClipButton->setText(QString());
         nextButton->setText(QString());
         preButton->setText(QString());
-        editRadioButton->setText(QApplication::translate("MainWindow", "Edit", 0));
+        pauseButton->setText(QString());
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
     } // retranslateUi
 

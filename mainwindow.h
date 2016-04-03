@@ -56,7 +56,7 @@ private slots:
     
 	void on_nextButton_clicked();
 
-    void on_pauseButton_clicked();
+    //void on_pauseButton_clicked();
 
 	void on_playTrackButton_clicked();
 
