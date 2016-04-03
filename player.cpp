@@ -46,6 +46,10 @@ bool player::isStopped() const{
 	return this->stop;
 }
 
+bool player::getPlayMode() const{
+	return this->playClip;
+}
+
 void player::run()
 {
 	if (playClip)
@@ -61,7 +65,7 @@ void player::run()
 
 			if (current_clip->getCutType() == 2)
 			{
-				int delay = 500 / frameRate;//delay = 1000 / frame_rate;
+				int delay = 1000 / frameRate;//delay = 1000 / frame_rate;
 				for (int j = start; !stop && j <= end; j++)
 				{
 					emit display(j);
@@ -76,7 +80,7 @@ void player::run()
 		{
 			int start, end;
 			int size = cutRanges.size();
-			int delay = 500 / frameRate;
+			int delay = 1000 / frameRate;
 
 			for (int i = 0; !stop && i < size; i += 2)
 			{
@@ -93,10 +97,67 @@ void player::run()
 				}
 			}
 		}
-		if (!stop)
+	}
+	else
+	{
+		int start = -1;
+		int end = -1;
+		int delay = -1;
+		int size = clips.size();
+		cliplabel *item;
+
+		for (int i = clipIndex; !stop && i < size; i++)
 		{
-			startFrameIndex = -1;
-			stop = true;
+			item = clips[i];
+			isEdited orginMode = item->getEditedMode();
+			if (item->getCutType() != -1 && orginMode != isDeleted && orginMode != isSelectedDeleted)
+			{
+				//item->setEditedMode(isViewed);
+				//ui->scrollArea_1->horizontalScrollBar()->setSliderPosition(item->pos().x());
+				//frame_slider->setValue(i);
+				start = item->getRange().at(0);
+				end = item->getRange().at(1);
+				vector<int> cutRanges = item->getCuts();
+				emit setCurrentClipIndex(i);
+
+				if (!cutRanges.empty())
+				{
+					int size = cutRanges.size();
+					delay = 1000 / frameRate;
+					for (int j = 0; !stop && j < size; j += 2)
+					{
+						int cut_start = cutRanges.at(j);
+						int cut_end = cutRanges.at(j + 1);
+						for (int k = cut_start; !stop && k <= cut_end; k++)
+						{
+							emit display(k);
+							Sleep(delay);
+						}
+					}
+				}
+				else if (item->getCutType() == 2)
+				{
+					delay = 1000 / frameRate;
+					for (int j = start; !stop && j <= end; j++)
+					{
+						emit display(j);
+						Sleep(delay);
+					}
+				}
+				else
+				{
+					delay = 1000;
+					emit display((start + end) / 2);
+					Sleep(delay);
+				}
+				//item->setEditedMode(orginMode);
+			}
 		}
+	}
+
+	if (!stop)
+	{
+		startFrameIndex = -1;
+		stop = true;
 	}
 }

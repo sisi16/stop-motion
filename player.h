@@ -21,12 +21,14 @@ public:
 	void playVideo(int index, bool singleClip = true);
 	void stopVideo();
 	bool isStopped() const;
+	bool getPlayMode() const;
 
 protected:
 	void run();
 
 signals:
 	void display(int frameIndex);
+	void setCurrentClipIndex(int clipIndex);
 
 private:
 	bool stop;

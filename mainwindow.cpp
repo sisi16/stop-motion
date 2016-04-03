@@ -558,7 +558,15 @@ int MainWindow::round(double r)
 void MainWindow::on_playClipButton_clicked()
 {
 	if (myPlayer->isStopped())
+	{
 		myPlayer->playVideo(current_clip_index);
+		ui->playClipButton->setIcon(QIcon(":/Images/icons/pause_24.png"));
+	}
+	else
+	{
+		myPlayer->stopVideo();
+		ui->playClipButton->setIcon(QIcon(":/Images/icons/play_24.png"));
+	}
 	/*vector<int> cutRanges = current_clip->getCuts();
 	if (cutRanges.empty())
 	{
@@ -637,14 +645,25 @@ void MainWindow::on_pauseButton_clicked()
 
 void MainWindow::on_playTrackButton_clicked()
 {
-	int start = -1;
+	if (myPlayer->isStopped())
+	{
+		myPlayer->playVideo(current_clip_index, false);
+		ui->playTrackButton->setIcon(QIcon(QPixmap(":/Images/icons/pause_24.png")));
+	}
+	else
+	{
+		myPlayer->stopVideo();
+		ui->playTrackButton->setIcon(QIcon(QPixmap(":/Images/icons/view-track.png")));
+	}
+
+	/*int start = -1;
 	int end = -1;
 	int delay = -1;
 	int frameRate = vproc.getFrameRate();
 	int size = clips.size();
 	cliplabel *item;
 
-	for (int i = frame_slider->value()%(size-1); i < size; i++)
+	for (int i = frame_slider->value() % (size - 1); i < size; i++)
 	{
 		item = clips.at(i);
 		isEdited orginMode = item->getEditedMode();
@@ -711,7 +730,7 @@ void MainWindow::on_playTrackButton_clicked()
 			}
 			item->setEditedMode(orginMode);
 		}
-	}
+	}*/
 }
 
 void MainWindow::seek(int index)
@@ -743,6 +762,7 @@ void MainWindow::on_actionLoad_triggered()
 	myPlayer = new player();
 	myPlayer->loadVideo(stdFileName, vproc.getFrameRate(), clips);
 	QObject::connect(myPlayer, SIGNAL(display(int)), this, SLOT(updatePlayer(int)));
+	QObject::connect(myPlayer, SIGNAL(setCurrentClipIndex(int)), this, SLOT(updateCurrentClip(int)));
 }
 
 /*void MainWindow::on_actionSelect_triggered()
@@ -1740,6 +1760,19 @@ void MainWindow::show_context_menu()
 
 void MainWindow::updatePlayer(int frameIndex)
 {
+	if (current_clip->getCutType() == 2 && current_clip->getCuts().empty())
+	{
+		int current_position = ui->scrollArea_1->horizontalScrollBar()->sliderPosition();
+		int base_width = current_clip->getBaseWidth();
+		int clip_width = current_clip->width();
+		int scroll_width = ui->scrollArea_1->width();
+		int indexOffset = frameIndex - current_clip->getRange().at(0);
+
+		if (clip_width > scroll_width && current_position + scroll_width <= ui->scrollAreaWidgetContents_1->width()
+			&& indexOffset > 0 && indexOffset % (2 * vproc.getFrameRate()) == 0)
+			ui->scrollArea_1->horizontalScrollBar()->setSliderPosition(current_position + base_width);
+	}
+
 	stringstream ss;
 	string type = ".jpg";
 	Mat frame;
@@ -1814,4 +1847,9 @@ void MainWindow::updatePlayer(int frameIndex)
 	ui->frameLabel->setStyleSheet("");
 	ui->frameLabel->setPixmap(pix);
 	ui->frameLabel->repaint();
+}
+
+void MainWindow::updateCurrentClip(int clipIndex)
+{
+	setCurrentClip(clips[clipIndex]);
 }
