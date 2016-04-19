@@ -106,6 +106,8 @@ private slots:
 
 	void updateCurrentClip(int clipIndex);
 
+	void updatePlayButtonIcon(bool isPlayingClip);
+
 private:
     //int resize_count;
     //int window_current_width;

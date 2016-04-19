@@ -29,6 +29,7 @@ protected:
 signals:
 	void display(int frameIndex);
 	void setCurrentClipIndex(int clipIndex);
+	void setPlayButtonIcon(bool isPlayingClip);
 
 private:
 	bool stop;

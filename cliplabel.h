@@ -34,6 +34,7 @@ public:
     ~cliplabel();
 	int getCutIndex();
 	int getCutType();
+	int getSize();
 	int getWidth();
 	int getHeight();
 	int getBaseWidth();
@@ -73,6 +74,7 @@ private:
 	int cut_index;
 	int cut_type;
 	int length;
+	int size;
 	bool sorted;
 	std::vector<int> range;
 	std::vector<int> cuts;

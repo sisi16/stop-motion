@@ -44,6 +44,8 @@ void MainWindow::refresh(int index)
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra1/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/UserTest_Tra1/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/UserTest_Tra2/540/" + ss.str());
 	ss.str("");
 
 	cv::Mat temp;
@@ -56,7 +58,10 @@ void MainWindow::refresh(int index)
 	QPainter *paint = new QPainter(&pix);
 	int w = pix.width();
 	int h = pix.height();
-	paint->drawPixmap((w-h*16/9)/2, 0, h*16/9, h, QPixmap::fromImage(current_image));
+	if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra1/1080/0.jpg")
+		paint->drawPixmap((w-h*4/3)/2, 0, h*4/3, h, QPixmap::fromImage(current_image));
+	else
+		paint->drawPixmap((w-h*16/9)/2, 0, h*16/9, h, QPixmap::fromImage(current_image));
 	if (ui->editRadioButton->isChecked() && index == current_clip->getRange().at(0))
 	{
 		stringstream ss_1, ss_2;
@@ -80,6 +85,11 @@ void MainWindow::refresh(int index)
 		{
 			frame_1 = imread("D:/CCCC/Stop Motion/Test8/540/" + ss_1.str());
 			frame_2 = imread("D:/CCCC/Stop Motion/Test8/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra2/1080/0.jpg")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/UserTest_Tra2/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/UserTest_Tra2/540/" + ss_2.str());
 		}
 		ss_1.str("");
 		ss_2.str("");
@@ -112,6 +122,7 @@ void MainWindow::refresh(int index)
 
 void MainWindow::visualizeClips()
 {
+	vector<bool> isDropped;
 	vector<int> scene_cuts = vproc.getSceneCuts();
 	vector<int> cut_types = vproc.getCutTypes();
 	//vector<Mat> frames = vproc.getFrames();
@@ -129,7 +140,9 @@ void MainWindow::visualizeClips()
 	stringstream ss;
 	string type = ".jpg";
 
-	vector<bool> isDropped = vproc.test();
+	if (fileName != "D:/CCCC/Stop Motion/UserTest_Tra1/1080/0.jpg" 
+		&& fileName != "D:/CCCC/Stop Motion/UserTest_Tra2/1080/0.jpg")
+		isDropped = vproc.test();
 	/*ifstream flowfile;
 	if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") flowfile.open("D:/CCCC/Stop Motion/Test6/suggestion_threshold.txt");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") flowfile.open("D:/CCCC/Stop Motion/Test7/suggestion_threshold.txt");
@@ -149,7 +162,7 @@ void MainWindow::visualizeClips()
 		else
 			length = cut_size / (2 * frameRate) + 1;
 
-		if (cut_types.at(i) == 1)
+		if (cut_size > 1 && cut_types.at(i) == 1)
 			width = base_width + base_width / 10 * (length - 1);
 		else
 			width = base_width * length;
@@ -163,6 +176,8 @@ void MainWindow::visualizeClips()
 			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str()));
 			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str()));
 			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra1/1080/0.jpg") srcImages.push_back(imread("D:/CCCC/Stop Motion/UserTest_Tra1/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra2/1080/0.jpg") srcImages.push_back(imread("D:/CCCC/Stop Motion/UserTest_Tra2/270/" + ss.str()));
 			ss.str("");
 
 			if (cut_types.at(i) == 1) break;
@@ -183,7 +198,7 @@ void MainWindow::visualizeClips()
 		{
 			ui->gridLayout_2->addWidget(clip, 0, i, Qt::AlignLeft);
 			ui->gridLayout_3->addWidget(empty_clip, 0, i, Qt::AlignLeft);
-			if (cut_types[i] == 2 && !isDropped[i / 2])
+			if (cut_types[i] == 2 && !isDropped.empty() && !isDropped[i / 2])
 			{
 				clip->setAutoCuts(vproc.checkCuts(range));
 				cout << i / 2 << endl << endl;;
@@ -230,6 +245,11 @@ void MainWindow::setCurrentClip(cliplabel *clip)
 	current_clip = clip;
 	current_clip_index = clip->getCutIndex();
 
+	if (current_clip->getSize() == 1)
+		ui->editRadioButton->setCheckable(false);
+	else
+		ui->editRadioButton->setCheckable(true);
+
 	if (current_clip->getEditedMode() == NotEdited || current_clip->getEditedMode() == isViewed)
 	{
 		current_clip->setEditedMode(isSelected);
@@ -275,6 +295,10 @@ void MainWindow::cutVideo()
 	visualizeClips();
 	current_clip = clips.at(0);
 	current_clip_index = 0;
+	if (current_clip->getSize() == 1)
+		ui->editRadioButton->setCheckable(false);
+	else
+		ui->editRadioButton->setCheckable(true);
 	if (current_clip->getEditedMode() == NotEdited)
 	{
 		current_clip->setEditedMode(isSelected);
@@ -750,7 +774,7 @@ void MainWindow::slotEntered(bool isEntered)
 
 void MainWindow::on_actionLoad_triggered()
 {
-    fileName = QFileDialog::getOpenFileName(this, tr("Open File"), ".", tr("Video Files(*.mp4 *.avi *.mov);;All files (*.*)" ));
+    fileName = QFileDialog::getOpenFileName(this, tr("Open File"), ".", tr("Video Files(*.mp4 *.avi *.mov *.jpg);;All files (*.*)" ));
     if (fileName.isEmpty())
         return;
 	
@@ -763,6 +787,7 @@ void MainWindow::on_actionLoad_triggered()
 	myPlayer->loadVideo(stdFileName, vproc.getFrameRate(), clips);
 	QObject::connect(myPlayer, SIGNAL(display(int)), this, SLOT(updatePlayer(int)));
 	QObject::connect(myPlayer, SIGNAL(setCurrentClipIndex(int)), this, SLOT(updateCurrentClip(int)));
+	QObject::connect(myPlayer, SIGNAL(setPlayButtonIcon(bool)), this, SLOT(updatePlayButtonIcon(bool)));
 }
 
 /*void MainWindow::on_actionSelect_triggered()
@@ -1620,11 +1645,16 @@ void MainWindow::on_editRadioButton_clicked()
 	else
 	{	
 		current_clip->updatePixmap(fileName);
+		QPoint pos = current_clip->pos();
+		cliplabel *empty_clip = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(pos));
+		int width = current_clip->getWidth();
+		int height = current_clip->getHeight();
+		empty_clip->setFixedSize(width, height);
+		empty_clip->setSizeThreshold(width, height);
 		initFrameSlider();
 		frame_slider->setMouseTracking(false);
 		frame_slider->removeEventFilter(this);
 	}
-
 	refresh(current_clip->getRange().at(0));
 
     /*if (isCut)
@@ -1784,6 +1814,8 @@ void MainWindow::updatePlayer(int frameIndex)
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra1/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/UserTest_Tra1/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/UserTest_Tra2/540/" + ss.str());
 	ss.str("");
 
 	cv::Mat temp;
@@ -1796,8 +1828,11 @@ void MainWindow::updatePlayer(int frameIndex)
 	QPainter *paint = new QPainter(&pix);
 	int w = pix.width();
 	int h = pix.height();
-	paint->drawPixmap((w - h * 16 / 9) / 2, 0, h * 16 / 9, h, QPixmap::fromImage(current_image));
-	if (ui->editRadioButton->isChecked() && frameIndex == current_clip->getRange().at(0))
+	if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra1/1080/0.jpg")
+		paint->drawPixmap((w - h * 4 / 3) / 2, 0, h * 4 / 3, h, QPixmap::fromImage(current_image));
+	else
+		paint->drawPixmap((w - h * 16 / 9) / 2, 0, h * 16 / 9, h, QPixmap::fromImage(current_image));
+	/*if (ui->editRadioButton->isChecked() && frameIndex == current_clip->getRange().at(0))
 	{
 		stringstream ss_1, ss_2;
 		string type = ".jpg";
@@ -1843,7 +1878,7 @@ void MainWindow::updatePlayer(int frameIndex)
 		paint_2->end();
 		paint->drawPixmap((w + h * 16 / 9) / 2, h / 5, pix_1.width(), pix_1.height(), pix_1);
 		paint->drawPixmap((w * 5 + h * 16 / 9) / 6, h / 3, pix_2.width(), pix_2.height(), pix_2);
-	}
+	}*/
 	paint->end();
 	ui->frameLabel->setStyleSheet("");
 	ui->frameLabel->setPixmap(pix);
@@ -1853,4 +1888,12 @@ void MainWindow::updatePlayer(int frameIndex)
 void MainWindow::updateCurrentClip(int clipIndex)
 {
 	setCurrentClip(clips[clipIndex]);
+}
+
+void MainWindow::updatePlayButtonIcon(bool isPlayingClip)
+{
+	if (isPlayingClip) 
+		ui->playClipButton->setIcon(QIcon(":/Images/icons/play_24.png"));
+	else
+		ui->playTrackButton->setIcon(QIcon(":/Images/icons/view-track.png"));
 }

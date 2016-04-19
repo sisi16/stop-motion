@@ -43,7 +43,7 @@ cliplabel::cliplabel(vector<Mat> src, int bw, int w, int h, int index, int type,
 			cv::cvtColor(src.at(i), temp, CV_BGR2RGB);
 		QImage image((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
 		image.bits();
-		if (cut_type == 1)
+		if (length > 1 && cut_type == 1)
 		{
 			if (i == 0)
 				painter->drawPixmap(0, 0, bw, h, QPixmap::fromImage(image));
@@ -85,6 +85,12 @@ int cliplabel::getCutIndex()
 int cliplabel::getCutType()
 {
 	return cut_type;
+}
+
+int cliplabel::getSize()
+{
+	int size = range.size();
+	return (range[size-1]-range[0]+1);
 }
 
 int cliplabel::getWidth()

@@ -18,18 +18,37 @@ void videoprocessor::readVideo(const string file)
 {
     if (!frames.empty()) frames.clear();
 
-    VideoCapture capture(file);
-
-	if (!capture.isOpened())
-		throw "Error when reading the video file";
-
-	fileName = file;
-	num_of_frames = capture.get(CV_CAP_PROP_FRAME_COUNT);
-	frame_width = capture.get(CV_CAP_PROP_FRAME_WIDTH);
-	frame_height = capture.get(CV_CAP_PROP_FRAME_HEIGHT);
-	frame_rate = capture.get(CV_CAP_PROP_FPS);
-	cout << frame_rate << endl;
-
+	if (file == "D:/CCCC/Stop Motion/UserTest_Tra1/1080/0.jpg")
+	{
+		fileName = file;
+		num_of_frames = 27;
+		frame_width = 1440;
+		frame_height = 1080;
+		frame_rate = 15;
+		cout << frame_rate << endl;
+	}
+	else if (file == "D:/CCCC/Stop Motion/UserTest_Tra2/1080/0.jpg")
+	{
+		fileName = file;
+		num_of_frames = 346;
+		frame_width = 1920;
+		frame_height = 1080;
+		frame_rate = 15;
+		cout << frame_rate << endl;
+	}
+	else
+	{
+		VideoCapture capture(file);
+		if (!capture.isOpened())
+			throw "Error when reading the video file";
+		fileName = file;
+		num_of_frames = capture.get(CV_CAP_PROP_FRAME_COUNT);
+		frame_width = capture.get(CV_CAP_PROP_FRAME_WIDTH);
+		frame_height = capture.get(CV_CAP_PROP_FRAME_HEIGHT);
+		frame_rate = capture.get(CV_CAP_PROP_FPS);
+		cout << frame_rate << endl;
+		capture.release();
+	}
 	/*for (int i = 0; i < num_of_frames; i++)//for (int i = 0; i < 930; i++)//for (int i = 0; i < 155; i++)
 	{
 		Mat frame;
@@ -41,17 +60,18 @@ void videoprocessor::readVideo(const string file)
 	/*stringstream ss;
 	string type = ".jpg";
 	Mat frame;
-	for (int i = 0; i < num_of_frames; i++)
+	VideoCapture capture(file);
+	for (int i = 280; i < num_of_frames+280; i++)
     {
 		capture >> frame;
 		if (i == 0) frames.push_back(frame);
         Mat dst_1, dst_2;
 		ss << i << type;
-		cv::imwrite("D:/CCCC/Stop Motion/UserTest_MX/1080/" + ss.str(), frame);
+		cv::imwrite("D:/CCCC/Stop Motion/UserTest_Tra2/1080/" + ss.str(), frame);
 		pyrDown(frame, dst_1, Size(frame.cols / 2, frame.rows / 2));
-		cv::imwrite("D:/CCCC/Stop Motion/UserTest_MX/540/" + ss.str(), dst_1);
+		cv::imwrite("D:/CCCC/Stop Motion/UserTest_Tra2/540/" + ss.str(), dst_1);
 		pyrDown(dst_1, dst_2, Size(dst_1.cols / 2, dst_1.rows / 2));
-		cv::imwrite("D:/CCCC/Stop Motion/UserTest_MX/270/" + ss.str(), dst_2);
+		cv::imwrite("D:/CCCC/Stop Motion/UserTest_Tra2/270/" + ss.str(), dst_2);
 		ss.str("");
     }*/
 	
@@ -65,10 +85,12 @@ void videoprocessor::readVideo(const string file)
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/UserTest_XT.avi") temp = imread("D:/CCCC/Stop Motion/UserTest_XT/270/0.jpg");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/UserTest_LL.avi") temp = imread("D:/CCCC/Stop Motion/UserTest_LL/270/0.jpg");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/UserTest_MX.avi") temp = imread("D:/CCCC/Stop Motion/UserTest_MX/270/0.jpg");
+	else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra1/1080/0.jpg") temp = imread("D:/CCCC/Stop Motion/UserTest_Tra1/540/0.jpg");
+	else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra2/1080/0.jpg") temp = imread("D:/CCCC/Stop Motion/UserTest_Tra2/540/0.jpg");
+
 	//cvtColor(frames.at(0), temp, CV_BGR2RGB);
 	//capture >> temp;
 	cv::imwrite("D:/CCCC/Stop Motion/Videos/preview.png", temp);
-	capture.release();
 
     /*progressBar = new QProgressBar;
 	progressBar->setRange(0, num_of_frames - 1);//progressBar->setRange(0, frames.size()-1);
@@ -692,6 +714,8 @@ void videoprocessor::readBuffers()
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") cutfile.open("D:/CCCC/Stop Motion/StopMotion/cuts18.txt");
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") cutfile.open("D:/CCCC/Stop Motion/StopMotion/cuts16.txt");
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") cutfile.open("D:/CCCC/Stop Motion/StopMotion/cuts17.txt");
+		else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra1/1080/0.jpg") cutfile.open("D:/CCCC/Stop Motion/StopMotion/cutsTra1.txt");
+		else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra2/1080/0.jpg") cutfile.open("D:/CCCC/Stop Motion/StopMotion/cutsTra2.txt");
 		//ifstream cutfile("D:/CCCC/Stop Motion/StopMotion/cuts11.txt");
 		int num;
 		if (cutfile.is_open())
@@ -712,6 +736,8 @@ void videoprocessor::readBuffers()
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") typefile.open("D:/CCCC/Stop Motion/StopMotion/types18.txt");
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") typefile.open("D:/CCCC/Stop Motion/StopMotion/types16.txt");
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") typefile.open("D:/CCCC/Stop Motion/StopMotion/types17.txt");
+		else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra1/1080/0.jpg") typefile.open("D:/CCCC/Stop Motion/StopMotion/typesTra1.txt");
+		else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra2/1080/0.jpg") typefile.open("D:/CCCC/Stop Motion/StopMotion/typesTra2.txt");
 		//ifstream typefile("D:/CCCC/Stop Motion/StopMotion/types11.txt");
 		int num;
 		if (typefile.is_open())

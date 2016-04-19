@@ -159,5 +159,9 @@ void player::run()
 	{
 		startFrameIndex = -1;
 		stop = true;
+		if (playClip)	
+			emit setPlayButtonIcon(true);
+		else
+			emit setPlayButtonIcon(false);
 	}
 }
