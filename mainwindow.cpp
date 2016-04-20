@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //window_current_height = this->height() - ui->menuBar->height() - ui->mainToolBar->height();
 	isCut = false;
 	entered = false;
+	isCounting = false;
 	ui->frameLabel->setScaledContents(true);
 	//ui->scrollArea->setBackgroundRole(QPalette::Midlight);
 	ui->scrollArea_1->setBackgroundRole(QPalette::Midlight);
@@ -1706,6 +1707,26 @@ void MainWindow::on_editRadioButton_clicked()
     {
         statusBar()->showMessage("Please cut the video first.");
     }*/
+}
+
+void MainWindow::on_countTimeButton_clicked()
+{
+	if (!isCounting)
+	{
+		start = clock();
+		isCounting = true;
+		statusBar()->showMessage("Start editing...");
+		ui->countTimeButton->setText("End");
+	}
+	else
+	{
+		end = clock();
+		isCounting = false;
+		double duration = (double)(end - start) / CLOCKS_PER_SEC;
+		QString tip = "Editing duration: " + QString::number(duration);
+		statusBar()->showMessage(tip);
+		ui->countTimeButton->setText("Start");
+	}
 }
 
 /*void MainWindow::on_keepRadioButton_clicked()

@@ -69,6 +69,9 @@ public:
     QPushButton *nextButton;
     QPushButton *preButton;
     QPushButton *pauseButton;
+    QFrame *line_5;
+    QLabel *label;
+    QPushButton *countTimeButton;
     QFrame *line;
     QScrollArea *scrollArea_1;
     QWidget *scrollAreaWidgetContents_1;
@@ -230,7 +233,7 @@ public:
         line_3->setFrameShape(QFrame::HLine);
         line_3->setFrameShadow(QFrame::Sunken);
 
-        gridLayout_1->addWidget(line_3, 3, 0, 1, 4);
+        gridLayout_1->addWidget(line_3, 6, 0, 1, 4);
 
         trackLabel = new QLabel(centralWidget);
         trackLabel->setObjectName(QStringLiteral("trackLabel"));
@@ -242,7 +245,7 @@ public:
         trackLabel->setStyleSheet(QLatin1String("font: 75 18pt \"Times New Roman\";\n"
 "color: darkblue;"));
 
-        gridLayout_1->addWidget(trackLabel, 1, 0, 1, 4);
+        gridLayout_1->addWidget(trackLabel, 4, 0, 1, 4);
 
         clipLabel = new QLabel(centralWidget);
         clipLabel->setObjectName(QStringLiteral("clipLabel"));
@@ -251,7 +254,7 @@ public:
         clipLabel->setStyleSheet(QLatin1String("font: 75 18pt \"Times New Roman\";\n"
 "color: darkblue;"));
 
-        gridLayout_1->addWidget(clipLabel, 4, 0, 1, 4);
+        gridLayout_1->addWidget(clipLabel, 7, 0, 1, 4);
 
         playTrackButton = new QPushButton(centralWidget);
         playTrackButton->setObjectName(QStringLiteral("playTrackButton"));
@@ -259,7 +262,7 @@ public:
         playTrackButton->setSizePolicy(sizePolicy2);
         playTrackButton->setIcon(icon19);
 
-        gridLayout_1->addWidget(playTrackButton, 2, 0, 1, 1);
+        gridLayout_1->addWidget(playTrackButton, 5, 0, 1, 1);
 
         line_4 = new QFrame(centralWidget);
         line_4->setObjectName(QStringLiteral("line_4"));
@@ -268,7 +271,7 @@ public:
         line_4->setFrameShape(QFrame::HLine);
         line_4->setFrameShadow(QFrame::Sunken);
 
-        gridLayout_1->addWidget(line_4, 0, 0, 1, 4);
+        gridLayout_1->addWidget(line_4, 3, 0, 1, 4);
 
         editRadioButton = new QRadioButton(centralWidget);
         editRadioButton->setObjectName(QStringLiteral("editRadioButton"));
@@ -277,7 +280,7 @@ public:
         editRadioButton->setStyleSheet(QStringLiteral("font: 75 12pt \"Times New Roman\";"));
         editRadioButton->setAutoExclusive(false);
 
-        gridLayout_1->addWidget(editRadioButton, 5, 0, 1, 2);
+        gridLayout_1->addWidget(editRadioButton, 8, 0, 1, 2);
 
         playClipButton = new QPushButton(centralWidget);
         playClipButton->setObjectName(QStringLiteral("playClipButton"));
@@ -288,7 +291,7 @@ public:
         playClipButton->setIcon(icon20);
         playClipButton->setIconSize(QSize(20, 20));
 
-        gridLayout_1->addWidget(playClipButton, 6, 0, 1, 1);
+        gridLayout_1->addWidget(playClipButton, 9, 0, 1, 1);
 
         nextButton = new QPushButton(centralWidget);
         nextButton->setObjectName(QStringLiteral("nextButton"));
@@ -299,7 +302,7 @@ public:
         nextButton->setIcon(icon21);
         nextButton->setIconSize(QSize(20, 20));
 
-        gridLayout_1->addWidget(nextButton, 6, 3, 1, 1);
+        gridLayout_1->addWidget(nextButton, 9, 3, 1, 1);
 
         preButton = new QPushButton(centralWidget);
         preButton->setObjectName(QStringLiteral("preButton"));
@@ -310,7 +313,7 @@ public:
         preButton->setIcon(icon22);
         preButton->setIconSize(QSize(20, 20));
 
-        gridLayout_1->addWidget(preButton, 6, 2, 1, 1);
+        gridLayout_1->addWidget(preButton, 9, 2, 1, 1);
 
         pauseButton = new QPushButton(centralWidget);
         pauseButton->setObjectName(QStringLiteral("pauseButton"));
@@ -319,7 +322,32 @@ public:
         pauseButton->setIcon(icon4);
         pauseButton->setIconSize(QSize(20, 20));
 
-        gridLayout_1->addWidget(pauseButton, 6, 1, 1, 1);
+        gridLayout_1->addWidget(pauseButton, 9, 1, 1, 1);
+
+        line_5 = new QFrame(centralWidget);
+        line_5->setObjectName(QStringLiteral("line_5"));
+        sizePolicy1.setHeightForWidth(line_5->sizePolicy().hasHeightForWidth());
+        line_5->setSizePolicy(sizePolicy1);
+        line_5->setFrameShape(QFrame::HLine);
+        line_5->setFrameShadow(QFrame::Sunken);
+
+        gridLayout_1->addWidget(line_5, 0, 0, 1, 4);
+
+        label = new QLabel(centralWidget);
+        label->setObjectName(QStringLiteral("label"));
+        sizePolicy2.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
+        label->setSizePolicy(sizePolicy2);
+        label->setStyleSheet(QLatin1String("font: 75 18pt \"Times New Roman\";\n"
+"color: darkblue;"));
+
+        gridLayout_1->addWidget(label, 1, 0, 1, 4);
+
+        countTimeButton = new QPushButton(centralWidget);
+        countTimeButton->setObjectName(QStringLiteral("countTimeButton"));
+        sizePolicy2.setHeightForWidth(countTimeButton->sizePolicy().hasHeightForWidth());
+        countTimeButton->setSizePolicy(sizePolicy2);
+
+        gridLayout_1->addWidget(countTimeButton, 2, 0, 1, 4);
 
 
         gridLayout->addLayout(gridLayout_1, 1, 4, 1, 1);
@@ -342,7 +370,7 @@ public:
         scrollArea_1->setWidgetResizable(true);
         scrollAreaWidgetContents_1 = new QWidget();
         scrollAreaWidgetContents_1->setObjectName(QStringLiteral("scrollAreaWidgetContents_1"));
-        scrollAreaWidgetContents_1->setGeometry(QRect(0, 0, 1262, 153));
+        scrollAreaWidgetContents_1->setGeometry(QRect(0, 0, 1262, 128));
         gridLayout_2 = new QGridLayout(scrollAreaWidgetContents_1);
         gridLayout_2->setSpacing(6);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);
@@ -359,7 +387,7 @@ public:
         scrollArea_2->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QStringLiteral("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 1262, 152));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 1262, 129));
         gridLayout_3 = new QGridLayout(scrollAreaWidgetContents_2);
         gridLayout_3->setSpacing(6);
         gridLayout_3->setContentsMargins(11, 11, 11, 11);
@@ -486,6 +514,8 @@ public:
         nextButton->setText(QString());
         preButton->setText(QString());
         pauseButton->setText(QString());
+        label->setText(QApplication::translate("MainWindow", "Time:", 0));
+        countTimeButton->setText(QApplication::translate("MainWindow", "Start", 0));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
     } // retranslateUi
 

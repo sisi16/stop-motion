@@ -21,6 +21,7 @@
 #include "cliplabel.h"
 #include "myscrollarea.h"
 #include "player.h"
+#include <time.h>
 
 namespace Ui {
 class MainWindow;
@@ -92,6 +93,8 @@ private slots:
 
 	void on_editRadioButton_clicked();
 
+	void on_countTimeButton_clicked();
+
 	//void on_keepRadioButton_clicked();
 
     //void reverse_action();
@@ -123,6 +126,7 @@ private:
 	int labelIndex = -1;
     bool isCut;
 	bool entered;
+	bool isCounting;
     //std::vector<int> clickRange;
 	//std::vector<int> movingRange;
 	//clipOperation action;
@@ -134,6 +138,7 @@ private:
 	//std::vector<QScrollArea *> selectedTrack;
 	//std::vector<QPoint> seletedPos;
 	player *myPlayer;
+	clock_t start, end;
 };
 
 #endif // MAINWINDOW_H
