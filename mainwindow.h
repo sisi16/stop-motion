@@ -44,6 +44,7 @@ public:
 	void drawScatterPlot(std::vector<cv::Point2f> points);
 	std::vector<cv::Point2f> klt();
 	int round(double r);
+	void writeLogFile();
 
 protected:
 	bool eventFilter(QObject *widget, QEvent *event);
@@ -139,6 +140,7 @@ private:
 	//std::vector<QPoint> seletedPos;
 	player *myPlayer;
 	clock_t start, end;
+	std::vector<std::string> logger;
 };
 
 #endif // MAINWINDOW_H

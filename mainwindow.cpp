@@ -535,6 +535,19 @@ int MainWindow::round(double r)
 	return (r > 0.0) ? int(floor(r + 0.5)) : int(ceil(r - 0.5));
 }
 
+void MainWindow::writeLogFile()
+{
+	ofstream logfile("D:/CCCC/Stop Motion/Test8/logs.txt");
+
+	if (logfile.is_open())
+	{
+		for (int i = 0; i < logger.size(); i++)
+			logfile << logger[i] << endl;
+		logfile.close();
+	}
+	else cout << "Unable to open file" << endl;
+}
+
 /*void MainWindow::resizeEvent(QResizeEvent* ev)
 {
     resize_count++;
@@ -582,15 +595,23 @@ int MainWindow::round(double r)
 
 void MainWindow::on_playClipButton_clicked()
 {
+	double time;
+	if (isCounting)
+		time = (double)(clock() - start) / CLOCKS_PER_SEC;
+	
 	if (myPlayer->isStopped())
 	{
 		myPlayer->playVideo(current_clip_index);
 		ui->playClipButton->setIcon(QIcon(":/Images/icons/pause_24.png"));
+		if (isCounting)
+			logger.push_back(QString::number(time).toStdString() + "  playClipButton");
 	}
 	else
 	{
 		myPlayer->stopVideo();
 		ui->playClipButton->setIcon(QIcon(":/Images/icons/play_24.png"));
+		if (isCounting)
+			logger.push_back(QString::number(time).toStdString() + "  pauseClipButton");
 	}
 	/*vector<int> cutRanges = current_clip->getCuts();
 	if (cutRanges.empty())
@@ -651,12 +672,22 @@ void MainWindow::on_playClipButton_clicked()
 
 void MainWindow::on_preButton_clicked()
 {
+	if (isCounting)
+	{
+		double time = (double)(clock() - start) / CLOCKS_PER_SEC;
+		logger.push_back(QString::number(time).toStdString() + "  preButton");
+	}
 	if (current_clip_index > 0)
 		setCurrentClip(clips.at(current_clip_index-1));
 }
 
 void MainWindow::on_nextButton_clicked()
 {
+	if (isCounting)
+	{
+		double time = (double)(clock()-start) / CLOCKS_PER_SEC;
+		logger.push_back(QString::number(time).toStdString() + "  nextButton");
+	}
 	if (current_clip_index < clips.size() - 1)
 		setCurrentClip(clips.at(current_clip_index+1));
 }
@@ -670,15 +701,22 @@ void MainWindow::on_nextButton_clicked()
 
 void MainWindow::on_playTrackButton_clicked()
 {
+	double time;
+	if (isCounting)
+		time = (double)(clock() - start) / CLOCKS_PER_SEC;
 	if (myPlayer->isStopped())
 	{
 		myPlayer->playVideo(current_clip_index, false);
 		ui->playTrackButton->setIcon(QIcon(QPixmap(":/Images/icons/pause_24.png")));
+		if (isCounting)
+			logger.push_back(QString::number(time).toStdString() + "  playTrackButton");
 	}
 	else
 	{
 		myPlayer->stopVideo();
 		ui->playTrackButton->setIcon(QIcon(QPixmap(":/Images/icons/view-track.png")));
+		if (isCounting)
+			logger.push_back(QString::number(time).toStdString() + "  pauseTrackButton");
 	}
 
 	/*int start = -1;
@@ -1153,6 +1191,11 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 				labelIndex = round(m->x() * (frame_slider->maximum() - frame_slider->minimum()) / double(frame_slider->width()) + frame_slider->minimum());
 				frame_slider->setContextMenuPolicy(Qt::CustomContextMenu);
 				connect(frame_slider, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(show_context_menu()));
+				if (isCounting)
+				{
+					double time = (double)(clock() - start) / CLOCKS_PER_SEC;
+					logger.push_back(QString::number(time).toStdString() + "  sliderContextMenu");
+				}
 				return true;
 			}
 			else
@@ -1224,6 +1267,11 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 				else 
 				{
 					setCurrentClip(item);
+					if (isCounting)
+					{
+						double time = (double)(clock() - start) / CLOCKS_PER_SEC;
+						logger.push_back(QString::number(time).toStdString() + "  clickOnClip " + QString::number(current_clip_index).toStdString());
+					}
 					QPixmap pixmap = *item->pixmap();
 					QMimeData *mimeData = new QMimeData;
 					QByteArray exData;
@@ -1566,6 +1614,11 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 					current_empty_clip = NULL;
 					//drop->setDropAction(Qt::MoveAction);
 					//drop->accept();
+					if (isCounting)
+					{
+						double time = (double)(clock() - start) / CLOCKS_PER_SEC;
+						logger.push_back(QString::number(time).toStdString() + "  dropClip " + QString::number(current_clip_index).toStdString());
+					}
 					return true;
 				}
 				else if (mode == isSelectedDeleted)
@@ -1582,6 +1635,11 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 					current_empty_clip = NULL;
 					//drop->setDropAction(Qt::MoveAction);
 					//drop->accept();
+					if (isCounting)
+					{
+						double time = (double)(clock() - start) / CLOCKS_PER_SEC;
+						logger.push_back(QString::number(time).toStdString() + "  recoverClip " + QString::number(current_clip_index).toStdString());
+					}
 					return true;
 				}
 				/*else if (cut_type > 2)
@@ -1630,6 +1688,10 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 
 void MainWindow::on_editRadioButton_clicked()
 {
+	double time;
+	if (isCounting)
+		time = (double)(clock() - start) / CLOCKS_PER_SEC;
+
 	if (ui->editRadioButton->isChecked())
 	{
 		frame_slider->setRange(current_clip->getRange().at(0), current_clip->getRange().at(1));
@@ -1642,6 +1704,8 @@ void MainWindow::on_editRadioButton_clicked()
 		frame_slider->setCuts(current_clip->getAutoCuts());
 		//ui->frame_slider->setCursor(Qt::PointingHandCursor);
 		frame_slider->installEventFilter(this);
+		if (isCounting)
+			logger.push_back(QString::number(time).toStdString() + "  editRadioButtonOn");
 	}
 	else
 	{	
@@ -1655,6 +1719,8 @@ void MainWindow::on_editRadioButton_clicked()
 		initFrameSlider();
 		frame_slider->setMouseTracking(false);
 		frame_slider->removeEventFilter(this);
+		if (isCounting)
+			logger.push_back(QString::number(time).toStdString() + "  editRadioButtonOff");
 	}
 	refresh(current_clip->getRange().at(0));
 
@@ -1711,12 +1777,15 @@ void MainWindow::on_editRadioButton_clicked()
 
 void MainWindow::on_countTimeButton_clicked()
 {
+	double time = (double)(clock() - start) / CLOCKS_PER_SEC;
+
 	if (!isCounting)
 	{
 		start = clock();
 		isCounting = true;
 		statusBar()->showMessage("Start editing...");
 		ui->countTimeButton->setText("End");
+		logger.push_back(QString::number(time).toStdString() + "  startEditing");
 	}
 	else
 	{
@@ -1726,6 +1795,8 @@ void MainWindow::on_countTimeButton_clicked()
 		QString tip = "Editing duration: " + QString::number(duration);
 		statusBar()->showMessage(tip);
 		ui->countTimeButton->setText("Start");
+		logger.push_back(QString::number(time).toStdString() + "  finishEditing");
+		writeLogFile();
 	}
 }
 
@@ -1776,6 +1847,11 @@ void MainWindow::label_action()
 	QString tip = "Labeling " + QString::number(labelIndex);
 	statusBar()->showMessage(tip);
 	disconnect(frame_slider, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(show_context_menu()));
+	if (isCounting)
+	{
+		double time = (double)(clock() - start) / CLOCKS_PER_SEC;
+		logger.push_back(QString::number(time).toStdString() + "  labelFrame " + QString::number(labelIndex).toStdString());
+	}
 }
 
 void MainWindow::delete_action()
@@ -1785,6 +1861,11 @@ void MainWindow::delete_action()
 	QString tip = "Deleting " + QString::number(labelIndex);
 	statusBar()->showMessage(tip);
 	disconnect(frame_slider, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(show_context_menu()));
+	if (isCounting)
+	{
+		double time = (double)(clock() - start) / CLOCKS_PER_SEC;
+		logger.push_back(QString::number(time).toStdString() + "  deleteFrame " + QString::number(labelIndex).toStdString());
+	}
 }
 
 void MainWindow::show_context_menu()
@@ -1904,6 +1985,9 @@ void MainWindow::updatePlayer(int frameIndex)
 	ui->frameLabel->setStyleSheet("");
 	ui->frameLabel->setPixmap(pix);
 	ui->frameLabel->repaint();
+
+	if (ui->editRadioButton->isChecked())
+		frame_slider->setValue(frameIndex);
 }
 
 void MainWindow::updateCurrentClip(int clipIndex)

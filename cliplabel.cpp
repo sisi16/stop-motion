@@ -89,8 +89,7 @@ int cliplabel::getCutType()
 
 int cliplabel::getSize()
 {
-	int size = range.size();
-	return (range[size-1]-range[0]+1);
+	return (range[1]-range[0]+1);
 }
 
 int cliplabel::getWidth()
@@ -269,6 +268,7 @@ void cliplabel::updatePixmap(QString file)
 				ss << cuts[i] << type;
 			if (file == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
 			else if (file == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
+			else if (file == "D:/CCCC/Stop Motion/UserTest_Tra2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/UserTest_Tra2/270/" + ss.str());
 			ss.str("");
 
 			srcImages.push_back(frame);
