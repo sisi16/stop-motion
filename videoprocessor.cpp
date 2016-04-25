@@ -61,30 +61,30 @@ void videoprocessor::readVideo(const string file)
 	string type = ".jpg";
 	Mat frame;
 	VideoCapture capture(file);
-	for (int i = 280; i < num_of_frames+280; i++)
+	double time;
+	start = clock();
+	time = (double)start / CLOCKS_PER_SEC;
+	logger.push_back(QString::number(time).toStdString() + "  start loading frames...");
+	for (int i = 0; i < num_of_frames; i++)
     {
 		capture >> frame;
 		if (i == 0) frames.push_back(frame);
         Mat dst_1, dst_2;
 		ss << i << type;
-		cv::imwrite("D:/CCCC/Stop Motion/UserTest_Tra2/1080/" + ss.str(), frame);
+		cv::imwrite("D:/CCCC/Stop Motion/UserTest_Tra2/Try/1080/" + ss.str(), frame);
 		pyrDown(frame, dst_1, Size(frame.cols / 2, frame.rows / 2));
-		cv::imwrite("D:/CCCC/Stop Motion/UserTest_Tra2/540/" + ss.str(), dst_1);
+		cv::imwrite("D:/CCCC/Stop Motion/UserTest_Tra2/Try/540/" + ss.str(), dst_1);
 		pyrDown(dst_1, dst_2, Size(dst_1.cols / 2, dst_1.rows / 2));
-		cv::imwrite("D:/CCCC/Stop Motion/UserTest_Tra2/270/" + ss.str(), dst_2);
+		cv::imwrite("D:/CCCC/Stop Motion/UserTest_Tra2/Try/270/" + ss.str(), dst_2);
 		ss.str("");
-    }*/
+    }
+	time = (double)(clock() - start) / CLOCKS_PER_SEC;
+	logger.push_back(QString::number(time).toStdString() + "  finish loading frames");*/
 	
 	Mat temp;
 	if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") temp = imread("D:/CCCC/Stop Motion/Test6/540/0.jpg");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") temp = imread("D:/CCCC/Stop Motion/Test7/540/0.jpg");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") temp = imread("D:/CCCC/Stop Motion/Test8/540/0.jpg");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/UserTest.avi") temp = imread("D:/CCCC/Stop Motion/UserTest/270/0.jpg");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/UserTest_1.avi") temp = imread("D:/CCCC/Stop Motion/UserTest_1/270/0.jpg");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/UserTest_2.avi") temp = imread("D:/CCCC/Stop Motion/UserTest_2/270/0.jpg");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/UserTest_XT.avi") temp = imread("D:/CCCC/Stop Motion/UserTest_XT/270/0.jpg");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/UserTest_LL.avi") temp = imread("D:/CCCC/Stop Motion/UserTest_LL/270/0.jpg");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/UserTest_MX.avi") temp = imread("D:/CCCC/Stop Motion/UserTest_MX/270/0.jpg");
 	else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra1/1080/0.jpg") temp = imread("D:/CCCC/Stop Motion/UserTest_Tra1/540/0.jpg");
 	else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra2/1080/0.jpg") temp = imread("D:/CCCC/Stop Motion/UserTest_Tra2/540/0.jpg");
 
@@ -132,36 +132,38 @@ float videoprocessor::calAvgOpFlow(Mat frame_1, Mat frame_2)
 
 void videoprocessor::cut2Scenes()
 {
+	double time;
 	vector<int> temp;
     int scene_count = 0;
 
 	stringstream ss;
 	string type = ".jpg";
-	ofstream flowfile("D:/CCCC/Stop Motion/UserTest_XT/flows.txt");
+	ofstream flowfile("D:/CCCC/Stop Motion/UserTest_Tra2/flows.txt");
 	Mat frame_1, frame_2;
-	
-	//ifstream flowfile("D:/CCCC/Stop Motion/UserTest_XT/flows.txt");
 
 	//#pragma omp parallel for
+	time = (double)(clock() - start) / CLOCKS_PER_SEC;
+	logger.push_back(QString::number(time).toStdString() + "  start calculating optical flows...");
+
 	for (int i = 0; i < num_of_frames - 1; i++)
     {
         //progressBar->setValue(i+1);
-		
+
 		if (i == 0)
 		{
-			frame_1 = imread("D:/CCCC/Stop Motion/UserTest_XT/270/0.jpg");
-			frame_2 = imread("D:/CCCC/Stop Motion/UserTest_XT/270/1.jpg");
+			frame_1 = imread("D:/CCCC/Stop Motion/UserTest_Tra2/Try/270/0.jpg");
+			frame_2 = imread("D:/CCCC/Stop Motion/UserTest_Tra2/Try/270/1.jpg");
 		}
 		else
 		{
-			ss << i+1 << type;
+			ss << i + 1 << type;
 			frame_1 = frame_2;
-			frame_2 = imread("D:/CCCC/Stop Motion/UserTest_XT/270/" + ss.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/UserTest_Tra2/Try/270/" + ss.str());
+			ss.str("");
 		}
 
 		Mat current_flow = of.calOpFlow(frame_1, frame_2);//Mat current_flow = of.calOpFlow(frames.at(i), frames.at(i + 1));
         float current_avg_flow = of.calAvgOpFlow(current_flow);
-		ss.str("");
 		flowfile << current_avg_flow << endl;
 
 		//float current_avg_flow;
@@ -189,14 +191,18 @@ void videoprocessor::cut2Scenes()
 			//cut_types.push_back(frame_types.at(i));
 		}
 	}
-	
-	flowfile.close();
 
+	time = (double)(clock() - start) / CLOCKS_PER_SEC;
+	logger.push_back(QString::number(time).toStdString() + "  finish calculating optical flows");
+	flowfile.close();
 
 	int cut_counter = -1;
 	int sum = 0;
 	bool isMessy = false;
 	int movingcount = 0;
+
+	time = (double)(clock() - start) / CLOCKS_PER_SEC;
+	logger.push_back(QString::number(time).toStdString() + "  start segment clips...");
     for (int j = 0; j < temp.size(); j++)
     {	
 		int length;
@@ -338,6 +344,8 @@ void videoprocessor::cut2Scenes()
 			}
 		}
     }
+	time = (double)(clock() - start) / CLOCKS_PER_SEC;
+	logger.push_back(QString::number(time).toStdString() + "  finish segment clips...");
 }
 
 vector<int> videoprocessor::getSceneCuts()
@@ -570,18 +578,23 @@ int videoprocessor::getFrameRate()
 
 vector<bool> videoprocessor::test()
 {	
-	//vector<bool> checkMovingClips;
-	//stringstream ss;
-	//string type = ".jpg";
-	//Mat frame, prevframe; //, gray, prevgray;
-	//int index, time, num_small_move, num_move_object;
+	double logtime;
 
-	//ofstream matchfile;
-	//if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") matchfile.open("D:/CCCC/Stop Motion/Test6/matches.txt");
-	//else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") matchfile.open("D:/CCCC/Stop Motion/Test7/matches_2.txt");
-	//else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") matchfile.open("D:/CCCC/Stop Motion/Test8/matches_2.txt");
+	stringstream ss;
+	string type = ".jpg";
+	Mat frame, prevframe;
+	int index, num_small_move, num_move_object;
 
-	/*for (int i = 0; i < scene_cuts.size(); i += 2)
+	ofstream matchfile;
+	if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") matchfile.open("D:/CCCC/Stop Motion/Test6/matches.txt");
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") matchfile.open("D:/CCCC/Stop Motion/Test7/matches_2.txt");
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") matchfile.open("D:/CCCC/Stop Motion/Test8/matches_3.txt");
+
+	start = clock();
+	logtime = (double)start / CLOCKS_PER_SEC;
+	logger.push_back(QString::number(logtime).toStdString() + "  start PatchMatch & match features...");
+	
+	for (int i = 0; i < scene_cuts.size(); i += 2)
 	{
 		if (i == 0) index = scene_cuts[0] / 2;
 		else index = (scene_cuts[i] + scene_cuts[i - 1] + 1) / 2;
@@ -600,23 +613,23 @@ vector<bool> videoprocessor::test()
 			for (int i = 0; i < size; i++)
 				area_sum += contourArea(contours[i]);
 			num_small_move = matchFeatures(prevframe, frame); //matchfile << matchFeatures(prevframe, frame) << endl;
-			time = scene_cuts[i-1] - scene_cuts[i-2];
-			//cout << time << " " << num_small_move << " " << large_scale << endl << endl;
+			matchfile << num_small_move << " " <<  size << " " << area_sum << endl;
 		}
 		prevframe = frame;
-		//if (waitKey(3000) == 27) break;
-		//if (waitKey(3000) == 32) waitKey(0);
-	}*/
+	}
 
-	//matchfile.close();
+	logtime = (double)(clock() - start) / CLOCKS_PER_SEC;
+	logger.push_back(QString::number(logtime).toStdString() + "  finish PatchMatch & match features...");
+	
+	matchfile.close();
 
-	ifstream matchfile;
-	if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") matchfile.open("D:/CCCC/Stop Motion/Test7/matches_2.txt");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") matchfile.open("D:/CCCC/Stop Motion/Test8/matches_2.txt");
+	ifstream imatchfile;
+	if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") imatchfile.open("D:/CCCC/Stop Motion/Test7/matches_2.txt");
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") imatchfile.open("D:/CCCC/Stop Motion/Test8/matches_2.txt");
 	
 	vector<bool> checkMovingClips;
 
-	if (matchfile.is_open())
+	if (imatchfile.is_open())
 	{
 		int num, contour_size, contour_area; //, index;
 		int idx = 1;
@@ -627,7 +640,10 @@ vector<bool> videoprocessor::test()
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") prevframe = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
 		ss.str("");*/
 
-		while (matchfile >> num >> contour_size >> contour_area)
+		logtime = (double)(clock() - start) / CLOCKS_PER_SEC;
+		logger.push_back(QString::number(logtime).toStdString() + " start decide which clips to drop...");
+
+		while (imatchfile >> num >> contour_size >> contour_area)
 		{
 			/*index = (scene_cuts[idx+1] + scene_cuts[idx] + 1) / 2;
 			ss << index << type;
@@ -659,7 +675,7 @@ vector<bool> videoprocessor::test()
 			//prevframe = frame;
 			idx += 2;
 		}
-		matchfile.close();
+		imatchfile.close();
 
 
 		for (int i = 0; i < checkMovingClips.size(); i++)
@@ -674,8 +690,20 @@ vector<bool> videoprocessor::test()
 				checkMovingClips[i] = false;
 		}
 
+		logtime = (double)(clock() - start) / CLOCKS_PER_SEC;
+		logger.push_back(QString::number(logtime).toStdString() + "  finish decide which clips to drop...");
+
 		//for (int j = 0; j < checkMovingClips.size(); j++)
 			//cout << checkMovingClips[j] << endl;
+
+		ofstream logfile("D:/CCCC/Stop Motion/Test8/algo_logs.txt");
+		if (logfile.is_open())
+		{
+			for (int i = 0; i < logger.size(); i++)
+				logfile << logger[i] << endl;
+			logfile.close();
+		}
+		else cout << "Unable to open file" << endl;
 	}
 	else cout << "Unable to open file" << endl;
 
@@ -684,7 +712,7 @@ vector<bool> videoprocessor::test()
 
 void videoprocessor::writeBuffers()
 {
-	ofstream cutfile("cuts20.txt");
+	ofstream cutfile("cutsTra1_Try.txt");
 	if (cutfile.is_open())
 	{
 		for (int i = 0; i < scene_cuts.size(); i++)
@@ -693,7 +721,7 @@ void videoprocessor::writeBuffers()
 	}
 	else cout << "Unable to open file" << endl;
 
-	ofstream typefile("types20.txt");
+	ofstream typefile("typesTra1_Try.txt");
 	if (typefile.is_open())
 	{
 		for (int j = 0; j < cut_types.size(); j++)

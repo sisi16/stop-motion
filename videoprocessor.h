@@ -11,6 +11,7 @@
 #include <QProgressBar>
 #include <string>
 #include <sstream>
+#include <time.h>
 #include "opflow.h"
 #include "handdetection.h"
 #include "blobtrack.h"
@@ -71,6 +72,8 @@ private:
     opflow of;
     handdetection hd;
 	std::string fileName;
+	clock_t start;
+	std::vector<std::string> logger;
 };
 
 #endif // VIDEOPROCESSOR_H

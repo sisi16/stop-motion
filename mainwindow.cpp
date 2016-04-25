@@ -283,8 +283,10 @@ void MainWindow::cutVideo()
 	vproc.readBuffers();
 	//vproc.test();
 	/*if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
-	vproc.cut2Scenes();
-	vproc.writeBuffers();*/
+	{
+		vproc.cut2Scenes();
+		vproc.writeBuffers();
+	}*/
 	//frame_slider->updateParams(vproc.getSceneCuts(), vproc.getCutTypes());
 	isCut = true;
 	statusBar()->clearMessage();
@@ -819,8 +821,8 @@ void MainWindow::on_actionLoad_triggered()
 	
 	string stdFileName = fileName.toStdString();
 	vproc.readVideo(stdFileName);
-	ui->frameLabel->setStyleSheet("background-color: rgb(0, 0, 0); image: url(D:/CCCC/Stop Motion/Videos/preview.png);");
 	cutVideo();
+	ui->frameLabel->setStyleSheet("background-color: rgb(0, 0, 0); image: url(D:/CCCC/Stop Motion/Videos/preview.png);");
 	initFrameSlider();
 	myPlayer = new player();
 	myPlayer->loadVideo(stdFileName, vproc.getFrameRate(), clips);
