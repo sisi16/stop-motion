@@ -47,6 +47,12 @@ void MainWindow::refresh(int index)
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra1/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/UserTest_Tra1/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/UserTest_Tra2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_SS1.avi") frame = imread("D:/CCCC/Stop Motion/US_SS1/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_SS2.avi") frame = imread("D:/CCCC/Stop Motion/US_SS2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_XT1.avi") frame = imread("D:/CCCC/Stop Motion/US_XT1/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_XT2.avi") frame = imread("D:/CCCC/Stop Motion/US_XT2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/US_SSTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_SSTRA2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/US_XTTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_XTTRA2/540/" + ss.str());
 	ss.str("");
 
 	cv::Mat temp;
@@ -91,6 +97,36 @@ void MainWindow::refresh(int index)
 		{
 			frame_1 = imread("D:/CCCC/Stop Motion/UserTest_Tra2/540/" + ss_1.str());
 			frame_2 = imread("D:/CCCC/Stop Motion/UserTest_Tra2/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/US_SS1.avi")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_SS1/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_SS1/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/US_SS2.avi")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_SS2/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_SS2/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/US_XT1.avi")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_XT1/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_XT1/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/US_XT2.avi")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_XT2/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_XT2/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/US_SSTRA2/1080/0.jpg")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_SSTRA2/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_SSTRA2/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/US_XTTRA2/1080/0.jpg")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_XTTRA2/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_XTTRA2/540/" + ss_2.str());
 		}
 		ss_1.str("");
 		ss_2.str("");
@@ -142,7 +178,9 @@ void MainWindow::visualizeClips()
 	string type = ".jpg";
 
 	if (fileName != "D:/CCCC/Stop Motion/UserTest_Tra1/1080/0.jpg" 
-		&& fileName != "D:/CCCC/Stop Motion/UserTest_Tra2/1080/0.jpg")
+		&& fileName != "D:/CCCC/Stop Motion/UserTest_Tra2/1080/0.jpg"
+		&& fileName != "D:/CCCC/Stop Motion/US_SSTRA2/1080/0.jpg"
+		&& fileName != "D:/CCCC/Stop Motion/US_XTTRA2/1080/0.jpg")
 		isDropped = vproc.test();
 	/*ifstream flowfile;
 	if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") flowfile.open("D:/CCCC/Stop Motion/Test6/suggestion_threshold.txt");
@@ -179,6 +217,12 @@ void MainWindow::visualizeClips()
 			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str()));
 			else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra1/1080/0.jpg") srcImages.push_back(imread("D:/CCCC/Stop Motion/UserTest_Tra1/270/" + ss.str()));
 			else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra2/1080/0.jpg") srcImages.push_back(imread("D:/CCCC/Stop Motion/UserTest_Tra2/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/US_SS1.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_SS1/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/US_SS2.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_SS2/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/US_XT1.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_XT1/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/US_XT2.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_XT2/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/US_SSTRA2/1080/0.jpg") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_SSTRA2/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/US_XTTRA2/1080/0.jpg") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_XTTRA2/270/" + ss.str()));
 			ss.str("");
 
 			if (cut_types.at(i) == 1) break;
@@ -281,7 +325,6 @@ void MainWindow::cutVideo()
 	progressBar->show();*/
 
 	vproc.readBuffers();
-	//vproc.test();
 	/*if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
 	{
 		vproc.cut2Scenes();
@@ -539,7 +582,7 @@ int MainWindow::round(double r)
 
 void MainWindow::writeLogFile()
 {
-	ofstream logfile("D:/CCCC/Stop Motion/Test8/logs.txt");
+	ofstream logfile("D:/CCCC/Stop Motion/US_XT2/logs.txt");
 
 	if (logfile.is_open())
 	{
@@ -1920,6 +1963,12 @@ void MainWindow::updatePlayer(int frameIndex)
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra1/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/UserTest_Tra1/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/UserTest_Tra2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/UserTest_Tra2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_SS1.avi") frame = imread("D:/CCCC/Stop Motion/US_SS1/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_SS2.avi") frame = imread("D:/CCCC/Stop Motion/US_SS2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_XT1.avi") frame = imread("D:/CCCC/Stop Motion/US_XT1/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_XT2.avi") frame = imread("D:/CCCC/Stop Motion/US_XT2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/US_SSTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_SSTRA2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/US_XTTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_XTTRA2/540/" + ss.str());
 	ss.str("");
 
 	cv::Mat temp;

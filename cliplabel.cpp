@@ -223,6 +223,9 @@ void cliplabel::cast(cliplabel *castedClip)
 {
 	//this->setScaledContents(true);
 	this->setPixmap(*castedClip->pixmap());
+	w_base = castedClip->getBaseWidth();
+	h_threshold = castedClip->getHeight();
+	w_threshold = castedClip->getWidth();
 	cut_type = castedClip->getCutType();
 	cut_index = castedClip->getCutIndex();
 	sorted = castedClip->isSorted();
@@ -269,6 +272,12 @@ void cliplabel::updatePixmap(QString file)
 			if (file == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
 			else if (file == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
 			else if (file == "D:/CCCC/Stop Motion/UserTest_Tra2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/UserTest_Tra2/270/" + ss.str());
+			else if (file == "D:/CCCC/Stop Motion/Videos/US_SS1.avi") frame = imread("D:/CCCC/Stop Motion/US_SS1/270/" + ss.str());
+			else if (file == "D:/CCCC/Stop Motion/Videos/US_SS2.avi") frame = imread("D:/CCCC/Stop Motion/US_SS2/270/" + ss.str());
+			else if (file == "D:/CCCC/Stop Motion/Videos/US_XT1.avi") frame = imread("D:/CCCC/Stop Motion/US_XT1/270/" + ss.str());
+			else if (file == "D:/CCCC/Stop Motion/Videos/US_XT2.avi") frame = imread("D:/CCCC/Stop Motion/US_XT2/270/" + ss.str());
+			else if (file == "D:/CCCC/Stop Motion/US_SSTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_SSTRA2/270/" + ss.str());
+			else if (file == "D:/CCCC/Stop Motion/US_XTTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_XTTRA2/270/" + ss.str());
 			ss.str("");
 
 			srcImages.push_back(frame);
