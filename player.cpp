@@ -50,6 +50,12 @@ bool player::getPlayMode() const{
 	return this->playClip;
 }
 
+void player::setClip(cliplabel* newClip)
+{
+	int index = newClip->getCutIndex();
+	clips[index] = newClip;
+}
+
 void player::run()
 {
 	if (playClip)
@@ -59,7 +65,8 @@ void player::run()
 		if (cutRanges.empty())
 		{
 			int start;
-			if (startFrameIndex == -1) start = current_clip->getRange().at(0);
+			int brange = current_clip->getRange()[0];
+			if (startFrameIndex == -1 || startFrameIndex < brange) start = brange;
 			else start = startFrameIndex;
 			int end = current_clip->getRange().at(1);
 

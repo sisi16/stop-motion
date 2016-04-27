@@ -22,6 +22,7 @@ public:
 	void stopVideo();
 	bool isStopped() const;
 	bool getPlayMode() const;
+	void setClip(cliplabel* newClip);
 
 protected:
 	void run();

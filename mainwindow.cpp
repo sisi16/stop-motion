@@ -582,7 +582,7 @@ int MainWindow::round(double r)
 
 void MainWindow::writeLogFile()
 {
-	ofstream logfile("D:/CCCC/Stop Motion/US_XT2/logs.txt");
+	ofstream logfile("D:/CCCC/Stop Motion/US_SSTRA2/logs.txt");
 
 	if (logfile.is_open())
 	{
@@ -1656,6 +1656,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 					current_clip->uncast();
 					current_clip = current_empty_clip;
 					clips.at(current_clip_index) = current_clip;
+					myPlayer->setClip(current_clip);
 					current_empty_clip = NULL;
 					//drop->setDropAction(Qt::MoveAction);
 					//drop->accept();
@@ -1677,6 +1678,7 @@ bool MainWindow::eventFilter(QObject *widget, QEvent *event)
 					current_clip->uncast();
 					current_clip = current_empty_clip;
 					clips.at(current_clip_index) = current_clip;
+					myPlayer->setClip(current_clip);
 					current_empty_clip = NULL;
 					//drop->setDropAction(Qt::MoveAction);
 					//drop->accept();
