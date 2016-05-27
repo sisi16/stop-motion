@@ -35,7 +35,7 @@ void myslider::addLabel(int index)
 	{
 		labels.push_back(index);
 		labels.push_back(index);
-		sort(labels.begin(), labels.end());
+		//sort(labels.begin(), labels.end());
 	}
 	else
 		labels[size-1] = index;

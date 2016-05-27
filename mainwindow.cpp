@@ -53,6 +53,21 @@ void MainWindow::refresh(int index)
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_XT2.avi") frame = imread("D:/CCCC/Stop Motion/US_XT2/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/US_SSTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_SSTRA2/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/US_XTTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_XTTRA2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/US_ZLTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_ZLTRA2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_ZL1.avi") frame = imread("D:/CCCC/Stop Motion/US_ZL1/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_ZL2.avi") frame = imread("D:/CCCC/Stop Motion/US_ZL2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_JJ1.avi") frame = imread("D:/CCCC/Stop Motion/US_JJ1/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_JJ2.avi") frame = imread("D:/CCCC/Stop Motion/US_JJ2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_LL1.avi") frame = imread("D:/CCCC/Stop Motion/US_LL1/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_LL2.avi") frame = imread("D:/CCCC/Stop Motion/US_LL2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_XR1.avi") frame = imread("D:/CCCC/Stop Motion/US_XR1/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_XR2.avi") frame = imread("D:/CCCC/Stop Motion/US_XR2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_QK1.avi") frame = imread("D:/CCCC/Stop Motion/US_QK1/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_QK2.avi") frame = imread("D:/CCCC/Stop Motion/US_QK2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/US_LLTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_LLTRA2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/US_XRTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_XRTRA2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/US_JJTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_JJTRA2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/US_ZXTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_ZXTRA2/540/" + ss.str());
 	ss.str("");
 
 	cv::Mat temp;
@@ -128,6 +143,81 @@ void MainWindow::refresh(int index)
 			frame_1 = imread("D:/CCCC/Stop Motion/US_XTTRA2/540/" + ss_1.str());
 			frame_2 = imread("D:/CCCC/Stop Motion/US_XTTRA2/540/" + ss_2.str());
 		}
+		else if (fileName == "D:/CCCC/Stop Motion/US_ZLTRA2/1080/0.jpg")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_ZLTRA2/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_ZLTRA2/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/US_ZL1.avi")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_ZL1/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_ZL1/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/US_ZL2.avi")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_ZL2/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_ZL2/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/US_JJ1.avi")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_JJ1/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_JJ1/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/US_JJ2.avi")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_JJ2/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_JJ2/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/US_LL1.avi")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_LL1/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_LL1/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/US_LL2.avi")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_LL2/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_LL2/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/US_XR1.avi")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_XR1/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_XR1/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/US_XR2.avi")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_XR2/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_XR2/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/US_QK1.avi")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_QK1/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_QK1/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/US_QK2.avi")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_QK2/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_QK2/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/US_LLTRA2/1080/0.jpg")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_LLTRA2/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_LLTRA2/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/US_XRTRA2/1080/0.jpg")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_XRTRA2/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_XRTRA2/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/US_JJTRA2/1080/0.jpg")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_JJTRA2/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_JJTRA2/540/" + ss_2.str());
+		}
+		else if (fileName == "D:/CCCC/Stop Motion/US_ZXTRA2/1080/0.jpg")
+		{
+			frame_1 = imread("D:/CCCC/Stop Motion/US_ZXTRA2/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/US_ZXTRA2/540/" + ss_2.str());
+		}
 		ss_1.str("");
 		ss_2.str("");
 
@@ -166,7 +256,7 @@ void MainWindow::visualizeClips()
 	int frameRate = vproc.getFrameRate();
 	int height = floor(0.8 * ui->scrollArea_1->height());
 	int base_width = ceil(height * vproc.getFrameWidth() / double(vproc.getFrameHeight()));
-	int base, width, cut_size, length;
+	int base, end, width, cut_size, length;
 
 	/*myscrollarea *scroll = new myscrollarea();
 	ui->verticalLayout->addWidget(scroll);
@@ -177,10 +267,15 @@ void MainWindow::visualizeClips()
 	stringstream ss;
 	string type = ".jpg";
 
-	if (fileName != "D:/CCCC/Stop Motion/UserTest_Tra1/1080/0.jpg" 
+	if (fileName != "D:/CCCC/Stop Motion/UserTest_Tra1/1080/0.jpg"
 		&& fileName != "D:/CCCC/Stop Motion/UserTest_Tra2/1080/0.jpg"
 		&& fileName != "D:/CCCC/Stop Motion/US_SSTRA2/1080/0.jpg"
-		&& fileName != "D:/CCCC/Stop Motion/US_XTTRA2/1080/0.jpg")
+		&& fileName != "D:/CCCC/Stop Motion/US_XTTRA2/1080/0.jpg"
+		&& fileName != "D:/CCCC/Stop Motion/US_ZLTRA2/1080/0.jpg"
+		&& fileName != "D:/CCCC/Stop Motion/US_LLTRA2/1080/0.jpg"
+		&& fileName != "D:/CCCC/Stop Motion/US_XRTRA2/1080/0.jpg"
+		&& fileName != "D:/CCCC/Stop Motion/US_JJTRA2/1080/0.jpg"
+		&& fileName != "D:/CCCC/Stop Motion/US_ZXTRA2/1080/0.jpg")
 		isDropped = vproc.test();
 	/*ifstream flowfile;
 	if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") flowfile.open("D:/CCCC/Stop Motion/Test6/suggestion_threshold.txt");
@@ -190,10 +285,11 @@ void MainWindow::visualizeClips()
 	for (int i = 0; i < scene_cuts.size(); i++)
 	{
 		vector<Mat> srcImages;
-		if (i == 0)
+		if (i == 0) // i+...
 			base = 0;
 		else
 			base = scene_cuts.at(i - 1) + 1;
+		end = scene_cuts[i];
 		cut_size = scene_cuts.at(i) - base + 1;
 
 		if (cut_size % (2 * frameRate) == 0)
@@ -208,7 +304,10 @@ void MainWindow::visualizeClips()
 
 		for (int j = 0; j < length; j++)
 		{
-			ss << base + 2 * j*frameRate << type;
+			if (cut_types[i] == 1)
+				ss << (base + end) / 2 << type;
+			else if (cut_types[i] == 2)
+				ss << base + 2 * j*frameRate << type;
 			if (fileName == "D:/CCCC/Stop Motion/Videos/Test.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test/480/" + ss.str()));
 			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test4.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test4/270/" + ss.str()));
 			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test5.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test5/270/" + ss.str()));
@@ -223,6 +322,21 @@ void MainWindow::visualizeClips()
 			else if (fileName == "D:/CCCC/Stop Motion/Videos/US_XT2.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_XT2/270/" + ss.str()));
 			else if (fileName == "D:/CCCC/Stop Motion/US_SSTRA2/1080/0.jpg") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_SSTRA2/270/" + ss.str()));
 			else if (fileName == "D:/CCCC/Stop Motion/US_XTTRA2/1080/0.jpg") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_XTTRA2/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/US_ZLTRA2/1080/0.jpg") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_ZLTRA2/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/US_ZL1.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_ZL1/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/US_ZL2.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_ZL2/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/US_JJ1.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_JJ1/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/US_JJ2.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_JJ2/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/US_LL1.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_LL1/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/US_LL2.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_LL2/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/US_XR1.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_XR1/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/US_XR2.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_XR2/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/US_QK1.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_QK1/270/" + ss.str())); // i+...
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/US_QK2.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_QK2/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/US_LLTRA2/1080/0.jpg") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_LLTRA2/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/US_XRTRA2/1080/0.jpg") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_XRTRA2/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/US_JJTRA2/1080/0.jpg") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_JJTRA2/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/US_ZXTRA2/1080/0.jpg") srcImages.push_back(imread("D:/CCCC/Stop Motion/US_ZXTRA2/270/" + ss.str()));
 			ss.str("");
 
 			if (cut_types.at(i) == 1) break;
@@ -312,7 +426,8 @@ void MainWindow::setCurrentClip(cliplabel *clip)
 		drawScatterPlot(centers);
 		
 	}*/
-	refresh(current_clip->getRange().at(0));
+	int index = (current_clip->getRange()[0] + current_clip->getRange()[1]) / 2;
+	refresh(index);
 	if (current_clip->pos().x() + current_clip->width() > ui->scrollArea_1->horizontalScrollBar()->sliderPosition() + ui->scrollArea_1->width())
 		ui->scrollArea_1->horizontalScrollBar()->setSliderPosition(current_clip->pos().x());
 	frame_slider->setValue(current_clip_index);
@@ -324,12 +439,12 @@ void MainWindow::cutVideo()
 	ui->verticalLayout_2->addWidget(progressBar);
 	progressBar->show();*/
 
-	vproc.readBuffers();
-	/*if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
+	//vproc.readBuffers();
+	if (vproc.getSceneCuts().empty() || vproc.getCutTypes().empty())
 	{
 		vproc.cut2Scenes();
 		vproc.writeBuffers();
-	}*/
+	}
 	//frame_slider->updateParams(vproc.getSceneCuts(), vproc.getCutTypes());
 	isCut = true;
 	statusBar()->clearMessage();
@@ -338,7 +453,7 @@ void MainWindow::cutVideo()
 	ui->verticalLayout_2->removeWidget(progressBar);
 	delete progressBar;*/
 
-	visualizeClips();
+	/*visualizeClips();
 	current_clip = clips.at(0);
 	current_clip_index = 0;
 	if (current_clip->getSize() == 1)
@@ -354,7 +469,7 @@ void MainWindow::cutVideo()
 	{
 		current_clip->setEditedMode(isSelectedDeleted);
 		//ui->keepRadioButton->setChecked(false);
-	}
+	}*/
 
 	ui->scrollAreaWidgetContents_1->installEventFilter(this);
 	//ui->scrollAreaWidgetContents_1->setAcceptDrops(true);
@@ -582,7 +697,7 @@ int MainWindow::round(double r)
 
 void MainWindow::writeLogFile()
 {
-	ofstream logfile("D:/CCCC/Stop Motion/US_SSTRA2/logs.txt");
+	ofstream logfile("D:/CCCC/Stop Motion/US_QK1/logs.txt");
 
 	if (logfile.is_open())
 	{
@@ -723,7 +838,13 @@ void MainWindow::on_preButton_clicked()
 		logger.push_back(QString::number(time).toStdString() + "  preButton");
 	}
 	if (current_clip_index > 0)
-		setCurrentClip(clips.at(current_clip_index-1));
+	{
+		int i = current_clip_index - 1;
+		while (i >= 0 && clips[i]->getEditedMode() == isDeleted)
+			i--;
+		if (i != -1)
+			setCurrentClip(clips.at(i));
+	}
 }
 
 void MainWindow::on_nextButton_clicked()
@@ -733,8 +854,15 @@ void MainWindow::on_nextButton_clicked()
 		double time = (double)(clock()-start) / CLOCKS_PER_SEC;
 		logger.push_back(QString::number(time).toStdString() + "  nextButton");
 	}
-	if (current_clip_index < clips.size() - 1)
-		setCurrentClip(clips.at(current_clip_index+1));
+	int size = clips.size();
+	if (current_clip_index < size - 1)
+	{
+		int i = current_clip_index + 1;
+		while (i < size && clips[i]->getEditedMode() == isDeleted)
+			i++;
+		if (i != size)
+			setCurrentClip(clips.at(i));
+	}
 }
 
 /*void MainWindow::on_pauseButton_clicked()
@@ -1971,6 +2099,21 @@ void MainWindow::updatePlayer(int frameIndex)
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_XT2.avi") frame = imread("D:/CCCC/Stop Motion/US_XT2/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/US_SSTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_SSTRA2/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/US_XTTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_XTTRA2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/US_ZLTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_ZLTRA2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_ZL1.avi") frame = imread("D:/CCCC/Stop Motion/US_ZL1/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_ZL2.avi") frame = imread("D:/CCCC/Stop Motion/US_ZL2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_JJ1.avi") frame = imread("D:/CCCC/Stop Motion/US_JJ1/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_JJ2.avi") frame = imread("D:/CCCC/Stop Motion/US_JJ2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_LL1.avi") frame = imread("D:/CCCC/Stop Motion/US_LL1/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_LL2.avi") frame = imread("D:/CCCC/Stop Motion/US_LL2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_XR1.avi") frame = imread("D:/CCCC/Stop Motion/US_XR1/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_XR2.avi") frame = imread("D:/CCCC/Stop Motion/US_XR2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_QK1.avi") frame = imread("D:/CCCC/Stop Motion/US_QK1/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/US_QK2.avi") frame = imread("D:/CCCC/Stop Motion/US_QK2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/US_LLTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_LLTRA2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/US_XRTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_XRTRA2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/US_JJTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_JJTRA2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/US_ZXTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_ZXTRA2/540/" + ss.str());
 	ss.str("");
 
 	cv::Mat temp;

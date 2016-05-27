@@ -117,12 +117,18 @@ Mat opflow::calOpFlow(Mat currentframe, Mat nextframe)
     
 	return flow;*/
 
-	Mat currentgray, nextgray, flow;
+	/*Mat currentgray, nextgray, flow;
 	cvtColor(currentframe, currentgray, CV_BGR2GRAY);
 	cvtColor(nextframe, nextgray, CV_BGR2GRAY);
 	Ptr<DenseOpticalFlow>tvl1 = createOptFlow_DualTVL1();
 	tvl1->calc(currentgray, nextgray, flow);
-	return flow;
+	return flow;*/
+
+	Mat currentImage, nextImage, diffImage;
+	cvtColor(currentframe, currentImage, CV_BGR2GRAY);
+	cvtColor(nextframe, nextImage, CV_BGR2GRAY);
+	absdiff(currentframe, nextframe, diffImage);
+	return diffImage;
 }
 
 bool opflow::isFlowCorrect(float u) 
@@ -156,34 +162,37 @@ float opflow::calAvgOpFlow(Mat flow)
     float avgflow = accrad / (flowx.rows * flowx.cols - overflow_count);
     return avgflow;*/
 
-	float accrad = 0;
-	int overflow_count = 0;
+	//float accrad = 0;
+	/*int overflow_count = 0;
 	int movingpixel_count = 0;
 	for (int i = 0; i < flow.rows; ++i)
 	{
 		for (int j = 0; j < flow.cols; ++j)
 		{
-			Vec2f flow_at_pixel = flow.at<Vec2f>(i, j);
-			float fx = flow_at_pixel[0];
-			float fy = flow_at_pixel[1];
+			float flow_at_pixel = flow.at<float>(i, j);//Vec2f flow_at_pixel = flow.at<Vec2f>(i, j);
+			//float fx = flow_at_pixel[0];
+			//float fy = flow_at_pixel[1];
+			//float fz = flow_at_pixel[2];
 
-			if (!isFlowCorrect(fx) || !isFlowCorrect(fy))
+			if (!isFlowCorrect(fx) || !isFlowCorrect(fy) || !isFlowCorrect(fz))
 			{
 				overflow_count++;
 				continue;
 			}
 
-			float rad = sqrt(fx * fx + fy * fy);
-			accrad += rad;
-			if (rad > 1) {
+			//float rad = sqrt(fx * fx + fy * fy + fz * fz);//float rad = sqrt(fx * fx + fy * fy);
+			//accrad += rad;
+			if (flow_at_pixel > 0) {//if (rad > 1) {
 				//cout << "[" << i << "," << j << "]: " << rad << endl;
 				movingpixel_count++;
 			}
 		}
 	}
 	//float avgflow = accrad / (flow.rows * flow.cols - overflow_count);
-	float avgflow = movingpixel_count / float(flow.rows * flow.cols - overflow_count);
-	return avgflow;
+	float avgflow = movingpixel_count / float(flow.rows * flow.cols); // - overflow_count);
+	return avgflow;*/
+
+	return norm(flow, NORM_L2);
 }
 
 /* -------------------------------------------------------------------------
