@@ -298,6 +298,11 @@ void cliplabel::updatePixmap(QString file)
 			else if (file == "D:/CCCC/Stop Motion/US_XRTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_XRTRA2/270/" + ss.str());
 			else if (file == "D:/CCCC/Stop Motion/US_JJTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_JJTRA2/270/" + ss.str());
 			else if (file == "D:/CCCC/Stop Motion/US_ZXTRA2/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/US_ZXTRA2/270/" + ss.str());
+			else if (file == "D:/CCCC/Stop Motion/Videos/Basic1.avi") frame = imread("D:/CCCC/Stop Motion/Basic1/270/" + ss.str());
+			else if (file == "D:/CCCC/Stop Motion/Videos/Basic2.avi") frame = imread("D:/CCCC/Stop Motion/Basic2/270/" + ss.str());
+			else if (file == "D:/CCCC/Stop Motion/Videos/Basic3.avi") frame = imread("D:/CCCC/Stop Motion/Basic3/270/" + ss.str());
+			else if (file == "D:/CCCC/Stop Motion/Videos/Real.avi") frame = imread("D:/CCCC/Stop Motion/Real/270/" + ss.str());
+			else if (file == "D:/CCCC/Stop Motion/RealTra/1080/0.jpg") frame = imread("D:/CCCC/Stop Motion/RealTra/270/" + ss.str());
 			ss.str("");
 
 			srcImages.push_back(frame);
@@ -322,6 +327,10 @@ void cliplabel::paintPixmap()
 		image.bits();
 		painter->drawPixmap(i*w_base, 0, w_base, h_threshold, QPixmap::fromImage(image));
 	}
+	if (cut_type == 1)
+		painter->setPen(QPen(Qt::darkBlue, 5));
+	else
+		painter->setPen(QPen(Qt::darkGreen, 5));
 	painter->drawRect(0, 0, w_threshold - 1, h_threshold - 1);
 	painter->end();
 	this->setPixmap(*pm);
