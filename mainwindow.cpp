@@ -428,12 +428,15 @@ void MainWindow::visualizeClips()
 
 void MainWindow::setCurrentClip(cliplabel *clip)
 {
+	int delta_width = 0;
 	if (ui->editRadioButton->isChecked())
 	{
+		delta_width = current_clip->getWidth();
 		current_clip->updatePixmap(fileName);
 		QPoint pos = current_clip->pos();
 		cliplabel *empty_clip = static_cast<cliplabel*>(ui->scrollAreaWidgetContents_2->childAt(pos));
 		int width = current_clip ->getWidth();
+		delta_width -= width;
 		int height = current_clip->getHeight();
 		empty_clip->setFixedSize(width, height);
 		empty_clip->setSizeThreshold(width, height);
@@ -471,9 +474,15 @@ void MainWindow::setCurrentClip(cliplabel *clip)
 		drawScatterPlot(centers);
 		
 	}*/
-	int index = (current_clip->getRange()[0] + current_clip->getRange()[1]) / 2;
+	int index;
+	if (!current_clip->getCuts().empty())
+		index = current_clip->getCuts()[0];
+	else if (current_clip->getCutType() == 2)
+		index = current_clip->getRange()[0];
+	else
+		index = (current_clip->getRange()[0] + current_clip->getRange()[1]) / 2;
 	refresh(index);
-	if (current_clip->pos().x() + current_clip->width() > ui->scrollArea_1->horizontalScrollBar()->sliderPosition() + ui->scrollArea_1->width())
+	if (current_clip->pos().x() - delta_width + current_clip->width() > ui->scrollArea_1->horizontalScrollBar()->sliderPosition() + ui->scrollArea_1->width())
 		ui->scrollArea_1->horizontalScrollBar()->setSliderPosition(current_clip->pos().x());
 	frame_slider->setValue(current_clip_index);
 }
@@ -1037,14 +1046,14 @@ void MainWindow::on_actionLoad_triggered()
 	
 	string stdFileName = fileName.toStdString();
 	vproc.readVideo(stdFileName);
-	cutVideo();
+	/*cutVideo();
 	ui->frameLabel->setStyleSheet("background-color: rgb(0, 0, 0); image: url(D:/CCCC/Stop Motion/Videos/preview.png);");
 	initFrameSlider();
 	myPlayer = new player();
 	myPlayer->loadVideo(stdFileName, vproc.getFrameRate(), clips);
 	QObject::connect(myPlayer, SIGNAL(display(int)), this, SLOT(updatePlayer(int)));
 	QObject::connect(myPlayer, SIGNAL(setCurrentClipIndex(int)), this, SLOT(updateCurrentClip(int)));
-	QObject::connect(myPlayer, SIGNAL(setPlayButtonIcon(bool)), this, SLOT(updatePlayButtonIcon(bool)));
+	QObject::connect(myPlayer, SIGNAL(setPlayButtonIcon(bool)), this, SLOT(updatePlayButtonIcon(bool)));*/
 }
 
 /*void MainWindow::on_actionSelect_triggered()

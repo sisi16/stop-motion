@@ -12,6 +12,7 @@
 #include <string>
 #include <sstream>
 #include <time.h>
+#include <omp.h>
 #include "opflow.h"
 #include "handdetection.h"
 #include "blobtrack.h"
@@ -62,8 +63,6 @@ private:
     int frame_width;
     int frame_height;
 	int frame_rate;
-    std::vector<cv::Mat> frames;
-    std::vector<int> stable_frames;
     std::vector<float> avg_flows;
     std::vector<int> frame_types;
 	std::vector<int> cut_types;

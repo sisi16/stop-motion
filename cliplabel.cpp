@@ -9,7 +9,7 @@ cliplabel::cliplabel(QWidget* parent, Qt::WindowFlags f)
 {
 	cut_index = -1;
 	cut_type = -1;
-	sorted = false;
+	//sorted = false;
 	edited_mode = NotEdited;
 	this->setScaledContents(true);
 	this->setMouseTracking(false);
@@ -26,7 +26,7 @@ cliplabel::cliplabel(vector<Mat> src, int bw, int w, int h, int index, int type,
 	cut_index = index;
 	cut_type = type;
 	length = l;
-	sorted = false;
+	//sorted = false;
 	edited_mode = NotEdited;
 
 	this->setScaledContents(true);
@@ -128,11 +128,11 @@ vector<int> cliplabel::getRange()
 
 vector<int> cliplabel::getCuts()
 {
-	if (!sorted)
+	/*if (!sorted)
 	{
 		sort(cuts.begin(), cuts.end());
 		sorted = true;
-	}
+	}*/
 	return cuts;
 }
 
@@ -141,10 +141,10 @@ vector<int> cliplabel::getAutoCuts()
 	return autoCuts;
 }
 
-bool cliplabel::isSorted()
+/*bool cliplabel::isSorted()
 {
 	return sorted;
-}
+}*/
 
 void cliplabel::enterEvent(QEvent *)
 {
@@ -232,7 +232,7 @@ void cliplabel::cast(cliplabel *castedClip)
 	w_threshold = castedClip->getWidth();
 	cut_type = castedClip->getCutType();
 	cut_index = castedClip->getCutIndex();
-	sorted = castedClip->isSorted();
+	//sorted = castedClip->isSorted();
 	if (castedClip->getEditedMode() == isSelectedDeleted)
 		this->setEditedMode(isSelected);
 	else if (castedClip->getEditedMode() == isSelected)
@@ -251,7 +251,7 @@ void cliplabel::uncast()
 	this->setEditedMode(NotEdited);
 	cut_index = -1;
 	cut_type = -1;
-	sorted = false;
+	//sorted = false;
 	srcImages.clear();
 	range.clear();
 	this->setMouseTracking(false);
@@ -260,7 +260,7 @@ void cliplabel::uncast()
 
 void cliplabel::updatePixmap(QString file)
 {
-	if (!cuts.empty() && !sorted)
+	if (!cuts.empty()) //&& !sorted)
 	{
 		sort(cuts.begin(), cuts.end());
 		srcImages.clear();
@@ -360,7 +360,7 @@ void cliplabel::addCut(int index)
 	}
 	else
 		cuts[size - 1] = index;
-	sorted = false;
+	sort(cuts.begin(), cuts.end()); //sorted = false;
 }
 
 void cliplabel::deleteCut(int index)
@@ -377,7 +377,7 @@ void cliplabel::deleteCut(int index)
 		for (int i = 0; i < cuts.size(); i++)
 			if (index == cuts.at(i)) cuts.erase(cuts.begin() + i);
 	}*/
-	sorted = false;
+	sort(cuts.begin(), cuts.end()); //sorted = false;
 }
 
 void cliplabel::setAutoCuts(vector<int> acs)

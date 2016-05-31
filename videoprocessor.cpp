@@ -11,32 +11,12 @@ videoprocessor::videoprocessor()
 
 videoprocessor::~videoprocessor()
 {
-    frames.clear();
 }
 
 void videoprocessor::readVideo(const string file)
 {
-    if (!frames.empty()) frames.clear();
-	start = clock();
-	if (file == "D:/CCCC/Stop Motion/UserTest_Tra1/1080/0.jpg")
-	{
-		fileName = file;
-		num_of_frames = 27;
-		frame_width = 1440;
-		frame_height = 1080;
-		frame_rate = 15;
-		cout << frame_rate << endl;
-	}
-	else if (file == "D:/CCCC/Stop Motion/UserTest_Tra2/1080/0.jpg")
-	{
-		fileName = file;
-		num_of_frames = 346;
-		frame_width = 1920;
-		frame_height = 1080;
-		frame_rate = 15;
-		cout << frame_rate << endl;
-	}
-	else if (file == "D:/CCCC/Stop Motion/US_SSTRA2/1080/0.jpg")
+	//start = clock();
+	if (file == "D:/CCCC/Stop Motion/US_SSTRA2/1080/0.jpg")
 	{
 		fileName = file;
 		num_of_frames = 315;
@@ -139,38 +119,33 @@ void videoprocessor::readVideo(const string file)
 		cout << frame_rate << endl;
 		capture.release();
 	}
-	/*for (int i = 0; i < num_of_frames; i++)//for (int i = 0; i < 930; i++)//for (int i = 0; i < 155; i++)
-	{
-		Mat frame;
-		capture >> frame;
-	    frames.push_back(frame);
-	}*/
 
 	// TEST
-	/*stringstream ss;
+	stringstream ss;
 	string type = ".jpg";
-	Mat frame;
+	Mat frame, dst_1, dst_2;
 	VideoCapture capture(file);
 	double time;
 	start = clock();
 	time = (double)start / CLOCKS_PER_SEC;
 	logger.push_back(QString::number(time).toStdString() + "  start loading frames...");
+	cout << time << endl;
+	//#pragma omp parallel for
 	for (int i = 0; i < num_of_frames; i++) // i+...
     {
 		capture >> frame;
-		if (i == 0) frames.push_back(frame); // i+...
-        Mat dst_1, dst_2;
 		ss << i << type;
-		cv::imwrite("D:/CCCC/Stop Motion/XTTRA2/1080/" + ss.str(), frame);
-		pyrDown(frame, dst_1, Size(frame.cols / 2, frame.rows / 2));
-		cv::imwrite("D:/CCCC/Stop Motion/XTTRA2/540/" + ss.str(), dst_1);
-		pyrDown(dst_1, dst_2, Size(dst_1.cols / 2, dst_1.rows / 2));
-		cv::imwrite("D:/CCCC/Stop Motion/XTTRA2/270/" + ss.str(), dst_2);
+		//cv::imwrite("D:/CCCC/Stop Motion/US_XT2/1080/" + ss.str(), frame);
+		pyrDown(frame, dst_1, Size(960, 540)); // frame.cols / 2, frame.rows / 2
+		cv::imwrite("D:/CCCC/Stop Motion/XTTRA2/nn540/" + ss.str(), dst_1);
+		pyrDown(dst_1, dst_2, Size(480, 270)); // dst_1.cols / 2, dst_1.rows / 2
+		cv::imwrite("D:/CCCC/Stop Motion/XTTRA2/n270/" + ss.str(), dst_2);
 		ss.str("");
     }
 	time = (double)(clock() - start) / CLOCKS_PER_SEC;
+	cout << time << endl;
 	logger.push_back(QString::number(time).toStdString() + "  finish loading frames");
-	capture.release();*/
+	capture.release();
 
 	Mat temp;
 	if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") temp = imread("D:/CCCC/Stop Motion/Test6/540/0.jpg");
@@ -214,16 +189,6 @@ void videoprocessor::readVideo(const string file)
     progressBar->setValue(0);*/
 
 	//test();
-}
-
-vector<Mat> videoprocessor::getFrames()
-{
-    return frames;
-}
-
-vector<int> videoprocessor::getStableFrames()
-{
-    return stable_frames;
 }
 
 int videoprocessor::getVideoSize()

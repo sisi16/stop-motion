@@ -43,7 +43,7 @@ public:
 	std::vector<int> getRange();
 	std::vector<int> getCuts();
 	std::vector<int> getAutoCuts();
-	bool isSorted();
+	//bool isSorted();
 	void setEditedMode(isEdited mode);
 	void setCutType(int type);
 	void setCutIndex(int index);
@@ -75,7 +75,7 @@ private:
 	int cut_type;
 	int length;
 	int size;
-	bool sorted;
+	//bool sorted;
 	std::vector<int> range;
 	std::vector<int> cuts;
 	std::vector<int> autoCuts;
