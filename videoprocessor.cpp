@@ -16,19 +16,10 @@ videoprocessor::~videoprocessor()
 void videoprocessor::readVideo(const string file)
 {
 	//start = clock();
-	if (file == "D:/CCCC/Stop Motion/QKTRA1/540/0.jpg")
+	if (file == "D:/CCCC/Stop Motion/ZL2/540/0.jpg")
 	{
 		fileName = file;
-		num_of_frames = 26; //here
-		frame_width = 1920;
-		frame_height = 1080;
-		frame_rate = 15;
-		cout << frame_rate << endl;
-	}
-	else if (file == "D:/CCCC/Stop Motion/QKTRA2/540/0.jpg")
-	{
-		fileName = file;
-		num_of_frames = 325; //here
+		num_of_frames = 330; //here
 		frame_width = 1920;
 		frame_height = 1080;
 		frame_rate = 15;
@@ -82,9 +73,9 @@ void videoprocessor::readVideo(const string file)
 		ss << i << type;
 		//cv::imwrite("D:/CCCC/Stop Motion/US_XT2/1080/" + ss.str(), frame);
 		pyrDown(frame, dst_1, Size(960, 540)); // frame.cols / 2, frame.rows / 2
-		cv::imwrite("D:/CCCC/Stop Motion/QK1/540/" + ss.str(), dst_1);
+		cv::imwrite("D:/CCCC/Stop Motion/ZL1/540/" + ss.str(), dst_1);
 		pyrDown(dst_1, dst_2, Size(480, 270)); // dst_1.cols / 2, dst_1.rows / 2
-		cv::imwrite("D:/CCCC/Stop Motion/QK1/270/" + ss.str(), dst_2);
+		cv::imwrite("D:/CCCC/Stop Motion/ZL1/270/" + ss.str(), dst_2);
 		ss.str("");
     }
 	time = (double)(clock() - start) / CLOCKS_PER_SEC;
@@ -95,10 +86,8 @@ void videoprocessor::readVideo(const string file)
 	if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") temp = imread("D:/CCCC/Stop Motion/Test6/540/0.jpg");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") temp = imread("D:/CCCC/Stop Motion/Test7/540/0.jpg");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") temp = imread("D:/CCCC/Stop Motion/Test8/540/0.jpg");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/QK1.avi") temp = imread("D:/CCCC/Stop Motion/QK1/540/0.jpg");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/QK2.avi") temp = imread("D:/CCCC/Stop Motion/QK2/540/0.jpg");
-	else if (fileName == "D:/CCCC/Stop Motion/QKTRA1/540/0.jpg") temp = imread("D:/CCCC/Stop Motion/QKTRA1/540/0.jpg");
-	else if (fileName == "D:/CCCC/Stop Motion/QKTRA2/540/0.jpg") temp = imread("D:/CCCC/Stop Motion/QKTRA2/540/0.jpg");
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/ZL1.avi") temp = imread("D:/CCCC/Stop Motion/ZL1/540/0.jpg");
+	else if (fileName == "D:/CCCC/Stop Motion/ZL2/540/0.jpg") temp = imread("D:/CCCC/Stop Motion/ZL2/540/0.jpg");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic1.avi") temp = imread("D:/CCCC/Stop Motion/Basic1/540/0.jpg");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic2.avi") temp = imread("D:/CCCC/Stop Motion/Basic2/540/0.jpg");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic3.avi") temp = imread("D:/CCCC/Stop Motion/Basic3/540/0.jpg");
@@ -111,8 +100,6 @@ void videoprocessor::readVideo(const string file)
     /*progressBar = new QProgressBar;
 	progressBar->setRange(0, num_of_frames - 1);//progressBar->setRange(0, frames.size()-1);
     progressBar->setValue(0);*/
-
-	//test();
 }
 
 int videoprocessor::getVideoSize()
@@ -144,12 +131,11 @@ void videoprocessor::cut2Scenes()
 
 	stringstream ss;
 	string type = ".jpg";
-	ofstream flowfile("D:/CCCC/Stop Motion/QK1/flows.txt"); // i+...
+	ofstream flowfile("D:/CCCC/Stop Motion/ZL1/flows.txt"); // i+...
 	Mat frame_1, frame_2;
 
 	//#pragma omp parallel for
 	time = (double)(clock() - start) / CLOCKS_PER_SEC;
-	cout << time << endl;
 	logger.push_back(QString::number(time).toStdString() + "  start calculating optical flows...");
 
 	for (int i = 0; i < num_of_frames - 1; i++) // i+...
@@ -158,14 +144,14 @@ void videoprocessor::cut2Scenes()
 
 		if (i == 0) // i+...
 		{
-			frame_1 = imread("D:/CCCC/Stop Motion/QK1/270/0.jpg"); // i+...
-			frame_2 = imread("D:/CCCC/Stop Motion/QK1/270/1.jpg");
+			frame_1 = imread("D:/CCCC/Stop Motion/ZL1/270/0.jpg"); // i+...
+			frame_2 = imread("D:/CCCC/Stop Motion/ZL1/270/1.jpg");
 		}
 		else
 		{
 			ss << i + 1 << type;
 			frame_1 = frame_2;
-			frame_2 = imread("D:/CCCC/Stop Motion/QK1/270/" + ss.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/ZL1/270/" + ss.str());
 			ss.str("");
 		}
 
@@ -178,7 +164,7 @@ void videoprocessor::cut2Scenes()
 
 		//float current_avg_flow;
 		//flowfile >> current_avg_flow;
-		if (current_avg_flow < 1200)//if (current_avg_flow < 0.005) // if (current_avg_flow == 0)
+		if (current_avg_flow < 1200) //if (current_avg_flow < 0.005) // if (current_avg_flow == 0)
 		{
 			frame_types.push_back(1);
 		}
@@ -203,7 +189,6 @@ void videoprocessor::cut2Scenes()
 	}
 
 	time = (double)(clock() - start) / CLOCKS_PER_SEC;
-	cout << time << endl;
 	logger.push_back(QString::number(time).toStdString() + "  finish calculating optical flows");
 	flowfile.close();
 
@@ -603,8 +588,7 @@ vector<bool> videoprocessor::test()
 	if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") matchfile.open("D:/CCCC/Stop Motion/Test6/matches.txt");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") matchfile.open("D:/CCCC/Stop Motion/Test7/matches_2.txt");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") matchfile.open("D:/CCCC/Stop Motion/Test8/matches_3.txt");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/QK1.avi") matchfile.open("D:/CCCC/Stop Motion/QK1/matches.txt");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/QK2.avi") matchfile.open("D:/CCCC/Stop Motion/QK2/matches.txt");
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/ZL1.avi") matchfile.open("D:/CCCC/Stop Motion/ZL1/matches.txt");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic1.avi") matchfile.open("D:/CCCC/Stop Motion/Basic1/matches.txt");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic2.avi") matchfile.open("D:/CCCC/Stop Motion/Basic2/matches.txt"); 
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic3.avi") matchfile.open("D:/CCCC/Stop Motion/Basic3/matches.txt");
@@ -622,8 +606,7 @@ vector<bool> videoprocessor::test()
 		if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str());
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
-		else if (fileName == "D:/CCCC/Stop Motion/Videos/QK1.avi") frame = imread("D:/CCCC/Stop Motion/QK1/270/" + ss.str());
-		else if (fileName == "D:/CCCC/Stop Motion/Videos/QK2.avi") frame = imread("D:/CCCC/Stop Motion/QK2/270/" + ss.str());
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/ZL1.avi") frame = imread("D:/CCCC/Stop Motion/ZL1/270/" + ss.str());
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic1.avi") frame = imread("D:/CCCC/Stop Motion/Basic1/270/" + ss.str());
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic2.avi") frame = imread("D:/CCCC/Stop Motion/Basic2/270/" + ss.str());
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic3.avi") frame = imread("D:/CCCC/Stop Motion/Basic3/270/" + ss.str());
@@ -651,8 +634,7 @@ vector<bool> videoprocessor::test()
 	ifstream imatchfile;
 	if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") imatchfile.open("D:/CCCC/Stop Motion/Test7/matches_2.txt");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") imatchfile.open("D:/CCCC/Stop Motion/Test8/matches_2.txt");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/QK1.avi") imatchfile.open("D:/CCCC/Stop Motion/QK1/matches.txt");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/QK2.avi") imatchfile.open("D:/CCCC/Stop Motion/QK2/matches.txt");
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/ZL1.avi") imatchfile.open("D:/CCCC/Stop Motion/ZL1/matches.txt");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic1.avi") imatchfile.open("D:/CCCC/Stop Motion/Basic1/matches.txt");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic2.avi") imatchfile.open("D:/CCCC/Stop Motion/Basic2/matches.txt");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic3.avi") imatchfile.open("D:/CCCC/Stop Motion/Basic3/matches.txt");
@@ -726,7 +708,7 @@ vector<bool> videoprocessor::test()
 		//for (int j = 0; j < checkMovingClips.size(); j++)
 			//cout << checkMovingClips[j] << endl;
 
-		ofstream logfile("D:/CCCC/Stop Motion/QK1/algo_logs_1.txt"); // i+...
+		ofstream logfile("D:/CCCC/Stop Motion/ZL1/algo_logs.txt"); // i+...
 		if (logfile.is_open())
 		{
 			for (int i = 0; i < logger.size(); i++)
@@ -742,7 +724,7 @@ vector<bool> videoprocessor::test()
 
 void videoprocessor::writeBuffers()
 {
-	ofstream cutfile("D:/CCCC/Stop Motion/QK1/cuts.txt"); //i+...
+	ofstream cutfile("D:/CCCC/Stop Motion/ZL1/cuts.txt"); //i+...
 	if (cutfile.is_open())
 	{
 		for (int i = 0; i < scene_cuts.size(); i++)
@@ -751,7 +733,7 @@ void videoprocessor::writeBuffers()
 	}
 	else cout << "Unable to open file" << endl;
 
-	ofstream typefile("D:/CCCC/Stop Motion/QK1/types.txt"); //i+...
+	ofstream typefile("D:/CCCC/Stop Motion/ZL1/types.txt"); //i+...
 	if (typefile.is_open())
 	{
 		for (int j = 0; j < cut_types.size(); j++)
@@ -769,10 +751,8 @@ void videoprocessor::readBuffers()
 		if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") cutfile.open("D:/CCCC/Stop Motion/StopMotion/cuts18.txt");
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") cutfile.open("D:/CCCC/Stop Motion/StopMotion/cuts16.txt");
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") cutfile.open("D:/CCCC/Stop Motion/StopMotion/cuts17.txt");
-		else if (fileName == "D:/CCCC/Stop Motion/Videos/QK1.avi") cutfile.open("D:/CCCC/Stop Motion/QK1/cuts.txt");
-		else if (fileName == "D:/CCCC/Stop Motion/Videos/QK2.avi") cutfile.open("D:/CCCC/Stop Motion/QK2/cuts.txt");
-		else if (fileName == "D:/CCCC/Stop Motion/QKTRA1/540/0.jpg") cutfile.open("D:/CCCC/Stop Motion/QKTRA1/cuts.txt");
-		else if (fileName == "D:/CCCC/Stop Motion/QKTRA2/540/0.jpg") cutfile.open("D:/CCCC/Stop Motion/QKTRA2/cuts.txt");
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/ZL1.avi") cutfile.open("D:/CCCC/Stop Motion/ZL1/cuts.txt");
+		else if (fileName == "D:/CCCC/Stop Motion/ZL2/540/0.jpg") cutfile.open("D:/CCCC/Stop Motion/ZL2/cuts.txt");
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic1.avi") cutfile.open("D:/CCCC/Stop Motion/Basic1/cuts.txt");
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic2.avi") cutfile.open("D:/CCCC/Stop Motion/Basic2/cuts.txt");
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic3.avi") cutfile.open("D:/CCCC/Stop Motion/Basic3/cuts.txt");
@@ -795,10 +775,8 @@ void videoprocessor::readBuffers()
 		if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") typefile.open("D:/CCCC/Stop Motion/StopMotion/types18.txt");
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") typefile.open("D:/CCCC/Stop Motion/StopMotion/types16.txt");
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") typefile.open("D:/CCCC/Stop Motion/StopMotion/types17.txt");
-		else if (fileName == "D:/CCCC/Stop Motion/Videos/QK1.avi") typefile.open("D:/CCCC/Stop Motion/QK1/types.txt");
-		else if (fileName == "D:/CCCC/Stop Motion/Videos/QK2.avi") typefile.open("D:/CCCC/Stop Motion/QK2/types.txt");
-		else if (fileName == "D:/CCCC/Stop Motion/QKTRA1/540/0.jpg") typefile.open("D:/CCCC/Stop Motion/QKTRA1/types.txt");
-		else if (fileName == "D:/CCCC/Stop Motion/QKTRA2/540/0.jpg") typefile.open("D:/CCCC/Stop Motion/QKTRA2/types.txt");
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/ZL1.avi") typefile.open("D:/CCCC/Stop Motion/ZL1/types.txt");
+		else if (fileName == "D:/CCCC/Stop Motion/ZL2/540/0.jpg") typefile.open("D:/CCCC/Stop Motion/ZL2/types.txt");
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic1.avi") typefile.open("D:/CCCC/Stop Motion/Basic1/types.txt");
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic2.avi") typefile.open("D:/CCCC/Stop Motion/Basic2/types.txt");
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic3.avi") typefile.open("D:/CCCC/Stop Motion/Basic3/types.txt");
@@ -969,8 +947,7 @@ vector<int> videoprocessor::checkCuts(vector<int> checkRange)
 	ifstream flowfile;
 	if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") flowfile.open("D:/CCCC/Stop Motion/Test7/flows.txt");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") flowfile.open("D:/CCCC/Stop Motion/Test8/flows.txt");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/QK1.avi") flowfile.open("D:/CCCC/Stop Motion/QK1/flows.txt");
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/QK2.avi") flowfile.open("D:/CCCC/Stop Motion/QK2/flows.txt");
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/ZL1.avi") flowfile.open("D:/CCCC/Stop Motion/ZL1/flows.txt");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic1.avi") flowfile.open("D:/CCCC/Stop Motion/Basic1/flows.txt");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic2.avi") flowfile.open("D:/CCCC/Stop Motion/Basic2/flows.txt");
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic3.avi") flowfile.open("D:/CCCC/Stop Motion/Basic3/flows.txt");

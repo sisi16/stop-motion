@@ -42,10 +42,8 @@ void MainWindow::refresh(int index)
 	if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/540/" + ss.str());
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/QK1.avi") frame = imread("D:/CCCC/Stop Motion/QK1/540/" + ss.str());
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/QK2.avi") frame = imread("D:/CCCC/Stop Motion/QK2/540/" + ss.str());
-	else if (fileName == "D:/CCCC/Stop Motion/QKTRA1/540/0.jpg") frame = imread("D:/CCCC/Stop Motion/QKTRA1/540/" + ss.str());
-	else if (fileName == "D:/CCCC/Stop Motion/QKTRA2/540/0.jpg") frame = imread("D:/CCCC/Stop Motion/QKTRA2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/ZL1.avi") frame = imread("D:/CCCC/Stop Motion/ZL1/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/ZL2/540/0.jpg") frame = imread("D:/CCCC/Stop Motion/ZL2/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic1.avi") frame = imread("D:/CCCC/Stop Motion/Basic1/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic2.avi") frame = imread("D:/CCCC/Stop Motion/Basic2/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic3.avi") frame = imread("D:/CCCC/Stop Motion/Basic3/540/" + ss.str());
@@ -88,25 +86,15 @@ void MainWindow::refresh(int index)
 			frame_1 = imread("D:/CCCC/Stop Motion/Test8/540/" + ss_1.str());
 			frame_2 = imread("D:/CCCC/Stop Motion/Test8/540/" + ss_2.str());
 		}
-		else if (fileName == "D:/CCCC/Stop Motion/Videos/QK1.avi")
+		else if (fileName == "D:/CCCC/Stop Motion/Videos/ZL1.avi")
 		{
-			frame_1 = imread("D:/CCCC/Stop Motion/QK1/540/" + ss_1.str());
-			frame_2 = imread("D:/CCCC/Stop Motion/QK1/540/" + ss_2.str());
+			frame_1 = imread("D:/CCCC/Stop Motion/ZL1/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/ZL1/540/" + ss_2.str());
 		}
-		else if (fileName == "D:/CCCC/Stop Motion/Videos/QK2.avi")
+		else if (fileName == "D:/CCCC/Stop Motion/ZL2/540/0.jpg")
 		{
-			frame_1 = imread("D:/CCCC/Stop Motion/QK2/540/" + ss_1.str());
-			frame_2 = imread("D:/CCCC/Stop Motion/QK2/540/" + ss_2.str());
-		}
-		else if (fileName == "D:/CCCC/Stop Motion/QKTRA1/540/0.jpg")
-		{
-			frame_1 = imread("D:/CCCC/Stop Motion/QKTRA1/540/" + ss_1.str());
-			frame_2 = imread("D:/CCCC/Stop Motion/QKTRA1/540/" + ss_2.str());
-		}
-		else if (fileName == "D:/CCCC/Stop Motion/QKTRA2/540/0.jpg")
-		{
-			frame_1 = imread("D:/CCCC/Stop Motion/QKTRA2/540/" + ss_1.str());
-			frame_2 = imread("D:/CCCC/Stop Motion/QKTRA2/540/" + ss_2.str());
+			frame_1 = imread("D:/CCCC/Stop Motion/ZL2/540/" + ss_1.str());
+			frame_2 = imread("D:/CCCC/Stop Motion/ZL2/540/" + ss_2.str());
 		}
 		else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic1.avi")
 		{
@@ -182,8 +170,7 @@ void MainWindow::visualizeClips()
 	stringstream ss;
 	string type = ".jpg";
 
-	if (fileName != "D:/CCCC/Stop Motion/QKRA1/540/0.jpg"
-		&& fileName != "D:/CCCC/Stop Motion/QKTRA2/540/0.jpg"
+	if (fileName != "D:/CCCC/Stop Motion/ZL2/540/0.jpg"
 		&& fileName != "D:/CCCC/Stop Motion/Videos/Real.avi"
 		&& fileName != "D:/CCCC/Stop Motion/RealTra/1080/0.jpg")
 		isDropped = vproc.test();
@@ -221,10 +208,8 @@ void MainWindow::visualizeClips()
 			if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test6/270/" + ss.str()));
 			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str()));
 			else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str()));
-			else if (fileName == "D:/CCCC/Stop Motion/Videos/QK1.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/QK1/270/" + ss.str()));
-			else if (fileName == "D:/CCCC/Stop Motion/Videos/QK2.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/QK2/270/" + ss.str()));
-			else if (fileName == "D:/CCCC/Stop Motion/QKTRA1/540/0.jpg") srcImages.push_back(imread("D:/CCCC/Stop Motion/QKTRA1/270/" + ss.str()));
-			else if (fileName == "D:/CCCC/Stop Motion/QKTRA2/540/0.jpg") srcImages.push_back(imread("D:/CCCC/Stop Motion/QKTRA2/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/Videos/ZL1.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/ZL1/270/" + ss.str()));
+			else if (fileName == "D:/CCCC/Stop Motion/ZL2/540/0.jpg") srcImages.push_back(imread("D:/CCCC/Stop Motion/ZL2/270/" + ss.str()));
 			else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic1.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Basic1/270/" + ss.str()));
 			else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic2.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Basic2/270/" + ss.str()));
 			else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic3.avi") srcImages.push_back(imread("D:/CCCC/Stop Motion/Basic3/270/" + ss.str()));
@@ -316,12 +301,6 @@ void MainWindow::setCurrentClip(cliplabel *clip)
 		//ui->keepRadioButton->setChecked(false);
 	}
 
-	/*if (current_clip->getCutType() == 2)
-	{
-		vector<Point2f> centers = klt();
-		drawScatterPlot(centers);
-		
-	}*/
 	int index;
 	if (!current_clip->getCuts().empty())
 		index = current_clip->getCuts()[0];
@@ -329,10 +308,12 @@ void MainWindow::setCurrentClip(cliplabel *clip)
 		index = current_clip->getRange()[0];
 	else
 		index = (current_clip->getRange()[0] + current_clip->getRange()[1]) / 2;
-	refresh(index);
-	if (current_clip->pos().x() - delta_width + current_clip->width() > ui->scrollArea_1->horizontalScrollBar()->sliderPosition() + ui->scrollArea_1->width())
+
+	if (current_clip->pos().x() - delta_width + current_clip->width() > ui->scrollArea_1->horizontalScrollBar()->sliderPosition() + ui->scrollArea_1->width()
+		|| current_clip->pos().x() - delta_width + current_clip->width() < ui->scrollArea_1->horizontalScrollBar()->sliderPosition())
 		ui->scrollArea_1->horizontalScrollBar()->setSliderPosition(current_clip->pos().x());
 	frame_slider->setValue(current_clip_index);
+	refresh(index);
 }
 
 void MainWindow::cutVideo()
@@ -599,7 +580,7 @@ int MainWindow::round(double r)
 
 void MainWindow::writeLogFile()
 {
-	ofstream logfile("D:/CCCC/Stop Motion/QK1/logs.txt");
+	ofstream logfile("D:/CCCC/Stop Motion/ZL1/logs.txt");
 
 	if (logfile.is_open())
 	{
@@ -877,7 +858,6 @@ void MainWindow::seek(int index)
 		refresh(index);
 	else
 		setCurrentClip(clips.at(index));
-
 	//mediaplayer_1->setPosition(seconds);//mediaplayer_1->setPosition(seconds * 1000);
 }
 
@@ -1990,10 +1970,8 @@ void MainWindow::updatePlayer(int frameIndex)
 	if (fileName == "D:/CCCC/Stop Motion/Videos/Test6.avi") frame = imread("D:/CCCC/Stop Motion/Test6/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/540/" + ss.str());
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/QK1.avi") frame = imread("D:/CCCC/Stop Motion/QK1/540/" + ss.str());
-	else if (fileName == "D:/CCCC/Stop Motion/Videos/QK2.avi") frame = imread("D:/CCCC/Stop Motion/QK2/540/" + ss.str());
-	else if (fileName == "D:/CCCC/Stop Motion/QKTRA1/540/0.jpg") frame = imread("D:/CCCC/Stop Motion/QKTRA1/540/" + ss.str());
-	else if (fileName == "D:/CCCC/Stop Motion/QKTRA2/540/0.jpg") frame = imread("D:/CCCC/Stop Motion/QKTRA2/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/Videos/ZL1.avi") frame = imread("D:/CCCC/Stop Motion/ZL1/540/" + ss.str());
+	else if (fileName == "D:/CCCC/Stop Motion/ZL2/540/0.jpg") frame = imread("D:/CCCC/Stop Motion/ZL2/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic1.avi") frame = imread("D:/CCCC/Stop Motion/Basic1/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic2.avi") frame = imread("D:/CCCC/Stop Motion/Basic2/540/" + ss.str());
 	else if (fileName == "D:/CCCC/Stop Motion/Videos/Basic3.avi") frame = imread("D:/CCCC/Stop Motion/Basic3/540/" + ss.str());

@@ -276,10 +276,8 @@ void cliplabel::updatePixmap(QString file)
 				ss << cuts[i] << type;
 			if (file == "D:/CCCC/Stop Motion/Videos/Test7.avi") frame = imread("D:/CCCC/Stop Motion/Test7/270/" + ss.str());
 			else if (file == "D:/CCCC/Stop Motion/Videos/Test8.avi") frame = imread("D:/CCCC/Stop Motion/Test8/270/" + ss.str());
-			else if (file == "D:/CCCC/Stop Motion/Videos/QK1.avi") frame = imread("D:/CCCC/Stop Motion/QK1/270/" + ss.str());
-			else if (file == "D:/CCCC/Stop Motion/Videos/QK2.avi") frame = imread("D:/CCCC/Stop Motion/QK2/270/" + ss.str());
-			else if (file == "D:/CCCC/Stop Motion/QKTRA1/540/0.jpg") frame = imread("D:/CCCC/Stop Motion/QKTRA1/270/" + ss.str());
-			else if (file == "D:/CCCC/Stop Motion/QKTRA2/540/0.jpg") frame = imread("D:/CCCC/Stop Motion/QKTRA2/270/" + ss.str());
+			else if (file == "D:/CCCC/Stop Motion/Videos/ZL1.avi") frame = imread("D:/CCCC/Stop Motion/ZL1/270/" + ss.str());
+			else if (file == "D:/CCCC/Stop Motion/ZL2/540/0.jpg") frame = imread("D:/CCCC/Stop Motion/ZL2/270/" + ss.str());
 			else if (file == "D:/CCCC/Stop Motion/Videos/Basic1.avi") frame = imread("D:/CCCC/Stop Motion/Basic1/270/" + ss.str());
 			else if (file == "D:/CCCC/Stop Motion/Videos/Basic2.avi") frame = imread("D:/CCCC/Stop Motion/Basic2/270/" + ss.str());
 			else if (file == "D:/CCCC/Stop Motion/Videos/Basic3.avi") frame = imread("D:/CCCC/Stop Motion/Basic3/270/" + ss.str());
